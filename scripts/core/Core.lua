@@ -10,20 +10,7 @@ extraLine = ""
 class= {}
 showDebug = showDebug or false
 linenumber = 0
--- Skillranks to be used in the skills table and other comparisons.
 
-
--- Helper function for debugging.
-function printtable(input)
-    for k,v in pairs(input) do
-        if type(v) == "table" then
-            printtable(v)
-        else
-            if type(v) == "string" then echo("--" .. tostring(k) .. " = " .. v) end
-            if type(v) == "number" then echo("--" .. tostring(k) .. " = " .. tostring(v)) end
-        end
-    end
-end
 
 function alias_handler(input)
     for k,v in pairs(aliases) do

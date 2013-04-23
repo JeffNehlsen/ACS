@@ -55,6 +55,17 @@ function tableRemove(t, rem)
     end
 end
 
+function printtable(input)
+    for k,v in pairs(input) do
+        if type(v) == "table" then
+            printtable(v)
+        else
+            if type(v) == "string" then echo("--" .. tostring(k) .. " = " .. v) end
+            if type(v) == "number" then echo("--" .. tostring(k) .. " = " .. tostring(v)) end
+        end
+    end
+end
+
 function testTrigger(pattern, input)
     local res = input:find(pattern)
     ACSEcho("Triggers works? " .. res)
