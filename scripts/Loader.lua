@@ -3,6 +3,7 @@
 -- This script is run on 'load' and 'reload'
 
 dofile("scripts/core/Core.lua")
+dofile("scripts/core/Helpers.lua")
 
 -- Load the default settings
 dofile("scripts/settings/Defaults.lua")
