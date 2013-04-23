@@ -6,7 +6,7 @@ canTree = true
 canClot = true
 canParry = true
 living = false
-artiPipes = true
+artiPipes = false
 
 -- If you want selfishness to be kept up.
 keepSelfishUp = false
@@ -31,7 +31,7 @@ experienceDisplay = "none"
 --  vampire
 --  bloodborn
 --  infernal
-classType = LoadArg or "Teradrim"
+classType = "Syssin"
 
 -- Default stick and kidney values.
 -- To change values in game, refer to help file
@@ -49,18 +49,8 @@ showVenoms = true
 
 -- Numbers for specific types of weapons for the wielding system.
 -- Custom weapons and other weapons need to be added to ACS-Wielding.
--- Examples are in the ACS-Wielding.
-crozier   = "crozier103575"
-flail     = "flail51478"
-tower     = "shield19445"
-sword     = "shortsword187816"
-whip      = "whip12536"
-dirk      = "dirk225010"
-bow       = "darkbow117728"
-dhurive   = "dhurive27968"
-axe       = "axe51634"
-warhammer = "warhammer153317"
-bardiche  = "bardiche158371"
+-- Example:
+-- weaponVar = "weapon12345"
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
 -- let Kaed know and he'll add it to the master file.
@@ -75,19 +65,19 @@ skills = {
   tattoos = skillranks.transcendent,
   
   -- Lycanthrope
-  ferality = skillranks.transcendent,
-  lycanthropy = skillranks.transcendent,
-  howling = skillranks.transcendent,
+  ferality = skillranks.unknown,
+  lycanthropy = skillranks.unknown,
+  howling = skillranks.unknown,
   
   -- Teradrim
-  sand = skillranks.transcendent,
-  earth = skillranks.transcendent,
-  animation = skillranks.transcendent,
+  sand = skillranks.unknown,
+  earth = skillranks.unknown,
+  animation = skillranks.unknown,
   
   -- Syssin
-  subterfuge = skillranks.transcendent,
-  venom = skillranks.transcendent,
-  hypnosis = skillranks.transcendent,
+  subterfuge = skillranks.unknown,
+  venom = skillranks.unknown,
+  hypnosis = skillranks.unknown,
   
   -- Vampire (General)
   mentis = skillranks.unknown,
@@ -104,9 +94,9 @@ skills = {
   forging = skillranks.unknown,
   necromancy = skillranks.unknown,
 
-  savagery = skillranks.transcendent,
-  deathlore = skillranks.transcendent,
-  warhounds = skillranks.transcendent,
+  savagery = skillranks.unknown,
+  deathlore = skillranks.unknown,
+  warhounds = skillranks.unknown,
 }
 
 -- Skills for endgame and racial skills.
@@ -115,6 +105,3 @@ extraSkills = {}
 -- Label color for your prompt (H, M, %, etc)
 promptLabelColor = C.x
 --promptLabelColor = C.g
-
-if living then str = "Living " else str = "Undead " end
-echo("Settings loaded. " .. str .. classType)

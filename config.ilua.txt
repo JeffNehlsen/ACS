@@ -11,4 +11,4 @@
 #load "example2.lua"
 
 module "AetolianCuringSystem"
-load "ACS-init.lua"
+load "scripts/init.lua"

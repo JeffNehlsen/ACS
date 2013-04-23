@@ -7,7 +7,7 @@ function alias_handler(input)
     return true
   elseif input:match("load") then
     init_setup()
-    dofile("aetolia.lua")
+    dofile("scripts/Loader.lua")
     return true
   elseif input:match("^setup$") or input:match("^setupprompt$") then 
   init_setup()

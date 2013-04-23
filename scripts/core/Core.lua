@@ -39,20 +39,7 @@ end
 
 function trigger_handler()
   addTemporaryTriggers()
-
-  -- for k,v in pairs(triggers) do
-  --   for j in ipairs(v) do
-  --     if not v[j].disabled and mb.line:find(v[j].pattern) then
-  --       v[j].handler(v[j].pattern)
-  --       if v[j] and v[j].temporary then
-  --         table.remove(v, j)
-  --       end
-  --     end
-  --   end
-  -- end
-
-
-  -- EXPERIMENTAL SYSTEM TO INCLUDE TABLES OF PATTERNS
+  
   for tableName, triggersTable in pairs(triggers) do
     for i, trigger in ipairs(triggersTable) do
       if not trigger.disabled then

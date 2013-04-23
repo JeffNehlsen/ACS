@@ -20,7 +20,7 @@ allsightEnchantment = "earring"
 experienceDisplay = "none"
 
 -- Set this to be whatever class you currently are.
-classType = LoadArg or "teradrim"
+classType = LoadArg or "Syssin"
 
 -- Default stick and kidney values.
 -- To change values in game, refer to help file
@@ -40,11 +40,9 @@ showVenoms = true
 -- Custom weapons and other weapons need to be added to ACS-Wielding.
 -- Examples are in the ACS-Wielding.
 tower     = "banded206321"
-
 whip      = "whip233722"
 dirk      = "dirk37544"
 bow       = "darkbow225604"
-
 crozier   = "crozier115683"
 flail     = "flail216061"
 
@@ -64,33 +62,6 @@ skills = {
   subterfuge = skillranks.transcendent,
   venom = skillranks.transcendent,
   hypnosis = skillranks.transcendent,
-
-  -- Teradrim
-  sand = skillranks.transcendent,
-  earth = skillranks.transcendent,
-  animation = skillranks.unknown,
-
-  -- Carnifex
-  savagery = skillranks.unknown,
-  deathlore = skillranks.unknown,
-  warhounds = skillranks.unknown,
-  
-  -- Vampire (General)
-  mentis = skillranks.unknown,
-  corpus = skillranks.unknown,
-  
-  -- Bloodborn
-  hematurgy = skillranks.unknown,
-  
-  -- Consanguine
-  sanguis = skillranks.unknown,
-  
-  -- Lycanthrope
-  ferality = skillranks.unknown,
-  lycanthropy = skillranks.unknown,
-  howling = skillranks.unknown,
-  
-
 }
 
 -- Skills for endgame and racial skills.
@@ -99,6 +70,3 @@ extraSkills = {"miasma", "reconstitute", "quickassess"}
 -- Label color for your prompt (H, M, %, etc)
 promptLabelColor = C.x
 --promptLabelColor = C.g
-
-if living then str = "Living " else str = "Undead " end
-echo("Settings loaded for " .. atcp.name .. ". " .. str .. classType)
