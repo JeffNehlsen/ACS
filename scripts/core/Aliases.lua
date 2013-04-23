@@ -116,10 +116,7 @@ end
 
 function reloadLua(input, pattern)
   if input and pattern then LoadArg = input:match(pattern) end
-  dofile("aetolia.lua")
-  resetTimers()
-  send("wielded")
-  show_prompt()
+  dofile("scripts/Loader.lua")
 end
 
 function setTarget(input, pattern)
