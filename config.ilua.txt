@@ -1,0 +1,14 @@
+# ILua configuration file.
+
+# This file is sectioned in modules. Each module has its own globals, and
+# modules cannot communicate between them. A module may load any number of
+# Lua script files.
+
+# Example of an ILua module:
+
+#module "Foo"
+#load "example1.lua"
+#load "example2.lua"
+
+module "AetolianCuringSystem"
+load "ACS-init.lua"

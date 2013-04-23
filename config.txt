@@ -1,0 +1,68 @@
+# MudBot configuration file.
+# Uncomment (i.e. remove the '#' before) anything you want to be parsed.
+# If there's something you don't understand here, just leave it as it is.
+
+# Ports to listen on. They can be as many as you want. "default" is 123.
+
+# These will accept connections only from localhost.
+allow_foreign_connections "no"
+
+#listen_on "default"
+listen_on "1623"
+
+# And anyone can connect to these.
+allow_foreign_connections "yes"
+
+#listen_on "1523"
+
+
+# If these are commented or left empty, MudBot will ask the user where to connect.
+
+host "aetolia.com"
+port "23"
+
+
+# Autologin. Requires ATCP.
+# Keep your password here at your own risk! Better just leave these empty.
+
+user ""
+pass ""
+
+
+# Name to use on ATCP authentication. To disable ATCP use "none".
+# To login as "MudBot <actual version>" use "default" or leave it empty.
+
+atcp_login_as "default"
+#atcp_login_as "Nexus 3.0.1"
+#atcp_login_as "JavaClient 2.4.8"
+
+
+# Mud Client Compression Protocol.
+
+disable_mccp "no"
+
+
+# Mud eXtension Protocol. Can be "disabled", "locked", "open", or "secure".
+# Read the MXP specifications on www.zuggsoft.com for more info.
+
+default_mxp_mode "open"
+
+
+# Telnet Go-Ahead sequence. Some clients can't live with it, some can't without it.
+
+strip_telnet_ga "no"
+
+
+# Read and parse these files too.
+
+#include "user.txt"
+
+
+
+# Windows modules: Dynamic loaded libraries.
+dll "./i_lua.dll"
+dll "./i_mapper.dll"
+#dll "./i_offense.dll"
+#dll "./voter.dll"
+#dll "./i_script.dll"
+
