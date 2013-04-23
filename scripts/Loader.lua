@@ -23,8 +23,8 @@ dofile("scripts/core/Healing.lua")
 dofile("scripts/core/Prompt.lua")
 dofile("scripts/core/Defenses.lua")
 dofile("scripts/core/Wielding.lua")
+dofile("scripts/core/Afflictions.lua")
 
-dofile("scripts/tracker/Afflictions.lua")
 dofile("scripts/tracker/LimbTracking.lua")
 dofile("scripts/tracker/EnemyTracking.lua")
 
