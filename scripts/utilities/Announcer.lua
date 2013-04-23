@@ -24,6 +24,6 @@ end
 
 function Announcer:announce(message)
   if Announcer.enabled then
-    send("wt ACS-Announcer: " .. message)
+    send("wt [ANNOUNCER]: " .. message)
   end
 end

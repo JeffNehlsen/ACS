@@ -37,8 +37,6 @@ toguard = toguard or "head"
 showVenoms = true
 
 -- Numbers for specific types of weapons for the wielding system.
--- Custom weapons and other weapons need to be added to ACS-Wielding.
--- Examples are in the ACS-Wielding.
 tower     = "banded206321"
 whip      = "whip233722"
 dirk      = "dirk37544"

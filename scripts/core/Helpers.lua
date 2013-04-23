@@ -47,6 +47,13 @@ end
 
 
 -- Other helper functions
+function stringInTable(str, tab)
+    for i,v in pairs(tab) do
+        if v == str then return true end
+    end
+    return false
+end
+
 function tableRemove(t, rem)
     for k,v in pairs(t) do
         if v.name == rem then

@@ -129,10 +129,9 @@ balances =  {
 function balances:sliceHandler(p)
   local slice = mb.line:match(p)
 
-  if slice == "pineal" or slice == "sulphurite" or slice == "tongue" or slice == "spleen" or slice == "tumor" or slice == "bone" or
-    slice == "skullcap" or slice == "kola" or slice == "cohesh" or slice == "echinacea" or slice == "myrrh" or slice == "pear" or slice == "sileris" then
+  if stringInTable(slice, {"pineal", "sulphurite", "tongue", "spleen", "tumor",  "bone", "skullcap", "kola", "cohesh", "echinacea", "myrrh", "pear", "sileris"}) then
     return
-  elseif slice == "moss" or slice == "kidney" then
+  elseif stringInTable(slice, {"moss", "kidney"}) then
     self:complete("kidney")
     return
   end

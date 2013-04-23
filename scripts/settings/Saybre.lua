@@ -48,8 +48,6 @@ toguard = "head"
 showVenoms = true
 
 -- Numbers for specific types of weapons for the wielding system.
--- Custom weapons and other weapons need to be added to ACS-Wielding.
--- Examples are in the ACS-Wielding.
 crozier   = "crozier161595"
 flail     = "flail154814"
 tower     = "banded206321"

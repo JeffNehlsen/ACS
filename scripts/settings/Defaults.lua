@@ -8,6 +8,9 @@ canParry = true
 living = false
 artiPipes = false
 
+-- Your preferred pagelength
+defaultPagelength = 30
+
 -- If you want selfishness to be kept up.
 keepSelfishUp = false
 
@@ -48,7 +51,6 @@ toguard = "head"
 showVenoms = true
 
 -- Numbers for specific types of weapons for the wielding system.
--- Custom weapons and other weapons need to be added to ACS-Wielding.
 -- Example:
 -- weaponVar = "weapon12345"
 

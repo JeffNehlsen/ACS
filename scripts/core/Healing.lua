@@ -12,6 +12,8 @@ syringeflicked = false
 writhed = false
 writhing = false
 afflictionList = {}
+
+
 function doStick(serum)
   balances:take("serum")
   if living then

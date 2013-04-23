@@ -28,7 +28,7 @@ aliases.pathRecording = {
 aliases.newBashing = {
   {pattern = "^beginbashing (%a+)$", handler = function(i,p) handleBeginBashing(i,p) end},
   {pattern = "^stopbashing$", handler = function() moveQueue = {} ACSEcho("Move Queue is empty.  Feel free to move around!") end},
-  {pattern = "^rlbashing$", handler = function() dofile("ACS-NewBashing.lua") show_prompt() end},
+  {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
 }
 
 recording = {active = false}

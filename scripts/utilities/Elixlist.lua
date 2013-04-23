@@ -1,46 +1,6 @@
 echo("Elixlist script loaded.")
 
 elixlistCheck = false
-defaultPagelength = 30
-
--- curatives = {}
--- curatives.cache = {}
--- curatives.undead = {set = {"serums", "bandages", "tinctures"}}
--- curatives.undead.bandages = {set = {"oculi", "orbis", "fumeae", "pueri", "jecis"}}
--- curatives.undead.serums = {set = {"analeptic", "stimulant", "euphoric", "calmative", "carminative", "nervine", "refrigerative"}}
--- curatives.undead.tinctures = {set = {"demulcent", "antispasmadic", "sudorific"}}
--- curatives.undead.cleans = 0
--- curatives.living = {set = {"elixirs", "salves"}}
--- curatives.living.elixirs = {set = {"health", "mana", "levitation",  "immunity", "venom", "speed", "frost"}}
--- curatives.living.salves = {set = {"mending", "restoration", "epidermal", "caloric", "mass"}}
--- curatives.empties = 0
--- curatives.decaySoon = {}
--- curatives.venoms = {set = {"xentio", "oleander", "eurypteria", "kalmia", "strophanthus", "digitalis", "digitalis", 
---                            "darkshade", "curare", "epteth", "epseth", "prefarar", "monkshood", "euphoria", "colocasia", 
---                            "oculus", "hepafarin", "jalk", "vernalius", "epseth", "larkspur", "slike", "araceae", 
---                            "voyria", "delphinium", "vardrax", "loki", "aconite", "selarnia", "gecko", "scytherus"}}
-curatives = {
-  undead = {
-    set = {"serums", "bandages", "tinctures"},
-    bandages = {set = {"oculi", "orbis", "fumeae", "pueri", "jecis"}},
-    serums = {set = {"analeptic", "stimulant", "euphoric", "calmative", "carminative", "nervine", "refrigerative", "apocroustic"}},
-    tinctures = {set = {"demulcent", "antispasmadic", "sudorific"}},
-    cleans = 0,
-  },
-  living = {
-    set = {"elixirs", "salves"},
-    elixirs = {set = {"health", "mana", "levitation",  "immunity", "venom", "speed", "frost"}},
-    salves = {set = {"mending", "restoration", "epidermal", "caloric", "mass"}},
-  },
-  empties = 0,
-  decaySoon = {},
-  venoms = {set = {"xentio", "oleander", "eurypteria", "kalmia", "strophanthus", "digitalis", "digitalis", 
-                   "darkshade", "curare", "epteth", "epseth", "prefarar", "monkshood", "euphoria", "colocasia", 
-                   "oculus", "hepafarin", "jalk", "vernalius", "epseth", "larkspur", "slike", "araceae", 
-                   "voyria", "delphinium", "vardrax", "loki", "aconite", "selarnia", "gecko", "scytherus"}
-  },
-  cache = {},
-}
 
 aliases.elixlist = {
   {pattern = "^els$", handler = function(i,p) doElixlistCheck() end},
@@ -49,6 +9,7 @@ aliases.elixlist = {
 empties = {}
 cleans = {}
 decaySoon = {}
+elsSep = C.b .. "------------------------------------------------------------------" .. C.x
 
 triggers.elixlistTriggers = {
   {pattern = "^(%w-)(%d+)%s+([%w ]-)%s%s%s*(%d+)%s+(%d+)$", handler = function(p) addAsElixir(p) end},
@@ -127,9 +88,6 @@ function cacheHandler(p)
 end
 
 function doElixlistCheck()
-  -- echo("\nCONSTRUCTION IN PROGRESS. DO NOT USE.")
-  -- return;
-
   elixlistCheck = true
   resetCuratives()
   send("config pagelength 250")
@@ -174,11 +132,10 @@ function setupels()
   send("more")
   send("more")
   send("bandagelist")
+  send("pipelist")
   send("more")
   send("more")
 end
-
-elsSep = C.b .. "------------------------------------------------------------------" .. C.x
 
 function firstToUpper(str)
     return (str:gsub("^%l", string.upper))

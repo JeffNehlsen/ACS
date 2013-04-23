@@ -69,7 +69,7 @@ end
 -- It will also have a switch to turn it on and off. Add that ASAP.
 attemptingguard = false
 function doParry()
-  if guard ~= toguard and canParry and not attemptingguard and balances:check("balance") and balances:check("equilibrium") and not stunned and
+  if guard ~= toguard and canParry and not attemptingguard and balances:check({"balance", "equilibrium"}) and not stunned and
     not unconscious and not asleep and not hasAffliction("paralysis") and not entangled then
     attemptingguard = true
     add_timer( 1, function() attemptingguard = false end)
