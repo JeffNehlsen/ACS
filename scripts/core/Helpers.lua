@@ -1,5 +1,6 @@
 -- Constants
 skillranks = {unknown = 0, inept = 1, novice = 2, apprentice = 3, capable = 4, adept = 5, skilled = 6, gifted = 7, expert = 8, virtuoso = 9, fabled = 10, mythical = 11, transcendent = 12}
+baleq = {"balance", "equilibrium"}
 
 
 -- Printing helpers.

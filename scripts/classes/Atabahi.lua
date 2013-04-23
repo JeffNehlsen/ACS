@@ -205,7 +205,26 @@ triggers.attackTriggers = {
   {pattern = "^Seeing (%w+) prey helpless, (%w+) grabs the inner thigh of (%w+) within", handler = function(p) enemyJawlocked(p) end},
   {pattern = "pinning (%w+) to the ground.$", handler = function(p) killLine() end},
 
+  --- Lycan Form
+  {pattern = "A feral sneer passes your lips as you lapse from concentrating on your (%w+) self, and allow your", handler = function(p) Lycan() end},
+  {pattern = "Centering your wild mind, civility floods your thoughts. Gasping in pain, your form contorts and", handler = function(p) noLycan() end},
 }
+
+function Lycan(p)
+  lycanthrope = true
+end
+
+function noLycan(p)
+  lycanthrope = false
+end
+
+function unLycaned()
+  defenses:take("lycanthrope")
+  defenses:take("thickhide")
+  defenses:take("thickfur")
+  defenses:take("enduranced")
+  defenses:take("heatsight")
+end
 
 -- Howling
 function testHowling()

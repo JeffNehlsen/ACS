@@ -104,6 +104,12 @@ triggers.attackTriggers = {
              "as a whispered mantra escapes from your lips. Feeling your powers well within the trance, you open " ..
              "your eyes to (%w+), streams of sand issues forth from the ground, merging with his every limb and " .. 
              "infusing them with your will.$", handler = function(p) sandcurseHandler(p) end},
+
+   --- Earthen form. This is special.  Need a pause to put up and take down.
+  {pattern = "You kneel, and place your hands upon the earth beneath you. As if on command", handler = function(p) stopHeal() end},
+  {pattern = "It takes several painstaking moments for the mass to settle upon every part of", handler = function(p) startHeal() end},
+  {pattern = "You kneel down and release your hold upon your earthen form. Within moments the", handler = function(p) stopHeal() end},
+  {pattern = "Within moments the last of the earth has seperated from your body, leaving you", handler = function(p) startHeal() end},
 }
 
 function doRockCrush(i,p)

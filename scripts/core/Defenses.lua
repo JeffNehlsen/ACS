@@ -17,26 +17,10 @@ triggers.defenseTriggers = {
   {pattern = "^Your ([a-zA-Z_]+) defence has been stripped%.$", handler = function(p) defStripHandler(p) end},
 
   {pattern = "^You have the following active defences:$", handler = function(p) defReset() end},
-  {pattern = "You feel incredibly tired suddenly, and fall asleep immediately.", handler = function(p) defRemove("insomnia") send("wake") end},
+  {pattern = "You feel incredibly tired suddenly, and fall asleep immediately.", handler = function(p) send("wake") end},
 
-  --- Earthen form. This is special.  Need a pause to put up and take down.
-  {pattern = "You kneel, and place your hands upon the earth beneath you. As if on command", handler = function(p) stopHeal() end},
-  {pattern = "It takes several painstaking moments for the mass to settle upon every part of", handler = function(p) startHeal() end},
-  {pattern = "You kneel down and release your hold upon your earthen form. Within moments the", handler = function(p) stopHeal() end},
-  {pattern = "Within moments the last of the earth has seperated from your body, leaving you", handler = function(p) startHeal() end},
 
-  --- Lycan Form
-  {pattern = "A feral sneer passes your lips as you lapse from concentrating on your (%w+) self, and allow your", handler = function(p) Lycan() end},
-  {pattern = "Centering your wild mind, civility floods your thoughts. Gasping in pain, your form contorts and", handler = function(p) noLycan() end},
 }
-
-function Lycan(p)
-  lycanthrope = true
-end
-
-function noLycan(p)
-  lycanthrope = false
-end
 
 function defAddHandler(p)
   local def = mb.line:match(p)
@@ -50,7 +34,7 @@ function defStripHandler(p)
 end
 
 function defReset()
--- This is where I'll reset all defenses when you check the DEF screen.
+-- Resets defenses when the DEF screen is shown
   defenses:reset()
   massed = false
   rebounded = false
@@ -88,21 +72,6 @@ function setParry(parry)
   echo(C.B .. "[" .. C.R .. "Setting parry to " .. C.G .. parry .. C.B .. "]" .. C.x)
   show_prompt()
 end
-
-function unLycaned()
-  defenses:take("lycanthrope")
-  defenses:take("thickhide")
-  defenses:take("thickfur")
-  defenses:take("enduranced")
-  defenses:take("heatsight")
-end
-
-
-----------------
--- NEW SYSTEM --
-----------------
--- Shortcut for a normal balance requirement.
-baleq = {"balance", "equilibrium"}
 
 -- Defenses table.
 -- Syntax can be drawn from examples below.
