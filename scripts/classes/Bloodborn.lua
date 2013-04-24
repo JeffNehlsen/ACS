@@ -10,19 +10,30 @@ aliases.classAliases = {
 --  {pattern = "^whistle$", handler = function(i,p) houndWhistle(i,p) end},
 --  {pattern = "^whistle (%w+)$", handler = function(i,p) houndWhistle(i,p) end},
 --  {pattern = "^hinfo$", handler = function(i,p) houndInfo() end},
+  {pattern = "^coll$", handler = function(i,p) hCollect() end},
+  {pattern = "^ps$", handler = function(i,p) PaintScythe() end},
+  {pattern = "^clcol$", handler = function(i,p) BloodCollect() end},
 }
 
 aliases.attackAliases = {
   {pattern = "^ar$", handler = function(i,p) cFrenzy() end},
   {pattern = "^fl$", handler = function(i,p) cFling() end},
 
-  {pattern = "^eld$", handler = function(i,p) hInvoke(eldritch) end},
-  {pattern = "^shso$", handler = function(i,p) hInvoke(shiftsoul) end},
-  {pattern = "^coll$", handler = function(i,p) hCollect() end},
+  {pattern = "^eld$", handler = function(i,p) hInvoke("eldritch") end},
+  {pattern = "^shso$", handler = function(i,p) hInvoke("shiftsoul") end},
+  {pattern = "^lr$", handler = function(i,p) hInvoke("resonance") end},
+  {pattern = "^ashso$", handler = function(i,p) send("activate shiftsoul") end},
 
   {pattern = "^kis$", handler = function(i,p) hKiss() end}, 
   {pattern = "^bath$", handler = function(i,p) hBath() end}, 
 }
+
+triggers.attackTriggers = {
+  --{pattern = "^$", handler = function(p)  end},
+  {pattern = "You attempt to flee to your coffin.", handler = function(p) stopHeal() end},
+--  {pattern = "The ominous silence lifts as your concentration is broken.$", handler = function(p) startHeal() end},
+}
+
 
 -- TODO: Weapon swing triggers for afflictions
 -- TODO: Soul tracking triggers
@@ -39,13 +50,22 @@ aliases.attackAliases = {
 
 --Class
 --Attack
---function wHammer()
---  doWield(warhammer)
---end
+function wScythe()
+  doWield(scythe)
+end
 
---function wBardiche()
---  doWield(bardiche)
---end
+function wAthame()
+  doWield(athame)
+end
+
+function PaintScythe() 
+  send("paint runes on scythe with blood of " .. target)
+end
+
+function BloodCollect()
+  cClaw()
+  hCollect()
+end
 
 -- Corpus
 function cFrenzy() 

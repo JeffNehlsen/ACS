@@ -106,6 +106,10 @@ aliases.attackAliases = {
   {pattern = "^gut$", handler = function(i,p) doAttack("gut", "none") end},
   {pattern = "^lac$", handler = function(i,p) doAttack("lacerate", "none") end},
   {pattern = "^spr$", handler = function(i,p) doAttack("spinalrip", "none") end},
+
+  {pattern = "^tr$", handler = function(i,p) doAttack("groinrip", "none") end},
+  {pattern = "^sr$", handler = function(i,p) doAttack("spleenrip", "none") end},
+  {pattern = "^nr$", handler = function(i,p) doAttack("throatrip", "none") end},
   
   -- Howling
   {pattern = "^nohowl$", handler = function(i,p) stopHowling() end},
@@ -122,6 +126,9 @@ aliases.attackAliases = {
   {pattern = "^bs$", handler = function(i,p) send("boneshaking on") end},
   {pattern = "^bs on$", handler = function(i,p) send("boneshaking on") end},
   {pattern = "^bs off$", handler = function(i,p) send("boneshaking off") end},
+  {pattern = "^att$", handler = function(i,p) send("attuning on") end},
+  {pattern = "^att on$", handler = function(i,p) send("attuning on") end},
+  {pattern = "^att off$", handler = function(i,p) send("attuning off") end},
   {pattern = "^howlingtest$", handler = function(i,p) testHowling() end},
   
   {pattern = "^qu$", handler = function(i,p) send("quarter " .. target) end},
@@ -205,26 +212,7 @@ triggers.attackTriggers = {
   {pattern = "^Seeing (%w+) prey helpless, (%w+) grabs the inner thigh of (%w+) within", handler = function(p) enemyJawlocked(p) end},
   {pattern = "pinning (%w+) to the ground.$", handler = function(p) killLine() end},
 
-  --- Lycan Form
-  {pattern = "A feral sneer passes your lips as you lapse from concentrating on your (%w+) self, and allow your", handler = function(p) Lycan() end},
-  {pattern = "Centering your wild mind, civility floods your thoughts. Gasping in pain, your form contorts and", handler = function(p) noLycan() end},
 }
-
-function Lycan(p)
-  lycanthrope = true
-end
-
-function noLycan(p)
-  lycanthrope = false
-end
-
-function unLycaned()
-  defenses:take("lycanthrope")
-  defenses:take("thickhide")
-  defenses:take("thickfur")
-  defenses:take("enduranced")
-  defenses:take("heatsight")
-end
 
 -- Howling
 function testHowling()

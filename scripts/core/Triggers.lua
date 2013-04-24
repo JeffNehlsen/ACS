@@ -220,76 +220,6 @@ function ateSlice(pattern)
   end
 end
 
-function poulticeApplied()
-  poulticebalance = false
-  applied = true
-  linenumber = 0
-  clearapplied = true
-end
-
-function injected()
-  doinginject = false
-  clearinjected = true
-  tincturebalance = false
-  if injecting then extraLine = extraLine .. C.B .. " (" .. C.g .. "injecting " .. injecting .. C.B .. ")" .. C.x end
-  linenumber = 0
-  checkSyringeCheckTime()
-end
-
-function usedRage()
-   rageBalance = false
-   raged = true
-   extraLine = extraLine .. C.B .. " (" .. C.R .. "RAAAAAAGE" .. C.B .. ")" .. C.x
-end
-
-function rageBalanceReturned()
-  rageBalance = true
-  extraLine = extraLine .. C.B .. " (" .. C.G .. "RAAAAAAGE AGAIN!" .. C.B .. ")" .. C.x
-end
-
-function poulticeBalanceBack()
-  poulticebalance = true
-  if ((applying ~= "jecis to left leg") or (applying ~= "jecis to left arm") or
-    (applying ~= "jecis to right leg") or (applying ~= "jecis to right arm") or
-    (applying ~= "jecis to head") or (applying ~= "jecis to torso") or
-    (applying ~= "jecis")) then
-    -- This is used for curing prerestoration stuff!
-    checkLimbDamageAfterRestoration()
-    applying = nil
-  end
-  applied = false
-end
-
-function touchedTree()
-  treebalance = false
-  touchedtree = true
-  cleartree = true
-end
-
-function usedFocus()
-  focusbalance = false
-  focused = true
-  clearfocus = true
-  extraLine = extraLine .. C.B .. " (" .. C.R .. "focus" .. C.B .. ")" .. C.x
-end
-
-function focusBalanceReturned()
-  focusbalance = true
-  extraLine = extraLine .. C.B .. " (" .. C.G .. "focus" .. C.B .. ")" .. C.x
-end
-
-function recheckLegDamage()
-  if (applying == "orbis to left leg") then
-    afflictionAdd(manll)
-  elseif (applying == "orbis to right leg") then
-    afflictionAdd(manrl)
-  elseif (applying == "orbis to left arm") then
-    afflictionAdd(manla)
-  elseif (applying == "orbis to right arm") then
-    afflictionAdd(manra)
-  end
-end
-
 function enemyDeliveranced(pattern)
   temp = mb.line:match(pattern)
   echo(C.R .. "\n\n\t" .. temp .. " HAS DELIVERANCE UP!!!\n\t\tDO NOT ATTACK!\n\t\tDO NOT ATTACK!\n\t\tDO NOT ATTACK!\n\n" .. C.x)
@@ -312,13 +242,6 @@ function setCurrentGuard(bodyPart)
   guard = bodyPart
   attemptingguard = false
   extraLine =  extraLine .. C.B .. " (" .. C.G .. "Parrying " .. guard .. C.B .. ") " .. C.x
-end
-
-function setDiagParry(bodyPart)
-  if (checkingDef) then
-    guard = bodyPart
-    extraLine = extraLine .. C.B .. " (" .. C.G .. "Parrying " .. guard .. C.B .. ") " .. C.x
-  end
 end
 
 function enemyLegBroken(side)

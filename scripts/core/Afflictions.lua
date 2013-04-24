@@ -546,6 +546,8 @@ function curedHandler(pattern)
     afflictionCure("lovers")
   elseif tmp == "petrified" then
     stunned = false
+  elseif tmp == "blackout" then
+    recklesscheck = true
   else
     afflictionCure(tmp)
   end

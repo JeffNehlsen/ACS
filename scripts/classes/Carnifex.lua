@@ -3,15 +3,48 @@ echo("Carnifex loaded.  Heads will roll.")
 -- TODO: Add in soul gathering system
 
 aliases.classAliases = {
-  {pattern = "^fol$", handler = function(i,p) houndsFollow() end},
+  --{pattern = "^fol$", handler = function(i,p) houndsFollow() end},
+  {pattern = "^fol$", handler = function(i,p) send("order hounds follow me") end},
   {pattern = "^recall$", handler = function(i,p) kennelRecall() end},
-  {pattern = "^whistle$", handler = function(i,p) houndWhistle(i,p) end},
-  {pattern = "^whistle (%w+)$", handler = function(i,p) houndWhistle(i,p) end},
+  {pattern = "^hw$", handler = function(i,p) houndWhistle(i,p) end},
+  {pattern = "^hw (%w+)$", handler = function(i,p) houndWhistle(i,p) end},
   {pattern = "^hinfo$", handler = function(i,p) houndInfo() end},
+
+  {pattern = "^att$", handler = function(i,p) hAttack() end},
+  {pattern = "^pass$", handler = function(i,p) hPassive() end},
+
+  {pattern = "^embeda$", handler = function(i,p) embedArmour() end},
+  {pattern = "^embedb$", handler = function(i,p) embedBody() end},
+  {pattern = "^embedw$", handler = function(i,p) embedWeapon() end},
+  {pattern = "^ssum$", handler = function(i,p) send("soul summon") end},
 }
 
 aliases.attackAliases = {
   {pattern = "^bat$", handler = function(i,p) hBatter() end},
+
+
+  {pattern = "^bf$", handler = function(i,p) bruteforce() end},
+  {pattern = "^hr$", handler = function(i,p) hRage() end},
+  {pattern = "^cha$", handler = function(i,p) setCharge() end},
+
+  {pattern = "^dsl$", handler = function(i,p) dsl() end},
+
+  {pattern = "^spin$", handler = function(i,p) pSpin() end},
+  {pattern = "^hack$", handler = function(i,p) pHack() end},
+  {pattern = "^ar$", handler = function(i,p) pSpin() end},
+  {pattern = "^skew$", handler = function(i,p) pSkewer() end},
+  {pattern = "^wre$", handler = function(i,p) pWrench() end},
+  {pattern = "^xx$", handler = function(i,p) pHook() end},
+
+  {pattern = "^barr$", handler = function(i,p) soulBarrage() end},
+  {pattern = "^sto$", handler = function(i,p) soulTorture() end},
+  {pattern = "^rul$", handler = function(i,p) soulRust(left) end},
+  {pattern = "^rur$", handler = function(i,p) soulRust(right) end},
+  {pattern = "^sta$", handler = function(i,p) soulTaint() end},
+  {pattern = "^spo$", handler = function(i,p) soulPoison() end},
+  {pattern = "^root$", handler = function(i,p) soulRoot() end},
+  {pattern = "^chain$", handler = function(i,p) soulChains() end},
+  {pattern = "^ero$", handler = function(i,p) soulErosion() end},
 }
 
 -- TODO: Weapon swing triggers for afflictions
@@ -19,15 +52,15 @@ aliases.attackAliases = {
 -- TODO: Attack/venom selection. Combos.
 -- TODO: Add everything for warhounds.
 -- TODO: Add in skewer attacks and auto-attack if enemy is skewered.
-triggers.attackTriggers = {
-  {pattern = "^You place your fingers to your mouth and blow a high%-pitched whistle.$", 
-    handler = function(p) addTemporaryTrigger("You have recovered equilibrium.", function(p) houndsFollow() end) end},
+--triggers.attackTriggers = {
+--  {pattern = "^You place your fingers to your mouth and blow a high%-pitched whistle.$", 
+--    handler = function(p) addTemporaryTrigger("You have recovered equilibrium.", function(p) houndsFollow() end) end},
 
-  {pattern = "Raising your soulstone above the corpse of a Spellshaper Archon, you snarl a guttural chant that causes a smoke-grey glyph to appear within the stone. Moments later, an ethereal",
-    handler = function(p) setACSLabel("Got a soul!") end},
-}
+ -- {pattern = "Raising your soulstone above the corpse of a Spellshaper Archon, you snarl a guttural chant that causes a smoke-grey glyph to appear within the stone. Moments later, an ethereal",
+ --   handler = function(p) setACSLabel("Got a soul!") end},
+--}
 
-hounds = hounds or {"Valstivar", "Dakash", "Mordekai"}
+hounds = hounds or {}
 
 function houndInfo()
   for i,v in ipairs(hounds) do send("hound info " .. v) end
@@ -60,6 +93,14 @@ function houndsFollow()
   orderHounds("follow me")
 end
 
+function hAttack() 
+  send("hound initiative " .. target)
+end
+
+function hPassive() 
+  send("hound initiative cease")
+end
+
 function wHammer()
   doWield(warhammer)
 end
@@ -69,8 +110,18 @@ function wBardiche()
 end
 
 -- Deathlore: Soul Attacks
+function embedArmour() 
+  send("soul embed in armor")
+end
+function embedBody() 
+  send("soul embed in body")
+end
+function embedWeapon() 
+  send("soul embed in weapon")
+end
+
 function soulBarrage() 
-  send("sould barrage " .. target)
+  send("soul barrage " .. target)
 end
 
 function soulTorture()
@@ -235,12 +286,24 @@ function pSweep()
   send("pole sweep")
 end
 
+function pSpin()
+  send("pole spinslash " .. target)
+end
+
 function pWhirlwind()
   send("pole whirlwind")
 end
 
 function pHook()
   send("pole hook " .. target)
+end
+
+function pSkewer()
+  send("pole skewer " .. target)
+end
+
+function pWrench()
+  send("pole wrench")
 end
 
 function pDismember(limb)

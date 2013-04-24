@@ -6,7 +6,6 @@ enemyProne = false
 Infuse = {state = 0, DOWN = 0, READY = 1, UP = 2}
 
 class.bashAttack = function()
-  doWield(crozier, tower)
   send("sand shred " .. selectedTarget)
 end
 
@@ -29,7 +28,14 @@ aliases.classAliases = {
 
 aliases.attackAliases = {
   -- {pattern = "^$", handler = function(i,p)  end},
-  {pattern = "^ar$", handler = function(i,p) shred("") end}, 
+  {pattern = "^ham$", handler = function(i,p) eHammer() end}, 
+  {pattern = "^sb$", handler = function(i,p) eSkullBash() end},
+  {pattern = "^ar$", handler = function(i,p) eBatter() end},
+  {pattern = "^guts$", handler = function(i,p) eGutsmash() end},
+  {pattern = "^pulp$", handler = function(i,p) ePulp() end},
+  {pattern = "^over$", handler = function(i,p) eOverhand() end},
+  {pattern = "^ep (%w+)$", handler = function(i,p) ePass(i,p) end},
+
   {pattern = "^aa$", handler = function(i,p) shred("left arm") end},
   {pattern = "^dd$", handler = function(i,p) shred("right arm") end},
   {pattern = "^zz$", handler = function(i,p) shred("left leg") end},
@@ -44,21 +50,21 @@ aliases.attackAliases = {
   {pattern = "^ss?2$", handler = function(i,p) shred2("torso") end},
   {pattern = "^ww?2$", handler = function(i,p) shred2("head") end},
   
-  {pattern = "^ad$", handler = function(i,p) elemental("left arm", "right arm") end},
-  {pattern = "^zc$", handler = function(i,p) elemental("left leg", "right leg") end},
-  {pattern = "^az$", handler = function(i,p) elemental("left arm", "left leg") end},
-  {pattern = "^dc$", handler = function(i,p) elemental("right leg", "right arm") end},
-  {pattern = "^dz$", handler = function(i,p) elemental("right arm", "left leg") end},
-  {pattern = "^ac$", handler = function(i,p) elemental("left arm", "right leg") end},
-  {pattern = "^ws$", handler = function(i,p) elemental("head", "torso") end},
-  {pattern = "^wa$", handler = function(i,p) elemental("left arm", "head") end},
-  {pattern = "^wd$", handler = function(i,p) elemental("right arm", "head") end},
-  {pattern = "^wz$", handler = function(i,p) elemental("left leg", "head") end},
-  {pattern = "^wc$", handler = function(i,p) elemental("right leg", "head") end},
-  {pattern = "^sa$", handler = function(i,p) elemental("left arm", "torso") end},
-  {pattern = "^sd$", handler = function(i,p) elemental("right arm", "torso") end},
-  {pattern = "^sz$", handler = function(i,p) elemental("left leg", "torso") end},
-  {pattern = "^cs$", handler = function(i,p) elemental("right leg", "torso") end},
+--  {pattern = "^ad$", handler = function(i,p) elemental("left arm", "right arm") end},
+--  {pattern = "^zc$", handler = function(i,p) elemental("left leg", "right leg") end},
+--  {pattern = "^az$", handler = function(i,p) elemental("left arm", "left leg") end},
+--  {pattern = "^dc$", handler = function(i,p) elemental("right leg", "right arm") end},
+--  {pattern = "^dz$", handler = function(i,p) elemental("right arm", "left leg") end},
+--  {pattern = "^ac$", handler = function(i,p) elemental("left arm", "right leg") end},
+--  {pattern = "^ws$", handler = function(i,p) elemental("head", "torso") end},
+--  {pattern = "^wa$", handler = function(i,p) elemental("left arm", "head") end},
+--  {pattern = "^wd$", handler = function(i,p) elemental("right arm", "head") end},
+--  {pattern = "^wz$", handler = function(i,p) elemental("left leg", "head") end},
+--  {pattern = "^wc$", handler = function(i,p) elemental("right leg", "head") end},
+--  {pattern = "^sa$", handler = function(i,p) elemental("left arm", "torso") end},
+--  {pattern = "^sd$", handler = function(i,p) elemental("right arm", "torso") end},
+--  {pattern = "^sz$", handler = function(i,p) elemental("left leg", "torso") end},
+--  {pattern = "^cs$", handler = function(i,p) elemental("right leg", "torso") end},
   
   {pattern = "^imp?$", handler = function(i,p) impale() end},
   {pattern = "^sh$", handler = function(i,p) stShatter() end},
@@ -67,12 +73,39 @@ aliases.attackAliases = {
   {pattern = "^coc?$", handler = function(i,p) cocoon() end},
   {pattern = "^coc?2$", handler = function(i,p) cocoon2() end},
   {pattern = "^qu$", handler = function(i,p) quake() end},
-  {pattern = "^inf$", handler = function(i,p) send("infuse") end},
+--  {pattern = "^inf$", handler = function(i,p) send("infuse") end},
   {pattern = "^xx$", handler = function(i,p) doTrip() end},
+
+  {pattern = "^storm$", handler = function(i,p) sand("storm") end},
+  {pattern = "^spike$", handler = function(i,p) sand("spikes") end},
+  {pattern = "^dist$", handler = function(i,p) sand("distort") end},
+  {pattern = "^surge (%w+)$", handler = function(i,p) sSurge(i,p) end},
+  {pattern = "^meld$", handler = function(i,p) sand("meld") end},
+  {pattern = "^pillar$", handler = function(i,p) sand("pillar") end},
+  {pattern = "^conf$", handler = function(i,p) sand("confound") end},
+  {pattern = "^sash (%w+)$", handler = function(i,p) sShield(i,p) end},
+  {pattern = "^sash$", handler = function(i,p) sand("shield") end},
+  {pattern = "^dess$", handler = function(i,p) sand("desiccate") end},
+  {pattern = "^blast$", handler = function(i,p) sand("blast") end},
+
+  {pattern = "^imbs$", handler = function(i,p) send("earth imbue stonefury") end},
+  {pattern = "^imbe$", handler = function(i,p) send("earth imbue erosion") end},
+  {pattern = "^imbw$", handler = function(i,p) send("earth imbue will") end},
+
+  {pattern = "^trap$", handler = function(i,p) sTrap() end},
+  {pattern = "^sm (%w+)$", handler = function(i,p) eSmash(i,p) end},
+  {pattern = "^gra$", handler = function(i,p) eGrasp() end},
+  {pattern = "^sli$", handler = function(i,p) doSlice() end},
+  {pattern = "^scu$", handler = function(i,p) sCurse() end},
   
-  {pattern = "^ch$", handler = function(i,p) send("chasm " .. target) end},
+  {pattern = "^ch$", handler = function(i,p) send("earth chasm " .. target) end},
   
   {pattern = "^gpm (%w+)$", handler = function(i,p) gpush(i,p) end},
+  {pattern = "^gsm (%w+)$", handler = function(i,p) gsmash(i,p) end},
+  {pattern = "^gsm$", handler = function(i,p) send("golem smash") end},
+  {pattern = "^gmo$", handler = function(i,p) golemMoan() end},
+  {pattern = "^gre$", handler = function(i,p) gRecover() end},
+
   {pattern = "^gc$", handler = function(i,p) send("golem call") end},
   {pattern = "^cg$", handler = function(i,p) send("golem call") end},
   {pattern = "^att$", handler = function(i,p) golAttack() end},
@@ -105,11 +138,10 @@ triggers.attackTriggers = {
              "your eyes to (%w+), streams of sand issues forth from the ground, merging with his every limb and " .. 
              "infusing them with your will.$", handler = function(p) sandcurseHandler(p) end},
 
-   --- Earthen form. This is special.  Need a pause to put up and take down.
-  {pattern = "You kneel, and place your hands upon the earth beneath you. As if on command", handler = function(p) stopHeal() end},
-  {pattern = "It takes several painstaking moments for the mass to settle upon every part of", handler = function(p) startHeal() end},
-  {pattern = "You kneel down and release your hold upon your earthen form. Within moments the", handler = function(p) stopHeal() end},
-  {pattern = "Within moments the last of the earth has seperated from your body, leaving you", handler = function(p) startHeal() end},
+  -- Earth Pass
+  {pattern = "You place a hand upon the ground, directing your senses into the earth as you search for a path", handler = function(p) stopHeal() end},
+  {pattern = "As your concentration wavers, your senses quickly flee the earth.$", handler = function(p) startHeal() end},
+  {pattern = "Letting your form meld and become one with the earth, you transport yourself through rock and soil", handler = function(p) startHeal() end},
 }
 
 function doRockCrush(i,p)
@@ -156,92 +188,15 @@ function noeform()
   send("earthenform release")
 end
 
-function flood()
-  sand("flood")
+function ePass(i,p)
+  dir = i:match(p)
+  send("earth pass " .. dir)
 end
 
-function cocoon()
-  doWield(crozier, tower)
-  sandwhip("mind")
-  sand("cocoon " .. target)
-  ghp()
-end
 
-function cocoon2()
-  doWield(crozier, tower)
-  sandwhip("mind")
-  sand("cocoon " .. target)
-  gpound()
-end
-
-function sandwhip(tar)
-  if tar == nil or tar ~= "mind" then tar = "body" end
-  if balances:check("whip") then
-    balances:take("whip")
-    sand("whip " .. target .. " " .. tar)
-  end
-end
-
-function shred(limb)
-  sandwhip("mind")
-  doInfuse()
-  sand("shred " .. target .. " " .. limb)
-  ghp()
-end
-
-function shred2(limb)
-  sandwhip()
-  doInfuse()
-  sand("shred " .. target .. " " .. limb)
-  gpound()
-end
-
-function doInfuse()
-  if Infuse.state == Infuse.READY then send("infuse") end
-end
-
-function elemental(limb1, limb2)
-  doWield(crozier, tower)
-  sandwhip("mind")
-  sand("elemental " .. target .. " " .. limb1 .. " " .. limb2)
-  ghp()
-end
-
-function sand(skill)
-  send("sand " .. skill)
-end
-
-function slice()
-  doWield(crozier, tower)
-  sand("slice " .. target)
-end
-
-function impale()
-  doWield(flail, crozier)
-  sandwhip("mind")
-  send("impale " .. target)
-  ghp()
-end
-
-function stShatter()
-  doWield(flail, crozier)
-  sandwhip("mind")
-  send("shatter stalagmite in " .. target)
-  ghp()
-end
-
-function stShatter2()
-  if enemyImpaled then
-    doWield(flail, crozier)
-    sandwhip("mind")
-    send("shatter stalagmite in " .. target)
-    ghp()
-  elseif enemyProne then
-    impale()
-  else
-    --cocoon2()
-  end
-end
+-------------
+-- Handler --
+-------------
 
 function impaleHandler(p)
   tmp = mb.line:match(p)
@@ -266,15 +221,6 @@ function stalShatterHandler(p)
   actions:add(function() impaleCheck() end, baleq, {"balance"});
 end
 
-function gpoundHandler(p)
-  local tmp = mb.line:match(p)
-  if tmp == target then
-    enemyProne = true
-    actions:add(function() impaleCheck() end, baleq, {"balance"});
-    replace(C.R .. target .. " knocked down!" .. C.x)
-  end
-end
-
 function tripHandler()
   enemyProne = true
   actions:add(function() impaleCheck() end, baleq, {"balance"});
@@ -286,16 +232,173 @@ function impaleCheck()
   end
 end
 
-function quake()
-  doWield(flail, tower)
-  send("quake")
-end
+
+------------------
+-- Combo Skills --
+------------------
 
 function doTrip()
-  sandwhip()
+  sScourge()
   sand("trip " .. target)
-  golemRip()
 end
+
+function doSlice()
+  slice()
+  sWhip()
+end
+
+function shred(limb)
+  sWhip()
+  sand("shred " .. target .. " " .. limb)
+end
+
+function shred2(limb)
+  sWhip()
+  sand("shred " .. target .. " " .. limb)
+end
+
+function elemental(limb1, limb2)
+  sandwhip("mind")
+  sand("elemental " .. target .. " " .. limb1 .. " " .. limb2)
+  ghp()
+end
+
+function cocoon()
+  sWhip()
+  sQuicksand()
+end
+
+function cocoon2()
+  sWhip()
+  sQuicksand()
+end
+
+-----------------
+-- Desiccation --
+-----------------
+
+function flood()
+  sand("flood")
+end
+
+function sTrap()
+  send("sand trap " .. target)
+end
+
+function sCurse()
+  send("sand curse " .. target)
+end
+
+function sandwhip(tar)
+  if tar == nil or tar ~= "mind" then tar = "body" end
+  if balances:check("whip") then
+    balances:take("whip")
+    sand("whip " .. target .. " " .. tar)
+  end
+end
+
+function sQuicksand()
+  send("sand quicksand " .. target)
+end
+
+function sWhip()
+  send("sand whip " .. target)
+end
+
+function sScourge()
+  send("sand scourge " .. target)
+end
+
+function doInfuse()
+  if Infuse.state == Infuse.READY then send("infuse") end
+end
+
+function sand(skill)
+  send("sand " .. skill)
+end
+
+function slice()
+  sand("sand slice " .. target)
+end
+
+function sWave()
+  sand("sand wave " .. target)
+end
+
+function sShield(i,p)
+  dir = i:match(p)
+  send("sand shield " .. dir)
+end
+
+function sSurge(i,p)
+  dir = i:match(p)
+  send("sand surge " .. dir)
+end
+
+function eSmash(i,p)
+  dir = i:match(p)
+  send("smash " .. target .. " " .. dir)
+end
+
+
+
+----------------
+-- Terramancy --
+----------------
+
+function eGrasp()
+  send("earth grasp " .. target)
+end
+
+function eHammer()
+  send("earth hammer " .. target)
+end
+
+function eBatter()
+  send("earth batter " .. target)
+end
+
+function eOverhand()
+  send("earth overhand " .. target)
+end
+
+function ePulp()
+  send("earth pulp " .. target)
+end
+
+function eGutsmash()
+  send("earth gutsmash " .. target)
+end
+
+function eSkullBash()
+  send("earth skullbash " .. target)
+end
+
+function impale()
+  sScourge()
+  send("earth impale " .. target)
+end
+
+function stShatter()
+  sScourge()
+  send("earth stonevice " .. target)
+end
+
+function stShatter2()
+  if enemyImpaled then
+    sScourge()
+    send("earth stonevice " .. target)
+  elseif enemyProne then
+    impale()
+  else
+    --cocoon2()
+  end
+end
+
+function quake()
+  send("earth quake")
+end
+
 
 --------------------------------
 --  GOLEM ANIMATION COMMANDS  --
@@ -308,6 +411,15 @@ function golPassive()
   send("order golem passive")
 end
 
+function gpoundHandler(p)
+  local tmp = mb.line:match(p)
+  if tmp == target then
+    enemyProne = true
+    actions:add(function() impaleCheck() end, baleq, {"balance"});
+    replace(C.R .. target .. " knocked down!" .. C.x)
+  end
+end
+
 function gpush(i,p)
   dir = i:match(p)
   send("golem push " .. target .. " " .. dir)
@@ -318,9 +430,29 @@ function gbarge(i,p)
   send("golem barge " .. dir)
 end
 
+function gsmash(i,p)
+  dir = i:match(p)
+  send("golem smash " .. dir)
+end
+
 function golemRip()
   balances:take("equilibrium")
   send("golem rip " .. target)
+end
+
+function gRecover()
+  balances:take("equilibrium")
+  send("golem recover")
+end
+
+function golemMoan()
+  balances:take("equilibrium")
+  send("golem moan " .. target)
+end
+
+function golemRoar()
+  balances:take("equilibrium")
+  send("golem roar " .. target)
 end
 
 function gslice()
