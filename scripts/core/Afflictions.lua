@@ -254,7 +254,7 @@ triggers.afflictionTriggers = {
 
   {pattern = "^You cannot seem to find a line in your limp peripheral veins.$", handler = function(p) afflictionAdd("limp_veins") end},
   {pattern = "^plodding with slow movement.", handler = function(p) if (diagnosed) then plodding = true end end},
-  
+
   -- Triggers for when a limb QUITE isn't healed, yet.
   {pattern = "^You have restored your left arm as best as you can!$", handler = function(p) afflictionCure("left_arm_mangled") afflictionCure("left_arm_damaged") end},
   {pattern = "^You have restored your right arm as best as you can!$", handler = function(p) afflictionCure("right_arm_mangled") afflictionCure("right_arm_damaged") end},
@@ -271,16 +271,9 @@ triggers.afflictionTriggers = {
   -- Triggers for when you already have the affliction.
   {pattern = "You move sluggishly into action.", handler = function(p) afflictionAdd("aeon") end},
   {pattern = "The curse of the Aeon wears off and you return to the normal timestream.", handler = function(p) send("stick nervine") end},
---   {pattern = "^You drive a clenched fist into your gut.", handler = function(p) diagAfflictionHandler("masochism") end},
   {pattern = "^You are too confused to concentrate properly.", handler = function(p) afflictionAdd("confusion") end},
---   {pattern = "^With the heel of your palm, you smack yourself upside the head.", handler = function(p) diagAfflictionHandler("masochism") end},
---   {pattern = "^You smile with pleasure as you ram your fist into your jaw.", handler = function(p) diagAfflictionHandler("masochism") end},
---   {pattern = "^You use your (%w+) foot to stomp on your *", handler = function(p) diagAfflictionHandler("masochism") end},
   {pattern = "^You cannot contain the convulsions in your stomach any longer", handler = function(p) afflictionAdd("vomiting") end},
   {pattern = "^A wave of utter panic washes over you.", handler = function(p) send("compose") send("compose") end},
-  --{pattern = "You rush about in a state of utter panic.", handler = function(p) send("compose") send("compose") end},
-  --{pattern = "panic runs down your spine as the horror", handler = function(p) send("compose") send("compose") end},
-  --{pattern = "pulses ominously, and irrational fear", handler = function(p) send("compose") send("compose") end},
   {pattern = "^afflicted by fear.$", handler = function(p) send("compose") send("compose") end},
   {pattern = "^You don't feel like doing that right now.$", handler = function(p) afflictionAdd("indifference") end},
   {pattern = "^You cannot press the poultice due to the pangs within your limbs.", handler = function(p) afflictionAdd("sandrot") end},
@@ -296,7 +289,6 @@ triggers.afflictionTriggers = {
   --{pattern = "You feel a bout of the shakes coming on.", handler = function(p) afflictionAdd("epilepsy") end},
   {pattern = "Your limbs begin to jerk and shake uncontrollably, and you begin to foam at the", handler = function(p) afflictionAdd("epilepsy") end},
   {pattern = "^Sunlight shines down upon you mercilessly, rippling across your", handler = function(p) afflictionAdd("sunlight_allergy") end},
-  --{pattern = "^You swoon as you suffer a toxic relapse.", handler = function(p) afflictionAdd("thinblood") end},
   {pattern = "^You feel a bit more alert and awake.", handler = function(p) send("insomnia") end},
   {pattern = "You pound maniacally at %w+'s chest.", handler = function(p) afflictionAdd("berserking") end},
   {pattern = "^You lash out clumsily.$", handler = function(p) afflictionAdd("clumsiness") end},
@@ -306,12 +298,6 @@ triggers.afflictionTriggers = {
   {pattern = "^No! You cannot pierce yourself that deeply for fear of exploding like an", handler = function(p) afflictionAdd("anorexia") end},
   {pattern = "^Both of your legs are shriveled and thus you cannot carry out that action.$", handler = function(p) afflictionAdd("left_leg_broken") afflictionAdd("right_leg_broken") end},
   {pattern = "(%w+) glares at you, and your innards suddenly clench.", handler = function(p) echo("\n\n" .. C.B .. "[" .. C.R .. "YOU HAVE SOME TYPE OF EFFUSION" .. C.B .. "]\n\n" .. C.x) end},
-  -- {pattern = "You cry out in anger as yellow bile oozes from your ears, nose and eyes.", handler = function(p) afflictionAdd("effused_yellowbile") end},
-  -- {pattern = "Pressure wells within you as your skin bloats and turns a sickly yellow.", handler = function(p) afflictionAdd("effused_yellowbile") end},
-  -- {pattern = "^Pain and dispair overcome you as bloodly black bile weeps from you mouth and", handler = function(p) afflictionAdd("effused_blackbile") end},
-  -- {pattern = "^Your skin turns a sickly colour and black bile seeps from your mouth.", handler = function(p) afflictionAdd("effused_blackbile") end},
-  -- {pattern = "^Horrified you see your veins bulge beneath your skin.", handler = function(p) afflictionAdd("effused_blood") end},
-  -- {pattern = "Screaming, your veins burst open spilling precious life blood to the ground.", handler = function(p) afflictionAdd("effused_blood") end},
   {pattern = "^Flames lick around you %- you are on fire!", handler = function(p) afflictionAdd("ablaze") end},
   {pattern = "^You cannot eat that! If you do you will explode!$", handler = function(p) afflictionAdd("anorexia") end},
   {pattern = "^The idea of putting something in your stomach sickens you.$", handler = function(p) afflictionAdd("anorexia") end},
@@ -325,7 +311,6 @@ triggers.afflictionTriggers = {
   {pattern = "^\"The voices! The voices! Get them out of my head!!\" you moan, while holding your", handler = function(p) afflictionAdd("stupidity") end},
   {pattern = "^You wobble back and forth unsure of your balance.", handler = function(p) afflictionAdd("stupidity") end},
   {pattern = "^You are too impatient to focus right now!$", handler = function(p) afflictionAdd("impatience") end},
-  --{pattern = "^The walls close in to suffocate you %- you must escape!$", handler = function(p) afflictionAdd("claustrophobia") end},
   {pattern = "^Clap, clap, clap.$", handler = function(p) afflictionAdd("stupidity") end},
   {pattern = "^You scrunch up your face in an impish way as you snicker, \"Gnehehe!\"$", handler = function(p) afflictionAdd("stupidity") end},
   {pattern = "^You squint one eye and release a guttural \"Arr!\"$", handler = function(p) afflictionAdd("stupidity") end},
@@ -365,7 +350,6 @@ triggers.afflictionTriggers = {
   
   -- Random afflictions
   {pattern = "^(%w+) strikes you with a dark bolt of energy directed through (%w+) mace.$", handler = function(p) randomAffliction() end},
-  --{pattern = "^(%w+)'s eyes meet yours, suddenly locking your gaze to (%w+). (%w+) utters a sharp,", handler = function(p) randomAffliction() end},
   {pattern = "^(%w+) points a ring of pestilence at you.$", handler = function(p) randomAffliction() end},
   {pattern = "^%w+'s .* into a whip of sand and .* sends it to scourge you.$", handler = function(p) randomAffliction() end},
   {pattern = "^A filthy bubonis entity chitters at you.$", handler = function(p) randomAffliction() end},
@@ -472,6 +456,15 @@ triggers.writheTriggers = {
   {pattern = "You begin to writhe furiously to escape your impalement from Lieutenant Gharvoi.", handler = function(p) isWrithing() end},
   {pattern = "You struggle to escape from Lieutenant Gharvoi's impalement.", handler = function(p) isWrithing() end},
 }
+
+function hasAffliction(aff)
+  hasaff = false
+  if not afflictionList then return false end
+  for k,v in pairs(afflictionList) do
+    if v.name:match(aff) then hasaff = true end
+  end
+  return hasaff
+end
 
 function curedEffusion()
   afflictionCure("effused_phlegm")

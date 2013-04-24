@@ -454,14 +454,7 @@ function isCuring(aff)
   return false
 end
 
-function hasAffliction(aff)
-  hasaff = false
-  if not afflictionList then return false end
-  for k,v in pairs(afflictionList) do
-    if v.name:match(aff) then hasaff = true end
-  end
-  return hasaff
-end
+
 
 function cureReset()
   if lastEaten then
