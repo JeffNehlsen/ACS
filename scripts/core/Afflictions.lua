@@ -120,6 +120,7 @@ afflictionTable = {
   needcaloric          = {name = "needcaloric",             cure = "fumeae",               priority = 49,  type = "poultice"},
   torso_mangled        = {name = "torso_mangled",           cure = "jecis to torso",       priority = 47,  type = "poultice", diag = "^has serious internal trauma.$"},
   torso_damaged        = {name = "torso_damaged",           cure = "jecis to torso",       priority = 47,  type = "poultice", diag = "^has mild internal trauma.$"},
+  collapsed_lung       = {name = "collapsed_lung",          cure = "jecis to torso",       priority = 47,  type = "poultice", diag = "^having trouble breathing.$"},
   effused_blood        = {name = "effused_blood",           cure = "oculi",                priority = 45,  type = "poultice", tree = true, diag = "^being effused of blood.$"},
   effused_phlegm       = {name = "effused_phlegm",          cure = "oculi",                priority = 40,  type = "poultice", tree = true, diag = "^being effused of phlegm.$"},
   effused_yellowbile   = {name = "effused_yellowbile",      cure = "oculi",                priority = 35,  type = "poultice", tree = true, diag = "^being effused of yellow bile.$"},
@@ -172,6 +173,7 @@ afflictionTable = {
   -- Misc afflictions that don't have cures or have odd cures
   void                 = {name = "void", type = "void", diag = "^within a shadowy void.$"},
   weakvoid             = {name = "weakvoid", type = "void",  diag = "^within a weakened, shadowy void.$"},
+  stonevice            = {name = "stonevice", type = "stonevice", diag = "^suffering from a petrified gut.$"},
 
   blackout             = {name = "blackout", diag = "^devoid of senses.$"},
   soul_poison          = {name = "soul_poison", diag = "^suffering a poisoned soul.$"},
@@ -362,6 +364,9 @@ triggers.afflictionTriggers = {
   {pattern = "^Your spirit writhes in torment under the glare of the angel.$", handler = function(p) randomAffliction() end},
   {pattern = "^The essence streaming from the floor heals your wounds.", handler = function(p) resetAfflictions() end},
   {pattern = "^%a+ pulls at your emotional well%-being.$", handler = function(p) randomAffliction() end},
+  {pattern = "practiced flick of the wrist, .* sends it to whip your flesh painfully.", handler = function(p) randomAffliction() end},
+  {pattern = "practiced flick of the wrist, you send it to whip yourself.$", handler = function(p) randomAffliction() end},
+  --{pattern = "You touch the tree of life tattoo.$", handler = function(p) afflictionCure("something") end},
 }
 
 triggers.writheTriggers = {
