@@ -99,7 +99,8 @@ triggers.parryTriggers = {
   -- My current parry
   {pattern = {"You begin guarding your (.+) with your paws.",
               "^You will now attempt to parry attacks to your (.+)%.$",
-              "You will attempt to parry attacks to your (.+)%."}, handler = function(p) guardHandler(p) end},
+              "You will attempt to parry attacks to your (.+)%.",
+              "^Moving in, %w+ feints a blow towards your (.+).$"}, handler = function(p) guardHandler(p) end},
 }
 
 function lastAttackHandler(p)
