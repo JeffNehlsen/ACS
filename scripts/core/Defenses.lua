@@ -20,7 +20,18 @@ triggers.defenseTriggers = {
   {pattern = "You feel incredibly tired suddenly, and fall asleep immediately.", handler = function(p) send("wake") end},
 
 
+  --- Lycan Form
+  {pattern = "A feral sneer passes your lips as you lapse from concentrating on your (%w+) self, and allow your", handler = function(p) Lycan() end},
+  {pattern = "Centering your wild mind, civility floods your thoughts. Gasping in pain, your form contorts and", handler = function(p) noLycan() end},
 }
+
+function Lycan()
+  lycanthrope = true
+end
+
+function noLycan()
+  lycanthrope = false
+end
 
 function defAddHandler(p)
   local def = mb.line:match(p)
@@ -73,6 +84,21 @@ function setParry(parry)
   show_prompt()
 end
 
+function unLycaned()
+  defenses:take("lycanthrope")
+  defenses:take("thickhide")
+  defenses:take("thickfur")
+  defenses:take("enduranced")
+  defenses:take("heatsight")
+end
+
+
+----------------
+-- NEW SYSTEM --
+----------------
+-- Shortcut for a normal balance requirement.
+baleq = {"balance", "equilibrium"}
+
 -- Defenses table.
 -- Syntax can be drawn from examples below.
 -- Required elements:
@@ -97,9 +123,12 @@ defenses = {
     able = hasSkill("miasma"),
     triggers = {
       up = {
-        "^You have the miasma of an Azudim.$"
+        "^You have the miasma of an Azudim.$",
+        "^You begin to exude a foul miasma, granting protection upon you and your allies.$",
       },
-      down = {},
+      down = {
+        "^The aura about you fades, leaving you somewhat more vulnerable again.$",
+      },
     },
   },
 
@@ -112,7 +141,7 @@ defenses = {
     able = hasSkill("safeguard"),
     triggers = {
       up = {
-        "^You have the safeguard of an Idreth.$"
+        "^You have the safeguard of an Idreth.$",
       },
       down = {},
     },
@@ -160,7 +189,8 @@ defenses = {
         "^The bone marrow solidifies into a thick, hardened shell.$",
         "^The sileris berry juice hardens into a supple purple shell.$",
         "^You are protected from the fangs of serpents.$",
-        "^You quickly squeeze the marrow from the bone, applying it to your skin.$"
+        "^You quickly squeeze the marrow from the bone, applying it to your skin.$",
+        "^You apply a sileris berry to yourself.$",
       },
       down = {},
     },
@@ -184,12 +214,13 @@ defenses = {
     triggers = {
       up = {
         "^You are feeling extremely energetic.$",
+        "^An instant feeling of excitement and edginess overcomes you.$",
       },
       down = {},
     },
   },
 
-  venom = {
+  venom_resistance = {
     requires = {"healingSerum"},
     takes = {"healingSerum"},
     initDef = true,
@@ -231,6 +262,7 @@ defenses = {
         "^Your sense of time is already heightened.$",
         "^Tiny tremours spread through your body as the world seems to slow down.$",
         "^You stick yourself with a nervine serum.$",
+        "^You take a drink of an elixir of speed from",
       },
       down = {
         "^You feel %w+'s eyes upon you, and feel your sense of time slow to normal.$",
@@ -256,8 +288,11 @@ defenses = {
         "^You are coated in an insulating caloric salve.$",
         "^You are insulated against the harsh cold.$",
         "^A feeling of comfortable warmth spreads over you.$",
+        "^You already have the insulation defense!$",
       },
-      down = {},
+      down = {
+        "^Your insulation defence has been stripped.$",
+      },
     },
   },
 
@@ -277,8 +312,30 @@ defenses = {
     triggers = {
       up = {
         "^You have been invigorated with strength.$",
+        "^You stick yourself with an apocroustic serum.$",
       },
-      down = {},
+      down = {
+        "^You suddenly feel less invigorated.$",
+      },
+    },
+  },
+
+  starburst = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    take = function() send() end,
+    able = true,
+    triggers = {
+      up = {
+        "^Touching the Ulgar Atlas, you are momentarily surrounded by a shimmering nimbus of stars.$",
+        "^You are already protected by the starburst defense.$",
+        "^You walk with the grace of the stars.$",
+      },
+      down = {
+      },
     },
   },
 
@@ -314,7 +371,10 @@ defenses = {
     give = function() send("touch cloak") end,
     able = true,
     triggers = {
-      up = {"^You are surrounded by a cloak of protection.$"},
+      up = {
+        "^You are surrounded by a cloak of protection.$",
+        "^You caress the tattoo and immediately you feel a cloak of protection surround you.$",
+      },
       down = {},
     },
   },
@@ -344,6 +404,8 @@ defenses = {
         "^You are already an insomniac.$",
         "^You suddenly feel incapable of falling asleep.$",
         "^You have insomnia, and cannot easily go to sleep.$",
+        "^You clench your fists, grit your teeth, and banish all possibility of sleep.$",
+        "^Your mind is whirling with thoughts - you cannot settle down to sleep.$",
       },
       down = {
         "^Your mind relaxes and you feel as if you could sleep.$",
@@ -359,9 +421,12 @@ defenses = {
     initDef = true,
     redef = true,
     give = function() send("nightsight") end,
-    able = skills.vision >= skillranks.virtuoso or isClass("atabahi") or hasSkill("nightsight") or isVampire(),
+    able = skills.vision >= skillranks.virtuoso or isClass("atabahi") or hasSkill("nightsight") or isVampire() or isClass("indorani") or isClass("luminary"),
     triggers = {
-      up = {"^Your vision is heightened to see in the dark.$"},
+      up = {
+        "^Your vision is heightened to see in the dark.$",
+        "^Your vision sharpens with light as you gain night sight.$",
+        },
       down = {},
     },
   },
@@ -426,7 +491,25 @@ defenses = {
       },
       down = {},
     },
-  },    
+  },  
+
+  clarity = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("clarity") end,
+    able = skills.survival >= skillranks.virtuoso,
+    triggers = {
+      up = {
+        "^You listen intently for an instant of silence. Finding it, you focus on it and its clarity,",
+        "^You have already filled your mind with clarity.$",
+        "^Your mind is filled with clarity.$",
+      },
+      down = {
+      },
+    },
+  },  
 
   levitation = {
     requires = {"healingSerum"},
@@ -448,9 +531,12 @@ defenses = {
         "^Your body begins to feel lighter and you feel that you are floating slightly.$",
         "^You walk on a small cushion of air.$",
         "^You are already levitating.$",
+        "^Flapping your wings gently, you begin to hover above the ground.$",
+        "^You are already hovering.$",
       },
       down = {
         "^You cease your levitation as the pit attempts to pull you towards it.$",
+        "^Your levitation defence has been stripped.$"
       },
     },
   },
@@ -503,6 +589,25 @@ defenses = {
       },
       down = {
         -- TODO: Get the fitness removal trigger
+      },
+    },
+  },
+
+  gripping = {
+    requires = baleq,
+    takes = {},
+    initDef = true,
+    redef = false,
+    give = function() send("grip") end,
+    take = function() send("relax grip") end,
+    able = isClass("carnifex") or hasSkill("gripping"),
+    triggers = {
+      up = {
+        "^You concentrate on gripping tightly with your hands.$",
+        "^Your hands are gripping your wielded items tightly.$",
+      },
+      down = {
+        "^You relax your grip.$",
       },
     },
   },
@@ -616,6 +721,7 @@ defenses = {
         "^You press a pueri poultice against your skin, rubbing it into your flesh.$",
         "^You press the pueri poultice to your skin and suddenly feel far more dense and heavy than usual.$",
         "^You are extremely heavy and difficult to move.$",
+        "^Your body grows extremely dense and heavy as the mass salve infuses your skin.$",
       },
       down = {
         "^You feel your density return to normal.$",
@@ -669,6 +775,103 @@ defenses = {
     },
   },
 
+  disregarding = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send("config disregarding on") end,
+    take = function() send("config disregarding off") end,
+    able = true,
+    triggers = {
+      up = {
+        "^You will disregard your own personal safety.$",
+        "^You are disregarding your personal safety.$",
+      },
+      down = {
+        "^You have disabled the ability to harm yourself.$",
+      },
+    },
+  },
+
+  divine_speed = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("grace") end,
+    able = true,
+    triggers = {
+      up = {
+        "^You call upon the Divine to make you fleet of foot and feel your prayers answered with a rush of ",
+        "^You have been granted the speed of the Divine.$",
+        "^You are already graced with Divine speed.$",
+      },
+      down = {
+        "^The Divine-granted rush of adrenaline fades.",
+--        "^Your divine_speed defence has been stripped.$",
+      },
+    },
+  },
+
+------------
+-- Eggnog --
+------------
+  eggnog = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send("sip eggnog") end,
+    able = true,
+    triggers = {
+      up = {
+        "^Thick and smooth, the eggnog is enough to send minute shivers through you with its immaculate",
+        "^The eggnog effect is boosting your critical hits.$",
+        "^The eggnog effect is boosting your willpower regeneration.$",
+        "^You finish off your eggnog and lick it clean from your lips.$",
+      },
+      down = {
+      },
+    },
+  },
+
+    eggnog_exp = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send("sip eggnog") end,
+    able = true,
+    triggers = {
+      up = {
+        "^You have gained the eggnog_exp defence.$",
+        "^The eggnog effect is boosting your experience gain.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  eggnog_crits = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send("sip eggnog") end,
+    able = true,
+    triggers = {
+      up = {
+        "^You have gained the eggnog_crits defence.$",
+        "^The eggnog effect is boosting your critical hits.$",
+      },
+      down = {
+      },
+    },
+  },
+
+
+
   -- template = {
   --   requires = {},
   --   takes = {},
@@ -686,6 +889,305 @@ defenses = {
   --     },
   --   },
   -- },
+
+
+-- -- Default and level 3 defenses for atabahi
+-- if isClass("atabahi") then
+--   defenseTable.lycanthrope = {name = "lycanthrope",   putup = "mutate into lycanthrope",   level = 1}
+--   defenseTable.weathering = {name = "weathering",     putup = "weathering",         level = 1}
+--   defenseTable.retractedclaws = {name = "retractedclaws", putup = "retract claws",     level = 3}
+--   defenseTable.enduranced = {name = "enduranced",     putup = "endurance",         level = 4}
+--   defenseTable.metabolized = {name = "metabolized",  putup = "metabolize",         level = 4}
+--   defenseTable.hide = {name = "hide",           putup = "hide",           level = 4}
+--   defenseTable.stealth = {name = "stealth",       putup = "stealth on",         level = 4}
+--   defenseTable.elongatedclaws = {name = "elongatedclaws", putup = "elongate claws",     level = 4}
+--   defenseTable.boneshaking = {name = "boneshaking",   putup = "boneshaking on",      level = 4}
+
+--   if skills.lycanthropy >= skillranks.apprentice then
+--     defenseTable.thickfur = {name = "thickfur",     putup = "thicken fur",         level = 2}
+--   end
+
+--   if skills.lycanthropy >= skillranks.adept then
+--     defenseTable.thickhide = {name = "thickhide",     putup = "thickhide",         level = 2}
+--   end
+
+--   if skills.lycanthropy >= skillranks.mythical then
+--     defenseTable.hardening = {name = "hardening",     putup = "harden bones",       level = 2}
+--   end
+-- end
+
+-- -- Heatsight.  Lycanthrope skill and racial skill.
+-- if (skills.lycanthropy >= skillranks.fabled and isClass("atabahi")) or hasSkill("heatsight") then
+--   defenseTable.heatsight = {name = "heatsight",     putup = "heatsight",         level = 3}
+-- end
+
+-- -- Selfishness. Survival and a racial skill.
+-- if skills.survival >= skillranks.virtuoso or hasSkill("selfishness") then
+--   -- This is set up in
+--   if keepSelfishUp then
+--     defenseTable.selfishness = {name = "selfishness",  putup = "selfishness", level = 2}
+--   else
+--     defenseTable.selfishness = {name = "selfishness",  putup = "selfishness", level = 4}
+--   end
+-- end
+
+-- if isClass("sentinel") then
+--   defenseTable.barkskin = {name = "barkskin", putup = "barkskin", level = 2}
+--   defenseTable.hide = {name = "hide", putup = "hide", level = 4}
+--   defenseTable.vitality = {name = "vitality", putup = "vitality", level = 3}
+--   defenseTable.quickfoot = {name = "quickfoot", putup = "quickfoot on", level = 4}
+--   defenseTable.flexibility = {name = "flexibility", putup = "flexibility", level = 3}
+--   defenseTable.fitness = {name = "fitness", putup = "fitness", level = 3}
+--   defenseTable.resistance = {name = "resistance", putup = "resistance", level = 1}
+-- end
+
+
+
+-- if isClass("carnifex") then
+--   defenseTable.fitness        = {name = "fitness",        putup = "fitness",         level = 3}
+--   defenseTable.gripping       = {name = "gripping",       putup = "grip",            level = 1}
+--   defenseTable.bruteforce     = {name = "bruteforce",     putup = "hammer force",    level = 4}
+--   defenseTable.herculeanrage  = {name = "herculeanrage",  putup = "hammer rage",     level = 4}
+--   defenseTable.soulthirst     = {name = "soulthirst",     putup = "soul thirst",     level = 3}
+--   defenseTable.cloaking       = {name = "cloaking",       putup = "soul shroud",     level = 1}
+--   defenseTable.soulharvest    = {name = "soulharvest",    putup = "soul harvest on", level = 1}
+--   defenseTable.spiritsight    = {name = "spiritsight",    putup = "soul spiritsight", level = 3}
+--   defenseTable.soul_sacrifice = {name = "soul_sacrifice", putup = "soul sacrifice", level = 4}
+--   defenseTable.soul_fortify   = {name = "soul_fortify",   putup = "soul fortify",    level = 3}
+--   defenseTable.alertness      = {name = "alertness",      putup = "soul alertness on", level = 4}
+--   defenseTable.soulmask       = {name = "soulmask",       putup = "soul mask",        level = 3}
+--   defenseTable.reckless       = {name = "reckless",       putup = "reckless",         level = 4}
+--   defenseTable.fetching       = {name = "fetching",       putup = "fetching",         level = 4}
+-- end
+
+-- if isClass("templar") then
+--   defenseTable.fitness        = {name = "fitness",        putup = "fitness",          level = 3}
+--   defenseTable.gripping       = {name = "gripping",       putup = "grip",            level = 1}
+--   defenseTable.might          = {name = "might",          putup = "might",            level = 3}
+--   defenseTable.standfirm      = {name = "standfirm",      putup = "standfirm",        level = 4}
+-- end
+
+-- if isClass("luminary") then
+--   defenseTable.lightshield    = {name = "lightshield",     putup = "lightshield",        level = 4}
+--   defenseTable.resistance     = {name = "resistance",      putup = "resistance",         level = 4}
+--   defenseTable.fitness        = {name = "fitness",         putup = "fitness",            level = 4}
+--   defenseTable.constitution   = {name = "constitution",    putup = "constitution",       level = 4}
+--   defenseTable.toughness      = {name = "toughness",       putup = "toughness",          level = 4}
+--   defenseTable.lightform      = {name = "lightform",       putup = "lightform",          level = 4}
+--   defenseTable.inspiration    = {name = "inspiration",     putup = "inspiration",        level = 4}
+--   defenseTable.damariel_symbol = {name = "damariel_symbol",     putup = "damariel symbol",        level = 4}
+--   defenseTable.auresae_symbol = {name = "auresae_symbol",     putup = "auresae symbol",        level = 4}
+--   defenseTable.dhar_symbol = {name = "dhar_symbol",     putup = "dhar symbol",        level = 4}
+--   defenseTable.haern_symbol = {name = "haern_symbol",     putup = "haern symbol",        level = 4}
+--   defenseTable.lleis_symbol = {name = "lleis_symbol",     putup = "lleis symbol",        level = 4}
+--   defenseTable.rebirth = {name = "rebirth",     putup = "rebirth",        level = 4}
+-- end
+
+  ----------------
+  --  Luminary  --
+  ----------------
+  toughness = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^Your body grows stronger as the blessings dissolve around you.$",
+        "^Your skin is toughened.$",
+      },
+      down = {
+--        "^$",
+      },
+    },
+  },
+
+  resistance = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^Your spirit is strengthened against spiteful magics.$",
+        "^You are resisting magical damage.$",
+      },
+      down = {
+--        "^$",
+      },
+    },
+  },
+
+  constitution = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^Your constitution is strengthened by the bliss that surrounds you.$",
+        "^You are using your superior constitution to prevent nausea.$",
+      },
+      down = {
+--        "^$",
+      },
+    },
+  },
+
+  bliss = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("perform bliss me") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You pour blessings of bliss over yourself, granting visions of the majesty of the divine.$",
+        "^You are experiencing the pleasure of divine bliss.$",
+        "^That person is already experiencing bliss.$",
+        "^pours blessings over you, and divine choirs begin to sing joyously at the edge of your hearing.$",
+      },
+      down = {
+        "^The heavenly visions fade as the bliss leaves you.$",
+      },
+    },
+  },
+
+  inspiration = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("perform inspiration") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You bow your head and, praying to the gods for inspiration, you are soon rewarded as your body is",
+        "^Your limbs are suffused with divinely",
+      },
+      down = {
+        "^You slump slightly as the divinely",
+      },
+    },
+  },
+
+  focus = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("perform focus") end,
+    take = function() send("perform focus") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You bow your head in silent prayer, allowing your devotional energy to anchor you to the ground.$",
+        "^Your Devotional energies are anchoring you to the ground.$",
+      },
+      down = {
+        "^Relaxing your legs, you allow the focused devotional energies anchoring you to the ground to",
+      },
+    },
+  },
+
+  fireblock = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = true,
+    redef = false,
+    give = function() send("evoke fireblock") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You close your eyes briefly, and evoke a brilliant shield around your body.$",
+        "^You are protected from other sources of fire.$",
+      },
+      down = {
+        "^With a wrench, your fire shield is violently snatched from your body.$",
+      },
+    },
+  },
+
+  lightshield = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("evoke lightshield") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You close your eyes briefly, and call forth a protective aura.$",
+        "^You are already protected against light",
+        "^You are protected from light",
+      },
+      down = {
+      },
+    },
+  },
+
+  rebirth = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("evoke rebirth") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^Your soul burns as you ready a portion of your Inner Fire to return you to life.$",
+        "^You have prepared your Inner Spark to bring about your Rebirth.$",
+        "^You are already protected from death.$",
+      },
+      down = {
+        "^Your soul has not recovered sufficiently for you to protect it from death.$",
+        "^You feel your Inner Spark flare up, quickly moving from your inner core until your skin begins to",
+      },
+    },
+  },
+
+  lightform = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("evoke lightform") end,
+    take = function() send("reform") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You strengthen your ties to the light and close your eyes briefly in concentration, only to realize",
+        "^You are a mote of light.$",
+      },
+      down = {
+        "^You will yourself to become corporeal once more.$",
+      },
+    },
+  },
+
+  dhar_symbol = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("evoke rebirth") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^Holding out a buckler, you deftly paint the symbol of Dhar onto its surface. As you finish, the",
+        "^You are aided by the symbol of Dhar.$",
+      },
+      down = {
+      },
+    },
+  },
 
   ---------------
   --  Atabahi  --
@@ -784,7 +1286,7 @@ defenses = {
   stealth = {
     requires = baleq,
     takes = {"balance"},
-    initDef = true,
+    initDef = false,
     redef = false,
     give = function() send("stealth on") end,
     take = function() send("stealth off") end,
@@ -834,9 +1336,11 @@ defenses = {
         "^You change your vocals slightly, curving the sound in an effort to echo your howls.$",
         "^You are already causing your howls to echo.$",
         "^You have the echoing defence.$",
+        "^Your howls are echoing back upon you.$",
       },
       down = {
         "^You cease to echo your howls.$",
+        "^You aren't causing your howls to echo.$",
       },
     },
   },
@@ -857,10 +1361,516 @@ defenses = {
       },
       down = {
         "^Your snarls stop, revealing the full sound of your howls.$",
+        "^You aren't snarling.$",
       },
     },
   },
 
+  attuning = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("attuning on") end,
+    take = function() send("attuning off") end,
+    able = isClass("atabahi"),
+    triggers = {
+      up = {
+        "^You focus on attuning your calls against attack, your subconscious mind protects you from ceasing",
+        "^Your vocal cords are protected by attuning.$",
+        "^You have already attuned your howls.$",
+      },
+      down = {
+        "^Your vocal cords are no longer attuned against attack.$",
+        "^You aren't attuning your howl.$",
+      },
+    },
+  },
+
+  boneshaking = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("boneshaking on") end,
+    take = function() send("boneshaking off") end,
+    able = isClass("atabahi"),
+    triggers = {
+      up = {
+        "^You begin to relax and constrict your throat alternately, letting your howls gain strength as they",
+        "^You are already howling strongly enough to shake the bones of those around you.$",
+        "^Your howls are shaking the bones of your victims.$",
+      },
+      down = {
+        "^Your howls are no longer strong enough to shake the bones of your victims.$",
+      },
+    },
+  },
+
+  endurance = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("endurance") end,
+    able = isClass("atabahi"),
+    triggers = {
+      up = {
+        "^Panting in a peculiar growl, your blood flows with greater intensity in your veins and fills you",
+        "^Your movements are supernaturally fast.$",
+        "^You are already moving at supernatural speed.$",
+      },
+      down = {
+        "^You are no longer moving so quickly.$",
+      },
+    },
+  },
+
+  ----------------
+  --  Carnifex  --
+  ----------------
+
+  shroud = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send("soul shroud") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^You utter a command of power as you lift your soulstone, sending forth an inky-blackness that",
+        "^Your actions are cloaked in secrecy.$",
+      },
+      down = {
+        "^Your shroud dissipates and you return to the realm of perception.$",
+      },
+    },
+  },
+
+  soulthirst = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("soul thirst") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^You close your eyes and summon upon a deep, ravenous hunger, a foul aura coursing through your arms",
+        "^Your weapons thirst for the souls of your enemies.$",
+      },
+      down = {
+        "^You feel your thirst for soul fade from your body.$"
+      },
+    },
+  },
+
+  soulharvest = {
+    requires = baleq,
+    takes = {},
+    initDef = true,
+    redef = false,
+    give = function() send("soul harvest on") end,
+    take = function() send("soul harvest off") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^You will begin to automatically harvest the souls of your victims.$",
+        "^You are harvesting the souls of your victims.$",
+      },
+      down = {
+        "^You will no longer harvest the souls of your victims automatically.$",
+      },
+    },
+  },
+
+  spiritsight = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("soul spiritsight") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^A luminous red haze fills your vision and your awareness heightens greatly.$",
+        "^You are seeking the souls of the hidden.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  soulmask = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("soul mask") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^Dark energy surrounds your soul as you chant harshly to yourself, masking it from prying eyes.$",
+        "^Your soul is swathed in secrecy.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  soul_sacrifice = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("soul sacrifice") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^A deafening roar fills your head and momentarily drowns out all other noise as you harness your",
+        "^Your soul has been sacrificed to improve your next strike.$",
+        "^You have already sacrificed a portion of your soul to strengthen your next blow.$",
+      },
+      down = {
+        "^Unable to maintain your sacrifice, your soul returns to you.$",
+        "^Your attack strikes true with the full force of your sacrificed soul.$",
+      },
+    },
+  },
+
+  soul_substitute = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("soul substitute") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^Taking hold of your soulstone you plunge it into your chest, eliciting a howl of rage as a soul is",
+        "^You will substitute your soul with another upon dying.$",
+        "^You are already preparing to substitute your soul with another.$",
+      },
+      down = {
+        "^As the last of your life force fades, you reach out to the soul trapped within your chest. A$",
+        "^Your soul has not recovered sufficiently for you to protect it from death.$",
+      },
+    },
+  },
+
+  soul_fortify = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("soul fortify") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^You call aloud, willing your soul to strengthen itself, and in turn you positively glow with",
+        "^Your soul has already been fortified.$",
+        "^Your soul has been fortified.$"
+      },
+      down = {
+        "^You feel weaker as the fortification surrounding your soul fades away.$",
+      },
+    },
+  },
+
+  bruteforce = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("hammer force") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^Your muscles bulge with deadly strength as your tighten your grip upon your hammer.$",
+        "^You are striking with great force.$",
+      },
+      down = {
+        "^As your muscles begin to tire, you cease to drive all your force behind your blows.$",
+      },
+    },
+  },
+
+  herculeanrage = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("hammer rage") end,
+    able = isClass("carnifex"),
+    triggers = {
+      up = {
+        "^With a herculean bellow of anger, you allow battle lust to over take you as you fly into a rage.$",
+        "^You have flown into a battle rage.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  fetching = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("hound fetching on") end,
+    take = function() send("hound fetching off") end,
+    able = isClass("carnifex") and skills.warhounds >= skillranks.fabled,
+    triggers = {
+      up = {
+        "^You order your hound to fetch the corpses of those you slay.$",
+        "^Your hound is automatically fetching corpses.$",
+        "^Your hound is already fetching the corpses of your slain.$",
+      },
+      down = {
+        "^Your hound will no longer fetch the corpses of your slain.$",
+      },
+    },
+  },
+
+  ---------------------------
+  --  Indorani / Cabalist  --
+  ---------------------------
+  soulmask = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("soulmask") end,
+    able = isNecro(),
+    triggers = {
+      up = {
+        "^You utter a short charm to mask your soul from prying eyes.$",
+        "^Your soul is swathed in secrecy.$",
+        "^You have already masked your soul.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  shroud = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("shroud") end,
+    take = function() send("unshroud") end,
+    able = isNecro(),
+    triggers = {
+      up = {
+        "^Calling on your dark power, you draw a thick shroud of concealment about yourself to cover your",
+        "^Your actions are cloaked in secrecy.$",
+      },
+      down = {
+        "^Your shroud dissipates and you return to the realm of perception.$",
+      },
+    },
+  },
+
+  gravechill = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("gravechill") end,
+    take = function() send("gravechill") end,
+    able = isNecro(),
+    triggers = {
+      up = {
+        "^The chill of the grave fills your inner core and limbs, waiting to spread through your decays.$",
+        "^The cold of the grave has filled your body.$",
+      },
+      down = {
+        "^You release the chill of the grave to your surroundings, letting your inner core and limbs warm.$",
+      },
+    },
+  },
+
+  vengeance = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("vengeance") end,
+    able = isNecro(),
+    triggers = {
+      up = {
+        "^You swear to yourself that you will wreak vengeance on your slayer.$",
+        "^Don't you think your anger and thirst for revenge is getting out of hand?",
+        "^You have sworn vengeance upon those who would slay you.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  deathaura = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isNecro(),
+    triggers = {
+      up = {
+        "^You let the blackness of your soul pour forth.$",
+        "^You are emanating an aura of death harmful to those around you.$",
+        "^You already possess an aura of death.$",
+      },
+      down = {
+        "^You remove the aura of death from around you.$",
+      },
+    },
+  },
+
+  soulcage = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("soulcage") end,
+    able = isNecro(),
+    triggers = {
+      up = {
+        "^You begin to spin a web of necromantic power about your soul, drawing on your vast reserves of life",
+        "^Your soul is already safe from death.$",
+        "^Your being is protected by the soulcage.$",
+        "^You are already protected from death.$",
+      },
+      down = {
+        "^As you feel the last remnants of strength ebb from your tormented body, you close your eyes and let",
+        "^Your soul has not recovered sufficiently for you to protect it from death.$",
+      },
+    },
+  },
+
+   blackwind = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("blackwind") end,
+    take = function() send("human") end,
+    able = isNecro,
+    triggers = {
+      up = {
+        "^You call upon your dark power, and instantly a black wind descends upon you. In seconds your body",
+        "^As an insubstantial black wind, you are immune to most attacks.$",
+        "^Before you can return to human form, you must possess both balance and equilibrium.$",
+      },
+      down = {
+        "^You concentrate and are once again Azudim.$",
+        "^You are already in Azudim form.$",
+      },
+    },
+  },
+
+  --------------
+  -- Indorani --
+  --------------
+
+  devil = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    take = function() send() end,
+    able = isClass("indorani"),
+    triggers = {
+      up = {
+        "^You fling the card at the ground, and a red, horned Devil rises from the bowels of the earth to say,",
+        "^You have made a deal with the Devil.$",
+      },
+      down = {
+      },
+    },
+  },
+
+  putrefaction = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("putrefaction") end,
+    take = function() send("solidify") end,
+    able = isClass("indorani"),
+    triggers = {
+      up = {
+        "^You concentrate for a moment and your flesh begins to dissolve away, becoming slimy and wet.$",
+        "^You are bathed in the glorious protection of decaying flesh.$",
+        "^You have already melted your flesh. Why do it again?",
+      },
+      down = {
+        "^You concentrate briefly and your flesh is once again solid.$",
+      },
+    },
+  },
+
+  hierophant = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send(tHierophant2()) end,
+    take = function() send() end,
+    able = isClass("indorani"),
+    triggers = {
+      up = {
+        "^You quickly fling a Hierophant tarot card at yourself and feel somewhat protected.$",
+        "^You are protected by the intimidating presence of the Hierophant.$",
+        "^They are already protected by the Hierophant.$",
+      },
+      down = {
+        "^The protection of the Hierophant fades.$",
+      },
+    },
+  },
+
+  chariot = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("board chariot") end,
+    take = function() send("dismount chariot") end,
+    able = isClass("indorani"),
+    triggers = {
+      up = {
+        "^You step aboard the chariot and firmly grasp the reins.$",
+        "^You are riding a charred chariot.$",
+        "^You are already mounted on a charred chariot.$",
+      },
+      down = {
+        "^You step down off of a charred chariot.$",
+        "^Losing your balance, you fall from your steed to the hard ground.$",
+      },
+    },
+  },
+
+  sun = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send(tSun()) end,
+    able = isClass("indorani"),
+    triggers = {
+      up = {
+        "^You lazily toss the card to the ground, and a thin veil of golden motes rise up to cover your skin.$",
+        "^You are protected from chill by the Sun tarot.$",
+      },
+      down = {
+        "^The effects of your Sun tarot have worn away.$",
+      },
+    },
+  },
 
   ---------------
   --  Vampire  --
@@ -901,6 +1911,7 @@ defenses = {
       },
       down = {
         "^You cease masquerading.$",
+        "^You are not currently masquerading.$",
       },
     },
   },
@@ -1016,6 +2027,29 @@ defenses = {
     },
   },
 
+  celerity = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("celerity") end,
+    able = isVampire(),
+    triggers = {
+      up = {
+        "^You draw upon your blood pool and send the mystical fluid racing through your entire body. You feel",
+        "^Your movements are supernaturally fast.$",
+        "^You are already moving at supernatural speed.$",
+      },
+      down = {
+      },
+    },
+  },
+
+
+  -----------------
+  --  Bloodborn  --
+  -----------------
+
   scythestance = {
     requires = baleq,
     takes = {"balance"},
@@ -1076,7 +2110,7 @@ defenses = {
   bloodshield = {
     requires = baleq,
     takes = {"equilibrium"},
-    initDef = false,
+    initDef = true,
     redef = false,
     give = function() send("wisp bloodshield on") end,
     take = function() send("wisp bloodshield off") end,
@@ -1166,6 +2200,24 @@ defenses = {
     },
   },
 
+    concentration = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isClass("bloodborn"),
+    triggers = {
+      up = {
+        "^You cringe, forcing your blood to concentrate.$",
+        "^Your blood is concentrated.$",
+      },
+      down = {
+        "^You feel your blood becoming thinner again.$",
+      },
+    },
+  },
+
 
   ----------------
   --  TERADRIM  --
@@ -1177,7 +2229,7 @@ defenses = {
     redef = false,
     give = function() send("earthenform embrace") end,
     take = function() send("earthenform release") end, -- TODO: GET EARTHENFORM TAKE COMMAND
-    able = isClass("teradrim") and skills.earth == skillranks.transcendant,
+    able = isClass("teradrim") and skills.terramancy == skillranks.transcendant,
     triggers = {
       up = {
         "^You have embraced your earthen form.$",
@@ -1189,88 +2241,317 @@ defenses = {
     },
   },
 
-  concealment = {
+  stonebind = {
     requires = baleq,
     takes = {"balance"},
-    initDef = false,
-    redef = false,
-    give = function() doWield(crozier, tower) send("sand concealment") end,
-    able = isClass("teradrim"),
-    triggers = {
-      up = {
-        "^You draw upon the powers of the earth and conceal your presence from detection.$",
-        "^You are veiled.$",
-        "^You are already concealed by the earth's power.$",
-      },
-      down = {},
-    },
-  },
-
-  truesight = {
-    requires = baleq,
-    takes = {"equilibrium"},
     initDef = true,
     redef = false,
-    give = function() doWield(crozier, tower) send("truesight") end,
+    give = function() send("earth stonebind") end,
     able = isClass("teradrim"),
     triggers = {
       up = {
-        "^You focus and your vision expands, allowing you to see as one of the Earthen.$",
-        "^You are utilising the sight of the Earthen.$",
-      },
-      down = {},
-    },
-  },
-
-  stonefeet = {
-    requires = baleq,
-    takes = {"balance"},
-    initDef = false,
-    redef = false,
-    give = function() send("stonefeet") end,
-    able = isClass("teradrim"),
-    triggers = {
-      up = {
-        "^You call to the earth and your feet grow heavy as stone.$",
-        "^Your feet are of dense granite.$",
+        "^You punch your arms into the earth, casting them within a thin layer of supple stone.$",
+        "^Your arms have been bound in stone.$",
+        "^Your arms have already been encased within stone.$",
       },
       down = {
-        "^Your stone feet revert to normal.$",
       },
     },
   },
 
-  sandarmour = {
+  imbue_stonefury = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("earth imbue stonefury") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^The earth around you shudders as you imbue your flail with the fury of the Earthen.$",
+        "^You are focusing energy into your sands to swelter them.$",
+        "^You have already imbued your flail with that!$",
+      },
+      down = {
+      },
+    },
+  },
+
+  imbue_will = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("earth imbue will") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^Faint, incoherent whispers touch your ears as you imbue your flail with the will of the Earthen.$",
+        "^Your flail is imbued with the will of the Earthen.$",
+        "^You have already imbued your flail with that!$",
+      },
+      down = {
+      },
+    },
+  },
+
+  imbue_erosion = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("earth imbue erosion") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^Sand suddenly swirls its way around your flail, imbuing it with the raw force of the desert.$",
+        "^Your flail imbued with the raw force of the desert.$",
+        "^You have already imbued your flail with that!$",
+      },
+      down = {
+      },
+    },
+  },
+
+  ricochet = {
     requires = baleq,
     takes = {"balance"},
     initDef = true,
     redef = false,
-    give = function() doWield(crozier, tower) send("sand armour") end,
-    take = function()  end, --Todo: Get Sandarmour TAKE COMMAND OR FIND OUT IF THERE ISN'T ONE
+    give = function() send("earth ricochet") end,
     able = isClass("teradrim"),
     triggers = {
       up = {
-        "^You will your sands to coat your body before hardening them into a thick armour.$",
-        "^You are protected by a hardened shell of sand.$",
-        "^You are already protected by sand armour."
+        "^You heft your flail as you familiarize itself with its weight and the momentum needed to bounce it",
+        "^You are attempting to bounce your attempts off parried blows.$",
       },
-      down = {},
+      down = {
+      },
     },
   },
 
-  earthsense = {
+  surefooted = {
+    requires = baleq,
+    takes = {"balance"},
+    initDef = false,
+    redef = false,
+    give = function() send("earth surefooted") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^Drawing on your connection with the elemental earth, you feel your feet drawn downward, steadying",
+        "^You are concentrating on maintaining a sure foot.$",
+        "^Your footing is already remarkably steady.$",
+      },
+      down = {
+        "^Your feet feel suddenly lighter, no longer drawn downward towards the earth.$",
+      },
+    },
+  },
+
+  twinsoul = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("golem twinsoul on") end,
+    take = function() send("golem twinsoul off") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^Spectral energy momentarily envelops both you and your golem as you carefully link a portion of your",
+        "^Your soul is entwined around your golem's.$",
+        "^Your soul is already linked to your golem.$",
+      },
+      down = {
+        "^You carefully detach your soul from the golem.$",
+        "^Your soul isn't linked to your golem in the first place.$",
+      },
+    },
+  },
+
+  earth_resonance = {
     requires = baleq,
     takes = {"equilibrium"},
     initDef = true,
     redef = false,
-    give = function() send("earthsense") end,
+    give = function() send("earth resonance") end,
     able = isClass("teradrim"),
     triggers = {
-      up = {"^You are listening for underground movement.$"},
-      down = {},
+      up = {
+        "^You close your eyes and focus on the steady thrum of the earth below you as you bring your soul into",
+        "^Your soul is resonating with the earth.$",
+        "^You are already resonating with the earth.$",
+      },
+      down = {
+      },
     },
   },
 
+  sand_conceal = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("sand conceal on") end,
+    take = function() send("sand conceal off") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^Sand wreathes itself around your feet, softening your footsteps.$",
+        "^Sand is softening your footsteps.$",
+        "^The sand is already concealing your movement.$",
+      },
+      down = {
+        "^The sand will no longer conceal your movement.$",
+        "^The sand wasn't concealing your movement in the first place.$",
+      },
+    },
+  },
+
+  sand_swelter = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("sand swelter on") end,
+    take = function() send("sand swelter off") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^You focus your energy into the area around you, the sands sweltering rapidly in response.$",
+        "^You are focusing your energy into sweltering your sands.$",
+        "^You are already sweltering your sands.$",
+      },
+      down = {
+        "^You cease the sweltering of your sands.$",
+        "^You weren't sweltering your sands in the first place.$",
+      },
+    },
+  },
+
+  entwine = {
+    requires = baleq,
+    takes = {},
+    initDef = true,
+    redef = true,
+    give = function() send("earth entwine") end,
+    able = isClass("teradrim"),
+    triggers = {
+      up = {
+        "^You reaffirm your familiarity with the flail as you test its weight and prepare to entwine its",
+        "^You are already preparing to disarm your opponents.$",
+        "^You are preparing to entwine your flail against hostile weapons.$",
+      },
+      down = {
+      },
+    },
+  },
+
+--  concealment = {
+--    requires = baleq,
+--    takes = {"balance"},
+--    initDef = false,
+--    redef = false,
+--    give = function() doWield(crozier, tower) send("sand concealment") end,
+--    able = isClass("teradrim"),
+--    triggers = {
+--      up = {
+--        "^You draw upon the powers of the earth and conceal your presence from detection.$",
+--        "^You are veiled.$",
+--        "^You are already concealed by the earth's power.$",
+--      },
+--      down = {},
+--    },
+--  },
+
+--  truesight = {
+--    requires = baleq,
+--    takes = {"equilibrium"},
+--    initDef = true,
+--    redef = false,
+--    give = function() doWield(crozier, tower) send("truesight") end,
+--    able = isClass("teradrim"),
+--    triggers = {
+--      up = {
+--        "^You focus and your vision expands, allowing you to see as one of the Earthen.$",
+--        "^You are utilising the sight of the Earthen.$",
+--      },
+--      down = {},
+--    },
+--  },
+
+--  stonefeet = {
+--    requires = baleq,
+--    takes = {"balance"},
+--    initDef = false,
+--    redef = false,
+--    give = function() send("stonefeet") end,
+--    able = isClass("teradrim"),
+--    triggers = {
+--      up = {
+--        "^You call to the earth and your feet grow heavy as stone.$",
+--        "^Your feet are of dense granite.$",
+--      },
+--      down = {
+--        "^Your stone feet revert to normal.$",
+--      },
+--    },
+--  },
+
+--  sandarmour = {
+--    requires = baleq,
+--    takes = {"balance"},
+--    initDef = true,
+--    redef = false,
+--    give = function() doWield(crozier, tower) send("sand armour") end,
+--    take = function()  end, --Todo: Get Sandarmour TAKE COMMAND OR FIND OUT IF THERE ISN'T ONE
+--    able = isClass("teradrim"),
+--    triggers = {
+--      up = {
+--        "^You will your sands to coat your body before hardening them into a thick armour.$",
+--        "^You are protected by a hardened shell of sand.$",
+--        "^You are already protected by sand armour."
+--      },
+--      down = {},
+--    },
+--  },
+
+--  earthsense = {
+--    requires = baleq,
+--    takes = {"equilibrium"},
+--    initDef = true,
+--    redef = false,
+--    give = function() send("earthsense") end,
+--    able = isClass("teradrim"),
+--    triggers = {
+--      up = {"^You are listening for underground movement.$"},
+--      down = {},
+--    },
+--  },
+
+
+  ------------------
+  --  Sciomancer  --
+  ------------------
+  reflection = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isClass("sciomancer"),
+    triggers = {
+      up = {
+        "^The air around you shimmers as a near-translucent reflection forms before you.$",
+        "^You are surrounded by 1 reflections of yourself.$",
+      },
+      down = {
+        "^All your reflections wink out of existence!$",
+        "^One of your reflections has been destroyed! You have 0 left.$",
+      },
+    },
+  },
 
   --------------
   --  SYSSIN  --
