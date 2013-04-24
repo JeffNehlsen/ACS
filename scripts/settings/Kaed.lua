@@ -1,40 +1,14 @@
 -- Settings for the system.
 
--- These are true or false
 canFocus = true
 canTree = true
 canClot = true
 canParry = true
-living = false
+living = true
 artiPipes = false
-
--- If you want selfishness to be kept up.
-keepSelfishUp = false
-
--- If you have an allsignt enchantment, put it here.
--- If not, leave a blank string.
-allsightEnchantment = "earring"
-
--- Experience display - Fixing the xp display in the prompt
--- Options: none, full, percent
-experienceDisplay = "none"
 
 -- Set this to be whatever class you currently are.
 classType = LoadArg or "Syssin"
-
--- Default stick and kidney values.
--- To change values in game, refer to help file
---  ? autosip
-siphealth    = atcp.max_health - 300
-sipmana      = atcp.max_mana - 300
-kidneyhealth = atcp.max_health * 2 / 3
-kidneymana   = atcp.max_mana * 2 / 3
-
--- Default limb to parry
-toguard = toguard or "head"
-
--- Using the Elixlist script, do you want to show venoms?
-showVenoms = true
 
 -- Numbers for specific types of weapons for the wielding system.
 tower     = "banded206321"
@@ -64,7 +38,3 @@ skills = {
 
 -- Skills for endgame and racial skills.
 extraSkills = {"miasma", "reconstitute", "quickassess"}
-
--- Label color for your prompt (H, M, %, etc)
-promptLabelColor = C.x
---promptLabelColor = C.g
