@@ -150,10 +150,16 @@ end
 function doStand()
   if hasAffliction("left_leg_broken") or hasAffliction("right_leg_broken") then brokenleg = true else brokenleg = false end 
   
-  if prompt.prone and balances:check("equilibrium") and balances:check("balance") and not brokenleg and not hasAffliction("paralysis") and
+  if prompt.prone and balances:check("equilibrium") and not brokenleg and not hasAffliction("paralysis") and
     not asleep and not stunned and not unconscious and not standing and
     not entangled then
-    send("stand")
+    if not canKipup then
+      if balances:check("balance") then
+        send("stand")
+      end
+    else
+      send("kipup")
+    end
     standing = true
     add_timer(1, function() standing = false end)
   end
