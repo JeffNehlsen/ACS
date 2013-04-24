@@ -7,6 +7,12 @@ prompt = {
   blackoutPattern = "^:$"
 }
 
+function setupPrompt()
+  send("config affliction_view on")
+  send("config experience_change on")
+  send(prompt.config)
+end
+
 function mb.server_prompt()
   if syringegag then
     syringegag = false

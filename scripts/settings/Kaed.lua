@@ -11,12 +11,9 @@ artiPipes = false
 classType = LoadArg or "Syssin"
 
 -- Numbers for specific types of weapons for the wielding system.
-tower     = "banded206321"
-whip      = "whip233722"
-dirk      = "dirk37544"
-bow       = "darkbow225604"
-crozier   = "crozier115683"
-flail     = "flail216061"
+bolas = "bola"
+
+useBolas = true
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
 -- let Kaed know and he'll add it to the master file.

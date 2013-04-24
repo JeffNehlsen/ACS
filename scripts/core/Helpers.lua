@@ -95,3 +95,8 @@ end
 function sortByPri(a,b)
     return a.priority > b.priority
 end
+
+
+function canUseMana()
+  return not restrictManaUsage or tonumber(prompt.mana) > tonumber(prompt.maxMana) * .75
+end

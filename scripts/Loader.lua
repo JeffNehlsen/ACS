@@ -25,6 +25,8 @@ dofile("scripts/core/Defenses.lua")
 dofile("scripts/core/Wielding.lua")
 dofile("scripts/core/Afflictions.lua")
 
+dofile("scripts/settings/Setup.lua")
+
 dofile("scripts/tracker/LimbTracking.lua")
 dofile("scripts/tracker/EnemyTracking.lua")
 

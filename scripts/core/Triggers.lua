@@ -67,10 +67,6 @@ triggers.balanceTriggers = {
   {pattern = "You have recovered balance on your right arm.", handler = function(p) replaceLineColor(C.R) end},
   {pattern = "You have recovered balance on all limbs.", handler = function(p) replaceLineColor(C.R) end},
   {pattern = "You feel your health and mana replenished.", handler = function(p) plodding = false idiocy = false end},
-  
-  {pattern = "The poultice mashes uselessly against your body.", handler = function(p) cureReset() end},
-  {pattern = "You are no longer blind.", handler = function(p) cureReset() end},
-  {pattern = "You are no longer deaf.", handler = function(p) cureReset() end},
 
   -- Syringes
   {pattern = "You quickly flick a simple syringe, easily mixing the tincture.", handler = function(p) syringeFlicked() end},
@@ -78,8 +74,6 @@ triggers.balanceTriggers = {
   {pattern = "The tinctures in your syringes have settled.", handler = function(p) syringesSettled() end},
   {pattern = "That syringe has already been flicked.", handler = function(p) syringeFlicked() end},
   {pattern = "You quickly flick your supply of syringes, mixing the tinctures within.", handler = function(p) syringeFlicked() end},
-
-  {pattern = "^You messily spread the salve over your body, to no effect.$", handler = function(p) cureReset() end},
 
   {pattern = "^You light your supply of pipes, igniting the herbs within.$", handler = function(p) syringeFlicked() end},
   {pattern = "^Your pipes have gone cold and dark.$", handler = function(p) syringesSettled() end},
@@ -255,43 +249,7 @@ function enemyArmBroken(side)
 end
 
 -- Beheading stuff
-function doBehead()
-  addAction("startBehead()", true)
-  show_prompt()
-end
 
-function startBehead()
-  send("behead " .. target)
-end
-
-function beheadQuit()
-  --addAction("unequipSword()", false)
-end
-
-function doShatter(limb)
-  send("wield " .. hammer)
-  send("shatter " .. limb .. " " .. target)
-end
-
-function shatterQuit()
-  addAction("unequipHammer()")
-end
-
-function equipSword()
-  send("wield " .. sword)
-end
-
-function unequipSword()
-  send("secure " .. sword)
-end
-
-function equipHammer()
-  send("wield " .. hammer)
-end
-
-function unequipHammer()
-  send("secure " .. hammer)
-end
 
 function beheadStart()
   replace(C.R .. "> > > " .. C.R .. "BEHEAD STARTED" .. C.R .. " < < <\n" .. C.R .. "> > > " .. C.R .. "  HEALER OFF  " .. C.R .. " < < <" .. C.x)

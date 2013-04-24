@@ -10,6 +10,16 @@ autoRedefPause = false
 
 aliases.defenses = {
   {pattern = "^defup$", handler = function(i,p) defenses:defup() end},
+
+    -- Parry/guard
+  {pattern = "^zzz$", handler = function(i,p) setParry("left leg") end},
+  {pattern = "^ccc$", handler = function(i,p) setParry("right leg") end},
+  {pattern = "^aaa$", handler = function(i,p) setParry("left arm") end},
+  {pattern = "^ddd$", handler = function(i,p) setParry("right arm") end},
+  {pattern = "^sss$", handler = function(i,p) setParry("torso") end},
+  {pattern = "^www$", handler = function(i,p) setParry("head") end},
+
+  {pattern = "^def$", handler = function(i,p) doDef() end},
 }
 
 triggers.defenseTriggers = {

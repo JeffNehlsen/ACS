@@ -13,6 +13,19 @@ writhed = false
 writhing = false
 afflictionList = {}
 
+aliases.healing = {
+  {pattern = "^24$", handler = function(i,p) doStick("stimulant") end},
+  {pattern = "^23$", handler = function(i,p) doStick("analeptic") end},
+  {pattern = "^diag$", handler = function(i,p) doDiag() end},
+}
+
+triggers.healing = {
+  {pattern = "The poultice mashes uselessly against your body.", handler = function(p) cureReset() end},
+  {pattern = "You are no longer blind.", handler = function(p) cureReset() end},
+  {pattern = "You are no longer deaf.", handler = function(p) cureReset() end},
+  {pattern = "^You messily spread the salve over your body, to no effect.$", handler = function(p) cureReset() end},
+}
+
 
 function doStick(serum)
   balances:take("serum")
