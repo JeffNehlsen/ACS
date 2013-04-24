@@ -4,6 +4,7 @@ prompt = {
   config = "config prompt custom H:@health/@maxhealth M:@mana/@maxmana E:@end/@maxend W:@will/@maxwill B:@blood/@maxblood XP:@xp/@xpmax Essence:@essence Spark:@spark Soul:@soul Devotion:@devotion Kai:@kai [@stats @eqbal]",
   lastHealth = 0,
   lastMana = 0,
+  blackoutPattern = "^:$"
 }
 
 function mb.server_prompt()
@@ -13,12 +14,22 @@ function mb.server_prompt()
     mb.gag_ending = true
     return
   end
+
   prompt:parse(mb.line)
-  prompt:setAdjustDisplay()
-  prompt:build()
+  if not prompt.blackout then
+    prompt:setAdjustDisplay()
+    prompt:build()
+  else
+    prompt:buildBlackout()
+  end
+  
   prompt:checkCureReset()
   prompt:reset()
   prompt:onPrompts()
+end
+
+function prompt:buildBlackout()
+  replace(C.r .. "[H:" .. atcp.health .. " M:" .. atcp.mana .. "]" .. C.x)
 end
 
 function prompt:parse(line)
@@ -26,6 +37,14 @@ function prompt:parse(line)
   local function check(str, char)
     return str:find(char) and true or false
   end
+
+  if line:match(prompt.blackoutPattern) then
+    prompt.blackout = true
+    prompt.health = 1
+    prompt.mana = 1
+    return
+  end
+  prompt.blackout = false
 
   prompt.health,    prompt.maxHealth, 
   prompt.mana,      prompt.maxMana, 
@@ -52,7 +71,7 @@ function prompt:parse(line)
   prompt.equilibrium  = eq  == "e"
   prompt.leftArmBal   = check(armbal, "l")
   prompt.rightArmBal  = check(armbal, "r")
-
+  
   health = tonumber(prompt.health)
   mana = tonumber(prompt.mana)
 end
