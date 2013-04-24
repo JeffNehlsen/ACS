@@ -50,10 +50,11 @@ function prompt:parse(line)
   prompt.xp,        prompt.maxXP, 
   extra, status, eq, bal, armbal = line:match(prompt.pattern)
 
-  prompt.soul         = extra:match("S:(%d+)")
-  prompt.devotion     = extra:match("Dev:(%d+)")
+  prompt.soul         = extra:match("Soul:(%d+)")
+  prompt.devotion     = extra:match("Devotion:(%d+)")
   prompt.spark        = extra:match("Spark:(%d+)")
   prompt.kai          = extra:match("Kai:(%d+)")
+  prompt.essence      = extra:match("Essence:(%d+)")
 
   prompt.cloak        = check(status, "c")
   prompt.silaris      = check(status, "s")
@@ -178,23 +179,30 @@ function prompt:build()
     return ""
   end
   local devotionDisplay = function() 
-    if prompt.devotion and prompt.devotion ~= "" then
+    if prompt.devotion and prompt.devotion ~= "" and isClass("luminary") then
       return promptLabelColor .. "Dev:" .. C.c .. prompt.devotion .. promptLabelColor .. "%"
     end
     return ""
   end
   local sparkDisplay = function()
-    if prompt.spark and prompt.spark ~= "" then
+    if prompt.spark and prompt.spark ~= "" and isClass("luminary") then
       return promptLabelColor .. "Spark:" .. C.r .. prompt.spark .. promptLabelColor .. "%"
     end
     return ""
   end
   local soulDisplay = function()
-    if prompt.soul and prompt.soul ~= "" and isClass("carnifex") then
+    if prompt.soul and prompt.soul ~= "" and isClass("carnifex") or isClass("luminary") or isClass("indorani") then
       return C.c .. "S:" .. prompt.soul .. "%" .. promptLabelColor
     end
     return ""
   end
+  local essenceDisplay = function()
+    if prompt.essence and prompt.essence ~= "" and isClass("indorani") then
+      return C.c .. "Essence:" .. prompt.essence .. "%" .. promptLabelColor
+    end
+    return ""
+  end
+
   local balanceDisplay = check(prompt.equilibrium, C.C .. "e" .. C.x, "-") .. check(prompt.balance, C.C .. "b" .. C.x, "-")
   local armBalDisplay = check(prompt.leftArmBal, C.C .. "l" .. C.x, "-") .. check(prompt.rightArmBal, C.C .. "r" .. C.x, "-")
   local statusDisplay = check(prompt.cloak, "c", "") ..
@@ -218,6 +226,8 @@ function prompt:build()
   if kaiDisplay() ~= "" then add(kaiDisplay, true) end
   if soulDisplay() ~= "" then add(soulDisplay, true) end
   if sparkDisplay() ~= "" then add(sparkDisplay, true) end
+  if essenceDisplay() ~= "" then add(essenceDisplay, true) end
+  if devotionDisplay() ~= "" then add(devotionDisplay, true) end
   if xpDisplay() ~= "" then add(xpDisplay, true) end
   add("[", false)
   add(balanceDisplay,   spaceAfterBalance)
