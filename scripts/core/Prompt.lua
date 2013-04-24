@@ -28,10 +28,6 @@ function mb.server_prompt()
   prompt:onPrompts()
 end
 
-function prompt:buildBlackout()
-  replace(C.r .. "[H:" .. atcp.health .. " M:" .. atcp.mana .. "]" .. C.x)
-end
-
 function prompt:parse(line)
   local extra, status, eq, bal, armbal
   local function check(str, char)
@@ -71,7 +67,7 @@ function prompt:parse(line)
   prompt.equilibrium  = eq  == "e"
   prompt.leftArmBal   = check(armbal, "l")
   prompt.rightArmBal  = check(armbal, "r")
-  
+
   health = tonumber(prompt.health)
   mana = tonumber(prompt.mana)
 end
@@ -234,6 +230,10 @@ function prompt:build()
   add(prompt.adjustdisp, true)
 
   replace(table.concat(promptDisplay))
+end
+
+function prompt:buildBlackout()
+  replace(C.r .. "[H:" .. atcp.health .. " M:" .. atcp.mana .. "]" .. C.x)
 end
 
 function prompt:checkCureReset()
