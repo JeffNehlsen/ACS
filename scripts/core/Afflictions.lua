@@ -271,7 +271,7 @@ triggers.afflictionTriggers = {
   {pattern = "^You regain consciousness with a start.", handler = function(p) removeUncon() end},
   
   -- Triggers for when you already have the affliction.
-  {pattern = "You move sluggishly into action.", handler = function(p) afflictionAdd("aeon") end},
+  -- {pattern = "You move sluggishly into action.", handler = function(p) afflictionAdd("aeon") end},
   {pattern = "The curse of the Aeon wears off and you return to the normal timestream.", handler = function(p) send("stick nervine") end},
   {pattern = "^You are too confused to concentrate properly.", handler = function(p) afflictionAdd("confusion") end},
   {pattern = "^You cannot contain the convulsions in your stomach any longer", handler = function(p) afflictionAdd("vomiting") end},
