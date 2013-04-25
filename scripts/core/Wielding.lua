@@ -244,14 +244,6 @@ function wieldWeapon(weapon)
   end
 end
 
-function unwieldWeapon(weapon)
-  send("secure " .. weapon)
-end
-
-function unwieldTower()
-  send("wear " .. tower)
-end
-
 function singleUnequip(pattern)
   weapon, side = mb.line:match(pattern)
   if side:match("left") then
@@ -267,16 +259,6 @@ function doubleUnequip(pattern)
   leftHand = ""
   rightHand = ""
   unwieldReplace(weapon, "both")
-end
-
-function towerUnequipped()
-  if leftHand == tower then
-    leftHand = ""
-    unwieldReplace(tower, "left")
-  else
-    rightHand = ""
-    unwieldReplace(tower, "right")
-  end
 end
 
 -- Line prettying functions
