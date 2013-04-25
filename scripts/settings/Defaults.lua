@@ -34,7 +34,7 @@ experienceDisplay = "none"
 --  vampire
 --  bloodborn
 --  infernal
-classType = "Syssin"
+classType = LoadArg or "Syssin"
 
 -- Default stick and kidney values.
 -- To change values in game, refer to help file

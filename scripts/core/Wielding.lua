@@ -8,24 +8,13 @@ aliases.wieldingAliases = {
 }
 
 triggers.wieldingTriggers = {
-  {pattern = "^You begin to wield(.*)flail(.*)in your (%w+) hand.$", handler = function(p) flailHandler(p) end},
-  {pattern = "^You begin to wield(.*)crozier(.*)in your (%w+) hand.$", handler = function(p) crozierHandler(p) end},
-  {pattern = "^You begin to wield(.*)shield(.*)in your (%w+) hand.$", handler = function(p) towerHandler(p) end},
-  {pattern = "^You begin to wield(.*)sword(.*)in your (%w+) hand.$", handler = function(p) swordHandler(p) end},
-  {pattern = "^You pull (.*) from your weaponbelt fluidly.$", handler = function(p) gagLine() end},
-  {pattern = "^You begin to wield(.*)dirk(.*)in your (%w+) hand.$", handler = function(p) dirkHandler(p) end},
-  {pattern = "^You begin to wield(.*)whip(.*)in your (%w+) hand.$", handler = function(p) whipHandler(p) end},
-  {pattern = "^You begin to wield(.*)axe(.*)in your (%w+) hand.$", handler = function(p) axeHandler(p) end},
-
   -- Unequipping
   {pattern = "^You deftly flip(.*)shield(.*)over your back, strapping it in place.$", handler = function(p) towerUnequipped() end},
-  {pattern = "^You cease to wield (.*) in your (%w+) hand, securing it", handler = function(p) singleUnequip(p) end},
+  {pattern = "^You cease to wield (.*) in your (%w+) hand, securing it conveniently on your weaponbelt.", handler = function(p) singleUnequip(p) end},
   {pattern = "^You cease to wield (.*) in your hands, securing it", handler = function(p) doubleUnequip(p) end},
-  {pattern = "^on your weaponbelt.$", handler = function(p) gagLine() end},
-  {pattern = "^your weaponbelt.$", handler = function(p) gagLine() end},
-  {pattern = "^conveniently on your weaponbelt.$", handler = function(p) gagLine() end},
   {pattern = "^You swiftly remove the shield from your back.$", handler = function(p) gagLine() end},
   {pattern = "^I don't see what you want to secure.$", handler = function(p) killLine() end},
+
   {pattern = "^You need to be wielding that which you want to secure.$", handler = function(p) killLine() end},
   {pattern = "^You are already wielding (.*) in your hands.$", handler = function(p) killLine() end},
   {pattern = "^You are already wielding (.*) in your (%w+) hand.$", handler = function(p) killLine() end},
@@ -38,38 +27,41 @@ triggers.wieldingTriggers = {
   -- Bow stuff
   {pattern = "^With a single fluid movement, you pull(.*)bow(.*)from your shoulder and wield it.$", handler = function(p) bowWielded() end},
   {pattern = "^You cease to wield(.*)bow(.*).$", handler = function(p) removedBow() end},
-  
-  {pattern = "^You start to wield(.*)dhurive(.*)in your hands.$", handler = function(p) wieldedDhurive() end},
-  
-  {pattern = "You start to wield(.*)warhammer(.*)in your hands.", handler = function(p) wieldedWarhammer() end},
-  {pattern = "You start to wield(.*)battlehammer(.*)in your hands.", handler = function(p) wieldedWarhammer() end},
-  {pattern = "You start to wield(.*)bardiche(.*)in your hands.", handler = function(p) wieldedBardiche() end},
-  {pattern = "You start to wield(.*)halberd(.*)in your hands.", handler = function(p) wieldedHalberd() end},
-  {pattern = "You start to wield(.*)bastard sword in your hands.", handler = function(p) wieldedBastard() end},
 }
 
-function wieldedBardiche()
-  leftHand = bardiche
-  rightHand = bardiche
-  wieldReplace(bardiche, "both")
-end
+function constructWieldingTriggers()
+  if not weapons then
+    ACSEcho("No weapons found. Check your settings")
+    return
+  end
 
-function wieldedBastard()
-  leftHand = bastard
-  rightHand = bastard
-  wieldReplace(bastard, "both")
-end
+  triggers.weapons = {}
 
-function wieldedHalberd()
-  leftHand = halberd
-  rightHand = halberd
-  wieldReplace(halberd, "both")
-end
+  for _, weapon in pairs(weapons) do
+    ACSEcho("Starting: " .. weapon.name)
 
-function wieldedWarhammer()
-  leftHand = warhammer
-  rightHand = warhammer
-  wieldReplace(warhammer, "both")
+    if not weapon.twoHanded then
+
+      addTrigger("weapons", "You begin to wield " .. weapon.name .. " in your (%w+) hand.", function(p)
+          side = mb.line:match(p)
+          if side:match("left") then
+            leftHand = weapon.item
+          else
+            rightHand = weapon.item
+          end
+          wieldReplace(weapon.item, side)
+      end)
+
+    else
+
+      addTrigger("weapons", "You start to wield " .. weapon.name .. " in your hands.", function(p)
+          leftHand = weapon.item
+          rightHand = weapon.item
+          wieldReplace(weapon.item, "both")
+      end)
+
+    end
+  end
 end
 
 function removedBow()
@@ -81,12 +73,6 @@ function bowWielded()
   leftHand = bow
   rightHand = bow
   wieldReplace(bow, "both")
-end
-
-function wieldedDhurive()
-  leftHand = dhurive
-  rightHand = dhurive
-  wieldReplace(dhurive, "both")
 end
 
 function wieldBow()
@@ -231,80 +217,7 @@ function towerUnequipped()
   end
 end
 
-function whipHandler(pattern)
-  _, _, side = mb.line:match(pattern)
-  if side:match("left") then
-    leftHand = whip
-  else
-    rightHand = whip
-  end
-  wieldReplace(whip, side)
-end
-
-function dirkHandler(pattern)
-  _, _, side = mb.line:match(pattern)
-  if side:match("left") then
-    leftHand = dirk
-  else
-    rightHand = dirk
-  end
-  wieldReplace(dirk, side)
-end
-
-function axeHandler(p)
-  _, _, side = mb.line:match(p)
-  if side:match("left") then leftHand = axe else rightHand = axe end
-  wieldReplace(axe, side)
-end
-
-function swordHandler(pattern)
-  _, _, side = mb.line:match(pattern)
-  if side:match("left") then
-    leftHand = sword
-  else
-    rightHand = sword
-  end
-  wieldReplace(sword, side)
-end
-
-function towerHandler(pattern)
-  _, _, side = mb.line:match(pattern)
-  if side:match("left") then
-    leftHand = tower
-  else
-    rightHand = tower
-  end
-  wieldReplace(tower, side)
-end
-
-function warhammerHandler()
-  leftHand = hammer
-  rightHand = hammer
-  wieldReplace(hammer, "both")
-end
-
-function flailHandler(pattern)
-  _, _, side = mb.line:match(pattern)
-  if side:match("left") then
-    leftHand = flail
-  else
-    rightHand = flail
-  end
-  
-  wieldReplace(flail, side)
-end
-
-function crozierHandler(pattern)
-  _, _, side = mb.line:match(pattern)
-  if side:match("left") then
-    leftHand = crozier
-  else
-    rightHand = crozier
-  end
-  
-  wieldReplace(crozier, side)
-end
-
+-- Line prettying functions
 function wieldReplace(weapon, hand)
   extra = hand == "both" and "s" or ""
   setACSLabel("Wielded " .. weapon .. " in " .. hand .. " hand" .. extra .. ".")

@@ -12,7 +12,20 @@ classType = LoadArg or "Syssin"
 
 -- Numbers for specific types of weapons for the wielding system.
 bolas = "bola"
+weapons = {
+  bola = {
+    item = "bola281238",
+    name = "a three%-weight bola"
+  },
+  -- warhammer = {
+  --   item = "warhammer12345",
+  --   name = "a bigass warhammer",
+  --   twoHanded = true
+  -- }
+}
 
+
+living = false
 useBolas = true
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 

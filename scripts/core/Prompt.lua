@@ -178,7 +178,8 @@ function prompt:build()
     end
     return ""
   end
-  kaiDisplay = function()
+
+  local kaiDisplay = function()
     if prompt.kai and prompt.kai ~= "" then
       return promptLabelColor .. "Kai:" .. C.Y .. prompt.kai .. promptLabelColor .. "%" 
     end

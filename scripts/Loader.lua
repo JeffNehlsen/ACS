@@ -53,3 +53,6 @@ if class.setup then
   class.setup()
 end
 
+if weapons then
+	constructWieldingTriggers()
+end

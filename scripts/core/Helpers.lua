@@ -100,3 +100,7 @@ end
 function canUseMana()
   return not restrictManaUsage or tonumber(prompt.mana) > tonumber(prompt.maxMana) * .75
 end
+
+function checkTrigger(string, pattern)
+    echo(tostring(string:match(pattern)))
+end

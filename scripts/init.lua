@@ -3,7 +3,7 @@ function alias_handler(input)
   if input:match("load (%w+)") then
     LoadArg = input:match("load (%w+)")
     init_setup()
-    dofile("aetolia.lua")
+    dofile("scripts/Loader.lua")
     return true
   elseif input:match("load") then
     init_setup()
