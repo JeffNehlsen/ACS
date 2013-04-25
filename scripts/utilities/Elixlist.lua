@@ -209,3 +209,6 @@ end
 function sortByApplicastions(a,b)
   return a.applications > b.applications
 end
+
+-- Init the file by building the curatives table.
+resetCuratives()

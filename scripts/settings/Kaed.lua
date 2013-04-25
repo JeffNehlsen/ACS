@@ -17,6 +17,10 @@ weapons = {
     item = "bola281238",
     name = "a three%-weight bola"
   },
+  shield = {
+    item = "cavalry204920",
+    name = "a cavalry shield"
+  }
   -- warhammer = {
   --   item = "warhammer12345",
   --   name = "a bigass warhammer",

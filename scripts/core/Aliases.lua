@@ -78,9 +78,9 @@ function doShield()
 end
 
 function doWeb()
-  if bolas and useBolas then
+  if weapons and weapon.bola then
     -- TODO: Set this to properly use wielding
-    send("draw bolas")
+    doWield("bola")
     send("throw bolas at " .. target)
   else
     send("touch web " .. target)
