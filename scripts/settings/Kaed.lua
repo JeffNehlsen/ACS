@@ -11,11 +11,10 @@ artiPipes = false
 classType = LoadArg or "Syssin"
 
 -- Numbers for specific types of weapons for the wielding system.
-echo("++++++ BEFORE WEAPONS")
 weapons = {
   dirk = {
     item = "dirk282342",
-    name = " a needle%-pointed dirk"
+    name = "a needle%-pointed dirk"
   },
   bola = {
     item = "bola281238",

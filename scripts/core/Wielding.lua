@@ -9,15 +9,16 @@ aliases.wieldingAliases = {
 
 triggers.wieldingTriggers = {
   -- Unequipping
-  -- {pattern = "^You deftly flip(.*)shield(.*)over your back, strapping it in place.$", handler = function(p) towerUnequipped() end},
   {pattern = "^You cease to wield (.*) in your (%w+) hand, securing it conveniently on your weaponbelt.", handler = function(p) singleUnequip(p) end},
   {pattern = "^You cease to wield (.*) in your hands, securing it", handler = function(p) doubleUnequip(p) end},
+
+  -- Gagging extra lines
   {pattern = "^You swiftly remove the shield from your back.$", handler = function(p) gagLine() end},
   {pattern = "^I don't see what you want to secure.$", handler = function(p) killLine() end},
-
   {pattern = "^You need to be wielding that which you want to secure.$", handler = function(p) killLine() end},
   {pattern = "^You are already wielding (.*) in your hands.$", handler = function(p) killLine() end},
   {pattern = "^You are already wielding (.*) in your (%w+) hand.$", handler = function(p) killLine() end},
+  {pattern = "^You pull .* from your weaponbelt fluidly.$", handler = function(p) gagLine() end},
   
   -- Wielded
   {pattern = "^You are wielding:$", handler = function(p) leftHand = "" rightHand = "" end},
@@ -25,6 +26,7 @@ triggers.wieldingTriggers = {
   {pattern = "^\"(%w+)(%d+)\" (%s+) (.*) %((.*)%)$", handler = function(p) setWielded(p) end},
   
   -- Bow stuff
+  -- TODO: Replace this with dynamic triggers and the weapons table.
   {pattern = "^With a single fluid movement, you pull(.*)bow(.*)from your shoulder and wield it.$", handler = function(p) bowWielded() end},
   {pattern = "^You cease to wield(.*)bow(.*).$", handler = function(p) removedBow() end},
 }
@@ -95,7 +97,8 @@ end
 
 function getWeaponByName(name)
   for _, weapon in pairs(weapons) do
-    if weapon.name == name then
+    -- if weapon.name:find(name) then
+    if string.find(weapon.name, name) then
       return weapon
     end
   end
@@ -103,7 +106,7 @@ end
 
 function getWeaponByItem(item)
   for _, weapon in pairs(weapons) do
-    if weapon.item == item then
+    if string.find(item, weapon.item) then
       return weapon
     end
   end
@@ -226,7 +229,8 @@ function doUnwield(side)
 end
 
 function unwieldSide(side)
-  if (side:find("left") and getWeaponByItem(leftHand).shield) or (side:find("right") and getWeaponByItem(rightHand).shield) then
+  if (side:find("left") and getWeaponByItem(leftHand).shield) or 
+     (side:find("right") and getWeaponByItem(rightHand).shield) then
     send("wear shield")
   else
     send("secure " .. side)
