@@ -9,7 +9,7 @@ aliases.wieldingAliases = {
 
 triggers.wieldingTriggers = {
   -- Unequipping
-  {pattern = "^You deftly flip(.*)shield(.*)over your back, strapping it in place.$", handler = function(p) towerUnequipped() end},
+  -- {pattern = "^You deftly flip(.*)shield(.*)over your back, strapping it in place.$", handler = function(p) towerUnequipped() end},
   {pattern = "^You cease to wield (.*) in your (%w+) hand, securing it conveniently on your weaponbelt.", handler = function(p) singleUnequip(p) end},
   {pattern = "^You cease to wield (.*) in your hands, securing it", handler = function(p) doubleUnequip(p) end},
   {pattern = "^You swiftly remove the shield from your back.$", handler = function(p) gagLine() end},
@@ -38,8 +38,6 @@ function constructWieldingTriggers()
   triggers.weapons = {}
 
   for _, weapon in pairs(weapons) do
-    ACSEcho("Starting: " .. weapon.name)
-
     if not weapon.twoHanded then
 
       addTrigger("weapons", "You begin to wield " .. weapon.name .. " in your (%w+) hand.", function(p)
@@ -60,6 +58,53 @@ function constructWieldingTriggers()
           wieldReplace(weapon.item, "both")
       end)
 
+    end
+
+    if weapon.shield then
+      addTrigger("weapons", "You deftly flip " .. weapon.name .. " over your back, strapping it in place.", function(p) 
+        -- unquippedWeaponByName(weapon.name)
+        if weapon.item == leftHand then
+          leftHand = ""
+          wieldReplace(weapon.item, "left")
+        elseif weapon.item == rightHand then
+          rightHand = ""
+          wieldReplace(weapon.item, "right")
+        end
+      end)
+    end
+  end
+end
+
+function unquippedWeaponByName(name)
+  local weapon = getWeaponByName(name)
+
+  if weapon.name == weaponName then
+    if leftHand == weapon.item then 
+      leftHand = ""
+      unwieldReplace(weapon.item, "left")
+      return
+    end
+
+    if rightHand == weapon.item then
+      rightHand = ""
+      unwieldReplace(weapon.item, "right")
+      return
+    end
+  end
+end
+
+function getWeaponByName(name)
+  for _, weapon in pairs(weapons) do
+    if weapon.name == name then
+      return weapon
+    end
+  end
+end
+
+function getWeaponByItem(item)
+  for _, weapon in pairs(weapons) do
+    if weapon.item == item then
+      return weapon
     end
   end
 end
@@ -103,6 +148,19 @@ function doWield(weapon1, weapon2)
   local w1WieldedLeft, w1WieldedRight, w1WieldedLeft, w2WieldedRight, w1Wielded, w2Wielded
   w1WieldedLeft = false w1WieldedRight = false w2WieldedLeft = false w2WieldedRight = false w1Wielded = false w2Wielded = false
   
+  if not weapons[weapon1] then
+    ACSEcho("Weapon " .. weapon1 .. " not found. Check your settings!")
+    return
+  end
+
+  if not weapons[weapon2] then
+    ACSEcho("Weapon " .. weapon2 .. " not found. Check your settings!")
+    return
+  end
+  weapon1 = weapons[weapon1].item
+  weapon2 = weapons[weapon2].item
+
+
   -- If you are trying to wield a 2h weapon, weapon2 will normally be nil
   if weapon2 == nil then weapon2 = weapon1 end
   
@@ -168,8 +226,8 @@ function doUnwield(side)
 end
 
 function unwieldSide(side)
-  if (side:find("left") and leftHand == tower) or (side:find("right") and rightHand == tower) then
-    unwieldTower() 
+  if (side:find("left") and getWeaponByItem(leftHand).shield) or (side:find("right") and getWeaponByItem(rightHand).shield) then
+    send("wear shield")
   else
     send("secure " .. side)
   end

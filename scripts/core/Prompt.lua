@@ -181,24 +181,24 @@ function prompt:build()
 
   local kaiDisplay = function()
     if prompt.kai and prompt.kai ~= "" then
-      return promptLabelColor .. "Kai:" .. C.Y .. prompt.kai .. promptLabelColor .. "%" 
+      return promptLabelColor .. "K:" .. C.Y .. prompt.kai .. promptLabelColor .. "%" 
     end
     return ""
   end
   local devotionDisplay = function() 
-    if prompt.devotion and prompt.devotion ~= "" and isClass("luminary") then
-      return promptLabelColor .. "Dev:" .. C.c .. prompt.devotion .. promptLabelColor .. "%"
+    if prompt.devotion and prompt.devotion ~= "" then
+      return promptLabelColor .. "D:" .. C.c .. prompt.devotion .. promptLabelColor .. "%"
     end
     return ""
   end
-  local sparkDisplay = function()
-    if prompt.spark and prompt.spark ~= "" and isClass("luminary") then
-      return promptLabelColor .. "Spark:" .. C.r .. prompt.spark .. promptLabelColor .. "%"
+  sparkDisplay = function()
+    if prompt.spark and prompt.spark ~= "" then
+      return promptLabelColor .. "S:" .. C.r .. prompt.spark .. promptLabelColor .. "%"
     end
     return ""
   end
   local soulDisplay = function()
-    if prompt.soul and prompt.soul ~= "" and isClass("carnifex") or isClass("luminary") or isClass("indorani") then
+    if prompt.soul and prompt.soul ~= "" and isClass("carnifex") then
       return C.c .. "S:" .. prompt.soul .. "%" .. promptLabelColor
     end
     return ""

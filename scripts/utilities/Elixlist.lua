@@ -70,6 +70,7 @@ function addVenomToCuratives(name, apps)
 end
 
 function curativesAdd(liveState, type, name, apps)
+  echo(liveState .. " " .. type .. " " .. name)
   if not curatives[liveState][type][name] then curatives[liveState][type][name] = {applications = 0, vials = 0} end
   curatives[liveState][type][name].applications = curatives[liveState][type][name].applications + apps
   curatives[liveState][type][name].vials = curatives[liveState][type][name].vials + 1

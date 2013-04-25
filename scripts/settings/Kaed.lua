@@ -1,5 +1,5 @@
 -- Settings for the system.
-
+echo("LOADING KAED LOLOLOL")
 canFocus = true
 canTree = true
 canClot = true
@@ -11,26 +11,37 @@ artiPipes = false
 classType = LoadArg or "Syssin"
 
 -- Numbers for specific types of weapons for the wielding system.
-bolas = "bola"
+echo("++++++ BEFORE WEAPONS")
 weapons = {
+  dirk = {
+    item = "dirk282342",
+    name = " a needle%-pointed dirk"
+  },
   bola = {
     item = "bola281238",
     name = "a three%-weight bola"
   },
-  shield = {
+  cavalry = {
     item = "cavalry204920",
-    name = "a cavalry shield"
+    name = "a cavalry shield",
+    shield = true
+  },
+  buckler = {
+    item = "buckler204052",
+    name = "a buckler",
+    shield = true
+  },
+  mace = {
+    item = "mace",
+    name = "a spiritual mace"
+  },
+  tower = {
+    item = "tower169295",
+    name = "a tower shield",
+    shield = true
   }
-  -- warhammer = {
-  --   item = "warhammer12345",
-  --   name = "a bigass warhammer",
-  --   twoHanded = true
-  -- }
 }
-
-
-living = false
-useBolas = true
+echo("++++++ AFTER WEAPONS: " .. printtable(weapons))
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
 -- let Kaed know and he'll add it to the master file.
