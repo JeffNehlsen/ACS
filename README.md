@@ -17,6 +17,12 @@ Downloading ACS:
 git clone https://githubUsername:githubPassword@github.com/jnehl701/ACS.git
 - ACS will download. Go into the ACS foloder and boot it up!
 
+Extra Git Setup
+---------------
+You need to do two more commands at this point to set Git up.  This only needs to be done once after installing Git.
+- *git config --global user.email "you@example.com"*
+- *git config --global user.name "your name"*
+
 To udpate:
 ----------
 - In the ACS folder, right click and select "Git Bash"
@@ -37,7 +43,7 @@ git push origin master
 
 Git TL;DR
 ---------
-Git is a fairly complex VCS, but thankfully there are only a handful of commands you really need to know.  I will provide a very brief overview, but more details can be found on git's website or on this blog post: http://www.vogella.com/articles/Git/article.html
+Git is a fairly complex VCS, but thankfully there are only a handful of commands you really need to know.  I will provide a very brief overview, but more details can be found on git's website or on this blog post: *http://www.vogella.com/articles/Git/article.html*
 
 ### git pull
 Git STATUS updates your local files with whatever has been saved on the server.  Run this before you login, after any significant changes, and before you push.  Pull often.  It helps prevent complications later.
