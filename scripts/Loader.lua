@@ -32,7 +32,7 @@ dofile("scripts/tracker/EnemyTracking.lua")
 
 dofile("scripts/utilities/Reanimation.lua")
 dofile("scripts/utilities/Announcer.lua")
-dofile("scripts/utilities/Elixlist.lua")
+-- dofile("scripts/utilities/Elixlist.lua")
 
 dofile("scripts/bashing/Bashing.lua")
 -- dofile("scripts/bashing/NewBashing.lua")
