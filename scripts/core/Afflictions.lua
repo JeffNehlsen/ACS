@@ -232,6 +232,7 @@ function afflictionTablePrepare()
   for k,v in pairs(afflictionTable) do
     if type(v) == "table" and v.diag then
       table.insert(diagnoseTriggers, {pattern = v.diag, handler = function(p) afflictionAdd(v.name) end})
+      table.insert(diagnoseTriggers, {pattern = "^afflicted with " .. v.name .. ".$", handler = function (p) afflictionAdd(v.name) end})
     end
   end
 end
