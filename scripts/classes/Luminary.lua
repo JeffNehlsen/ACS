@@ -114,8 +114,13 @@ angel = {
 }
 
 class = {
-  bashAttack = function(target)
-    send("smite " .. target)
+  bashAttack = function()
+    send("stand")
+    send("wield mace")
+    send("smite " .. selectedTarget)
+    if not hasDefense("inspiration") then
+      send("perform inspiration")
+    end
   end,
   setup = function()
     angel.buildTriggers()

@@ -268,7 +268,7 @@ end
 
 function checkForState()
   debug("checkForState()")
-  if allbalance and equilibrium and not hasAffliction("paralysis") and not hasAffliction("left_leg_broken") and not hasAffliction("right_leg_broken")
+  if balances:check(baleq) not hasAffliction("paralysis") and not hasAffliction("left_leg_broken") and not hasAffliction("right_leg_broken")
     and not hasAffliction("left_arm_broken") and not hasAffliction("right_arm_broken") and not prone and not stunned and not isEntangled() then
 
     debug("Able to do stuff!")
@@ -468,7 +468,7 @@ function selectMobTable(t)
   end
 end
 
-class = {}
+class = class or {}
 if isClass("syssin") then
   class.bashAttack = function()
     --send("wield whip")

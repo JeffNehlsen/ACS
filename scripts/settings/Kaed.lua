@@ -1,5 +1,4 @@
 -- Settings for the system.
-echo("LOADING KAED LOLOLOL")
 canFocus = true
 canTree = true
 canClot = true
@@ -40,7 +39,6 @@ weapons = {
     shield = true
   }
 }
-echo("++++++ AFTER WEAPONS: " .. printtable(weapons))
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
 -- let Kaed know and he'll add it to the master file.

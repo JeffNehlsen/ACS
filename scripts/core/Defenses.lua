@@ -1071,7 +1071,7 @@ defenses = {
   },
 
   inspiration = {
-    requires = baleq,
+    requires = "balance",
     takes = {"equilibrium"},
     initDef = false,
     redef = false,
