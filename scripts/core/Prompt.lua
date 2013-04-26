@@ -205,9 +205,16 @@ function prompt:build()
   end
   local essenceDisplay = function()
     if prompt.essence and prompt.essence ~= "" and isClass("indorani") then
-      return C.c .. "Essence:" .. prompt.essence .. "%" .. promptLabelColor
+      return C.c .. "E:" .. prompt.essence .. "%" .. promptLabelColor
     end
     return ""
+  end
+
+  local angelDisplay = function()
+    if angel and angel.power and angel.max then
+      local perc = math.floor(angel.power / angel.max * 100)
+      return promptLabelColor .. "A:" .. C.W .. perc .. promptLabelColor .. "%"
+    end
   end
 
   local balanceDisplay = check(prompt.equilibrium, C.C .. "e" .. C.x, "-") .. check(prompt.balance, C.C .. "b" .. C.x, "-")
@@ -235,6 +242,7 @@ function prompt:build()
   if sparkDisplay() ~= "" then add(sparkDisplay, true) end
   if essenceDisplay() ~= "" then add(essenceDisplay, true) end
   if devotionDisplay() ~= "" then add(devotionDisplay, true) end
+  if angelDisplay() ~= "" then add(angelDisplay, true) end
   if xpDisplay() ~= "" then add(xpDisplay, true) end
   add("[", false)
   add(balanceDisplay,   spaceAfterBalance)
