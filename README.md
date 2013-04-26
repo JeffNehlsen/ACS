@@ -36,10 +36,10 @@ Getting Started with ACS:
 - Modify your settings file.  Anything int his settings file will 'overwrite' the Defaults.  So, replace what you need to, or add onto it.
 - Open a Git Bash window (right click in the ACS folder and select "Git Bash")
 - Add, commit and push your file:
-git pull
-git add scripts/settings/Yourchar.lua
-git commit -m "Adding settings file for my character"
-git push origin master
+- *git pull*
+- *git add scripts/settings/Yourchar.lua*
+- *git commit -m "Adding settings file for my character"*
+- *git push origin master*
 
 Git TL;DR
 ---------
