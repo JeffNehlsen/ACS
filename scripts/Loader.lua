@@ -30,7 +30,12 @@ dofile("scripts/settings/Setup.lua")
 dofile("scripts/tracker/LimbTracking.lua")
 dofile("scripts/tracker/EnemyTracking.lua")
 
-dofile("scripts/utilities/Reanimation.lua")
+
+if skills and skills.concoctions and skills.concoctions > skillranks.unknown then
+	dofile("scripts/utilities/Concoctions.lua")
+elseif skills and skills.reanimation and skills.reanimation > skillranks.unknown then
+	dofile("scripts/utilities/Reanimation.lua")
+end 
 dofile("scripts/utilities/Announcer.lua")
 -- dofile("scripts/utilities/Elixlist.lua")
 

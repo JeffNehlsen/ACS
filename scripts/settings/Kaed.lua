@@ -56,6 +56,8 @@ skills = {
   subterfuge = skillranks.transcendent,
   venom = skillranks.transcendent,
   hypnosis = skillranks.transcendent,
+
+  concoctions = skillranks.transcendent,
 }
 
 -- Skills for endgame and racial skills.
