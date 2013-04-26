@@ -120,6 +120,10 @@ class = {
     send("smite " .. selectedTarget)
     if not hasDefense("inspiration") then
       send("perform inspiration")
+    elseif tonumber(prompt.health) < 3500 then
+      send("angel drain")
+    elseif tonumber(angel.power) < 4200 then
+      send("angel power")
     end
   end,
   setup = function()
