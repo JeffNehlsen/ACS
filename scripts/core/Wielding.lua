@@ -229,6 +229,8 @@ function doUnwield(side)
 end
 
 function unwieldSide(side)
+  if (side:find("left") and leftHand == "") or (side:find("right") and rightHand == "") then return end
+
   if (side:find("left") and getWeaponByItem(leftHand).shield) or 
      (side:find("right") and getWeaponByItem(rightHand).shield) then
     send("wear shield")
