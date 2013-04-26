@@ -31,11 +31,13 @@ angel = {
     },
     seek = {
       cost = function() return 5 end,
-      -- used = {"Your angel senses %w+ at .*"}
     },
     beckon = {
       cost = function() return 35 end,
-      used = {"You bid your guardian angel to draw your enemies closer."}
+      used = {
+        "You bid your guardian angel to draw your enemies closer.",
+        "You bid your guardian angel to draw %w+ in close."
+      }
     },
     strip = {
       cost = function() return 20 end,
@@ -112,7 +114,7 @@ angel = {
 }
 
 class = {
-  bash = function(target)
+  bashAttack = function(target)
     send("smite " .. target)
   end,
   setup = function()
@@ -126,17 +128,22 @@ class = {
 -- Corporality - 50 power/20 seconds
 
 aliases.classAliases = {
-  {pattern = "^inspir$", handler = function(i,p) send("perform inspiration") end},
-  {pattern = "^bliss (%w+)$", handler = function(i,p) dBliss(i,p) end},
+  {pattern = "^inspire$", handler = function(i,p) send("perform inspiration") end},
+  {pattern = "^bliss (%w+)$", handler = function(i,p) doBliss(i,p) end},
   {pattern = "^pfocus$", handler = function(i,p) send("perform focus") end},
-  {pattern = "^lfor$", handler = function(i,p) send("evoke lightform") end},
+  {pattern = "^lform$", handler = function(i,p) send("evoke lightform") end},
   {pattern = "^inf$", handler = function(i,p) send("evoke infusion") end},
+  {pattern = "^touch$", handler = function(i,p) send("angel touch") end},
+
+  {pattern = "^seek (%w+)$", handler = function(i,p) seekHandler(i,p) end},
 }
 
 aliases.attackAliases = {
   --{pattern = "^$", handler = function(i,p)  end},
   {pattern = "^ar$", handler = function(i,p) sSmite() end},
   {pattern = "^lig$", handler = function(i,p) iLightning() end},
+  {pattern = "^beck(.*)", handler = function(i,p) beckonHandler(i,p) end},
+  {pattern = "^aura (%w+)", handler = function(i,p) auraHandler(i,p) end},
 }
 
 
@@ -147,15 +154,30 @@ triggers.attackTriggers = {
   {pattern = "^You will yourself to become corporeal once more.$", handler = function(p) startHeal() end},
 }
 
-function dBliss(i,p)
-  dir = i:match(p)
-  send("perform bliss " .. dir)
+function seekHandler(i,p)
+  local person = i:match(p)
+  send("angel seek " .. person)
 end
 
-function sSmite()
+function doBliss(i,p)
+  local tar = i:match(p)
+  send("perform bliss " .. tar)
+end
+
+function smite()
   send("smite " .. target)
 end
 
 function iLightning()
   send("evoke lightning " .. target)
+end
+
+function beckonHandler(i,p)
+  local person = i:match(p)
+  send("angel beckon" .. person)
+end
+
+function auraHandler(i,p)
+  local person = i:match(p)
+  send("angel aura " .. person)
 end

@@ -69,7 +69,9 @@ function doHammer()
 end
 
 function doShield()
-  if classType == "teradrim" then
+  if isClass("luminary") then
+    send("angel aura")
+  elseif classType == "teradrim" then
     doWield(crozier, tower)
     send("sand shield")
   else

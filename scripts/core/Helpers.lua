@@ -34,7 +34,7 @@ end
 
 -- Class selection helpers
 function isClass(class)
-    return class == classType
+    return class:lower() == classType:lower()
 end
 
 function isVampire()
