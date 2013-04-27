@@ -1,8 +1,90 @@
 echo("Zealot system loaded. Unbelievers beware!")
 --Attack system aliases, etc.
-target = "target"
 autobbt = false 
+
+
+Tekura = {}
+Tekura.moves = {
+  -- Punches
+  hfpl = {command = "hfp", side = "left"},
+  hfpr = {command = "hfp", side = "right"},
+  ucp =  {command = "ucp", side = "none"},
+
+  -- Stances
+  brs =  {command = "brs", side = "none"},
+
+  -- Kicks
+  snkl = {command = "snk", side = "left"},
+  snkl = {command = "snk", side = "right"},
 }
+
+-- Cannot combo in aeon/retardation
+Tekura.combo = function(att1, att2, att3)
+    if not Tekura.moves[att1] then
+      ACSEcho("Tekura move " .. att1 .. " not found.")
+      return
+    end
+
+    if not Tekura.moves[att2] then
+      ACSEcho("Tekura move " .. att2 .. " not found.")
+      return
+    end
+
+    if not Tekura.moves[att3] then
+      ACSEcho("Tekura move " .. att3 .. " not found.")
+      return
+    end
+
+    local canUseCombo
+    local attacks = {Tekura.moves[att1], Tekura.moves[att2], Tekura.moves[att3]}
+
+    canUseCombo = Tekura.checkForOneSide(attacks) and not (hasAffliction("aeon") or isInRetardationVibe)
+
+    local cmd
+    local side
+    if canUseCombo then
+
+      cmd = "combo " .. target
+      for _, attack in pairs(attacks) do
+        cmd = cmd .. " " .. attack.command
+        if attack.side ~= "none" then
+          side = attack.side
+        end
+      end
+      if side then
+        cmd = cmd .. " " .. side
+      end
+      send(cmd)
+    else
+      for _, attack in pairs(attacks) do
+        cmd = attack.command .. " " .. target
+        if attack.side ~= "none" then
+          cmd = cmd .. " " .. attack.side
+        end
+        send(cmd)
+      end
+    end
+end
+
+function Tekura.checkForOneSide(attacks)
+  local foundSide = nil
+
+  for _, attack in pairs(attacks) do
+    if attack.side ~= "none" then
+      if foundSide == nil then
+        foundSide = attack.side
+      elseif foundSide ~= attack.side then
+        return false
+      end
+    end
+  end
+
+  return true
+end
+
+
+
+
 
 --Hunting Combo
 aliases.classAliases = {
@@ -68,11 +150,11 @@ triggers.attackTriggers = {
   -- Mind command balance track.
   {pattern = "^You feel ready to howl once again.", handler = function(p) howlBalanceBack() end},
 
-function howlBalanceBack()
-  replace(C.g .. "+++" .. C.G .. "HOWLING BALANCE BACK" .. C.g .. "+++" .. C.x)
-  howlingBalance = true
-  doHowl()
-end
+-- function howlBalanceBack()
+--   replace(C.g .. "+++" .. C.G .. "HOWLING BALANCE BACK" .. C.g .. "+++" .. C.x)
+--   howlingBalance = true
+--   doHowl()
+-- end
 }
 
 -- This is Tekura --
@@ -234,3 +316,4 @@ function doCombo(attack1, attack2, attack3)
   if (attack1 == "dragon") then
     send("drs ")
   end
+end
