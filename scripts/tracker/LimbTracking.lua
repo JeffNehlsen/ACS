@@ -157,64 +157,18 @@ triggers.limbTrackingTriggers = {
   -- {pattern = "^(%w+) takes a salve of (%w+) and rubs it on (%w+) (%w+) (%w+).$", handler = function(p) enemySalveDirectlyApplied(p) end},
   -- {pattern = "^(%w+) takes a salve of (%w+) and rubs it on (%w+) (%w+).$", handler = function(p) enemySalveGenerallyApplied(p) end},
   
-  -- Wound checking
-  -- {pattern = "^You take a moment to assess how damaged (%w+)'s limbs are.$", handler = function(p) enemyWoundCheck = "target" end},
-  -- {pattern = "^You take a moment to assess how damaged your limbs are.$", handler = function(p) selfWoundCheck = "me" end},
-  -- {pattern = "^(%w+):(%s+)(%d+)%% %((%w+) bruising%)$", handler = function(p) woundCheck(p) end},
-  -- {pattern = "^(%w+) (%w+):(%s+)(%d+)%% %((%w+) bruising%)$", handler = function(p) woundCheck2(p) end},
   
   -- Prerestore completel stuff
   {pattern = "^You have restored your (.*) as best as you can!$", handler = function(p) preresComplete(p) end},
-  -- {pattern = "^You have restored your left arm as best as you can!$", handler = function(p) preresComplete("left arm") end},
-  -- {pattern = "^You have restored your right leg as best as you can!$", handler = function(p) preresComplete("right leg") end},
-  -- {pattern = "^You have restored your right arm as best as you can!$", handler = function(p) preresComplete("right arm") end},
-  -- {pattern = "^You have restored your torso as best as you can!$", handler = function(p) preresComplete("torso") end},
-  -- {pattern = "^You have restored your head as best as you can!$", handler = function(p) preresComplete("head") end},
   
   -- Attacks on you.
   {pattern = "Your (.+) has taken (.+)%% damage.", handler = function(p) parseLimbDamage(p) end},
   {pattern = "Your (.+) has recovered (.+)%% damage.", handler = function(p) parseLimbDamageCure(p) end},
 
   -- Wounds
-  -- You take a moment to assess how damaged your limbs are.
-  -- You take a moment to assess how damaged Daingean's limbs are.
-  -- Head:      0.00% (no bruising)
-  -- Torso:     0.00% (no bruising)
-  -- Left arm:  0.00% (no bruising)
-  -- Right arm: 0.00% (no bruising)
-  -- Left leg:  22.70% (no bruising)
-  -- Right leg: 0.00% (no bruising)
   {pattern = "^You take a moment to assess how damaged your limbs are.$", handler = function (p) wounds.checking = "my" end},
   {pattern = "^You take a moment to assess how damaged (%w+)'s limbs are.$", handler = function (p) wounds.checking = "enemy" end},
   {pattern = "^(.+):%s+(.+)%% %(no bruising%)$", handler = function (p) woundsCheckHandler(p) end},
-
-
-
-  --- Shred.
-  -- {pattern = "^The sands seem to be focused upon your (.*).$", handler = function(p) enemyShredHandler(p) end},
-  
-  -- {pattern = "^(%w+) slashes at you, eyeing your (.*) hungrily.$", handler = function(p) enemySlashHandler(p) end},
-  
-  -- {pattern = "^(%w+) crouches low and hurtles (%w+) into your midsection. You blink groggily, stunned.$", handler = function(p) addLimbDamageToMe("torso", attacks.bodypunch) end},
-  -- {pattern = "^(%w+) leaps headlong into your spine! You hear a sickening crack and a", handler = function(p) addLimbDamageToMe("torso", attacks.spinalcrack) end},
-  -- {pattern = "^(%w+) pants with exhilaration and tears at your (.*).$", handler = function(p) enemyRendHandler(p) end},
-  -- {pattern = "^(%w+) raises up (%w+) mace to smash your (.*)\.$", handler = function(p) enemyMaceSmashHandler(p) end},
-  -- {pattern = "^(%w+) rears up behind you and there is a sharp pain at the base of your skull!$", handler = function(p) addLimbDamageToMe("head", attacks.skullwhack) end},
-  -- {pattern = "^(%w+) spies an opening and lunges to claw open your jugular!$", handler = function(p) addLimbDamageToMe("head", attacks.jugularclaw) end},
-  -- {pattern = "^(%w+) springs forward lithely and lashes at your (.*)!$", handler = function(p) enemyHamstringHandler(p) end},
-  -- {pattern = "^A snarl twists (%w+)'s lips as (%w+) claws at your (.*).$", handler = function(p) enemyClawHandler(p) end},
-  -- {pattern = "^With careful aim (%w+) smashes (%w+) mace into your (*) before swiftly slamming a buckler into your (*).$", handler = function(p) enemyLuminaryHitsHandler(p) end},
-  
-  --- Axe slash
-  -- {pattern = "^(%w+) slashes into your (.*) with (.*).$", handler = function(p) enemyAxeSlashHandler(p) end},
-  -- {pattern = "^Lightning%-quick, (%w+) jabs your (.*) with (.*).$", handler = function(p) enemyAxeSlashHandler(p) end},
-  -- {pattern = "^(%w+) swings (.*) at your (.*) with all his might.$", handler = function(p) enemyAxeSlashHandler2(p) end},
-  
-  -- Sand Elementals
-  -- {pattern = "^With a powerful strike, an earthen elemental slams a fist into (%w+)'s (.*).", handler = function(p) elementalHandler1(p) end},
-  -- {pattern = "^An earthen elemental raises a fist toward (%w+) and a large rock erupts from its hand, striking (%w+) (.*) with", handler = function(p) elementalHandler2(p) end},
-  -- {pattern = "^With a powerful strike, an earthen elemental slams a fist into your (.*)", handler = function(p) enemyElementalHandler(p) end},
-  -- {pattern = "^An earthen elemental raises a fist toward you and a large rock erupts from its hand, striking your (.*) painfully", handler = function(p) enemyElementalHandler(p) end},
 }
 
 aliases.limbTrackingAliases = {
@@ -228,8 +182,6 @@ function woundsCheckHandler(p)
 
   wounds[wounds.checking][lowerLimb].damage = tonumber(damage)
   local syntax ="%10s" .. " %5s%%"
-
-  replace(syntax:format(limb .. ":", damage))
 end
 
 
@@ -237,14 +189,12 @@ function parseLimbDamage(p)
   local limb, damage = mb.line:match(p)
 
   wounds.my[limb].damage = wounds.my[limb].damage + damage
-  setACSLabel(limb .. " took " .. damage .. "% damage!")
 end
 
 function parseLimbDamageCure(p)
   local limb, damage = mb.line:match(p)
 
   wounds.my[limb].damage = wounds.my[limb].damage - damage
-  setACSLabel(limb .. " cured " .. damage .. "% damage!")
 end
 
 function checkLimbsForPrerestore()
