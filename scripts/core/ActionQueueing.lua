@@ -73,7 +73,6 @@ function actions:add(action, requires, takes)
   if not requires then requires = {} end
   if not takes then takes = {} end
 
-  -- debug("Adding: " .. action)
   table.insert(self.queue, {action = action, requires = requires, takes = takes})
 end
 

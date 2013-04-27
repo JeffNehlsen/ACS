@@ -199,7 +199,6 @@ function balances:take(bal)
     return
   end
 
-  debug("Taking balance " .. bal)
   self[bal].able = false
   self[bal].trying = true
   add_timer(1, function()
@@ -210,19 +209,16 @@ end
 function balances:complete(bal)
   self[bal].trying = false
   self[bal].able = false
-  debug("Balance complete " .. bal)
 end
 
 function balances:reset(bal)
   if balances[bal].trying then
     balances[bal].trying = false
     balances[bal].able = true
-    debug("Resetting " .. bal)
   end
 end
 
 function balances:give(bal)
-  debug("Giving balance " .. bal)
   self[bal].able = true
   self[bal].trying = false
 end

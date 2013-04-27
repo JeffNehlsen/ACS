@@ -389,7 +389,6 @@ function doHeal()
   end
   
   if tincture_target and balances:check("tincture") and (not (hasAffliction("asthma") and living) or (hasAffliction("limp_veins") and not living)) then
-    debug("Tincture target: " .. tincture_target.name)
     if balance and equilibrium then
       doFlick()
     end
@@ -793,7 +792,6 @@ function syringeCheckHandler(p)
     s["number"] = num
     s["injects"] = injects
     s["decay"] = decay
-    for i,v in pairs(s) do debug(v) end
     table.insert(syringeTable[itype], s)
     killLine()
   end

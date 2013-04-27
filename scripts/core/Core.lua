@@ -8,7 +8,6 @@ temporaryPromptTriggers = {}
 hooks = {}
 extraLine = ""
 class= {}
-showDebug = showDebug or false
 linenumber = 0
 
 
@@ -62,7 +61,6 @@ function addTrigger(sub, pattern, handler)
     local trigger = {pattern = pattern, handler = handler}
     if not triggers[sub] then triggers[sub] = {} end
     table.insert(triggers[sub], trigger)
-    debug("Added trigger for: " .. pattern)
 end
 
 -- Function for adding an alias

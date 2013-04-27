@@ -2719,7 +2719,6 @@ function defenses:defup()
       local init
       if type(defense.initDef) == "function" then init = defense.initDef() else init = defense.initDef end
       if defense.able and init and not defense.active then
-        debug("Setting up " .. name)
         actions:add(function() defense.give() end, defense.requires, defense.takes)
       end
     end
@@ -2745,21 +2744,18 @@ function defenses:redef()
 end
 
 function defenses:give(name)
-  debug("Giving defense: " .. name)
   if not self[name] then ACSEcho("Defense " .. name .. " not found.") return end
   extraLine = extraLine .. C.B .. " (" .. C.G .. name .. C.B .. ") " .. C.x
   self[name].active = true
 end
 
 function defenses:take(name)
-  debug("Taking defense: " .. name)
   if not self[name] then ACSEcho("Defense " .. name .. " not found.") return end
   extraLine = extraLine .. C.B .. " (" .. C.R .. name .. C.B .. ") " .. C.x
   self[name].active = false
 end
 
 function defenses:reset()
-  debug("Resetting defenses.")
   for name, _ in pairs(self) do
     if type(defenses[name]) == "table" then
       self[name].active = false

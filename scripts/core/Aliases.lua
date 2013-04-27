@@ -5,8 +5,7 @@ aliases.coreAliases = {
   {pattern = "^> (.*)$", handler = function(input, pattern) doInLua(input, pattern) end},
   {pattern = "^reload$", handler = function(input, pattern) reloadLua() end},
   {pattern = "^reload (%w+)", handler = function(i, p) reloadLua(i, p) end},
-  {pattern = "^docomm (%w+) (.*)", handler = function(i,p) sendTestCommand(i,p) end}, 
-  {pattern = "^debug$", handler = function(i,p) switchDebug() end},
+  {pattern = "^docomm (%w+) (.*)", handler = function(i,p) sendTestCommand(i,p) end},
   
   {pattern = "^tar (.*)", handler = function(input, pattern) setTarget(input, pattern) end},
   

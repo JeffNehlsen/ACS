@@ -15,22 +15,6 @@ function ACSEcho(str)
     show_prompt()
 end
 
-function switchDebug()
-    if showDebug then
-        showDebug = false
-    else
-        showDebug = true
-    end
-    ACSEcho("Debug is now " .. tostring(showDebug))
-    show_prompt()
-end
-
-function debug(message)
-    if showDebug then
-        echo(C.r .. "  [" .. C.R .. "DEBUG" .. C.r .. "]: " .. C.x .. message)
-    end
-end
-
 
 -- Class selection helpers
 function isClass(class)

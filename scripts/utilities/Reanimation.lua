@@ -219,7 +219,6 @@ function performDissect()
   elseif dissection.state == "canDissect" then
     local organ = selectDissection()
     local corpse = corpses[1]
-    debug("Trying to extract " .. organ .. " from " .. corpse)
     send("dissect " .. organ .. " from " .. corpse)
     dissectedCount = dissectedCount + 1
   end
@@ -230,12 +229,9 @@ function dissectedHandler(p)
   
   if organ == "testes" then organ = "testis" end
   organ = organ:match("(%w+).*")
-  debug("Attempting to remove: " .. organ)
   if organ == "ovaries" then organ = "ovary" end
   for i,v in ipairs(canDissect) do
-    debug("Checking " .. v .. " and comparing to " .. organ)
     if v == organ then 
-      debug("Removing " .. organ)
       table.remove(canDissect, i) 
       break
     end
@@ -306,7 +302,7 @@ function selectDissection()
       end
     end 
   end
-  debug("Returning " .. toReturn)
+  
   return toReturn
 end
 

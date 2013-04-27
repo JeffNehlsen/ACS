@@ -37,7 +37,6 @@ recording.path = recording.path or {}
 function handleDirection(dir)
   if recording.active then
     table.insert(recording.path, dir)
-    debug("Insert " .. dir .. " to paths. #paths: " .. #recording.path)
   end
   send(dir)
 end
@@ -267,11 +266,8 @@ function setupBashQueues(area)
 end
 
 function checkForState()
-  debug("checkForState()")
   if balances:check(baleq) and not hasAffliction("paralysis") and not hasAffliction("left_leg_broken") and not hasAffliction("right_leg_broken")
     and not hasAffliction("left_arm_broken") and not hasAffliction("right_arm_broken") and not prone and not stunned and not isEntangled() then
-
-    debug("Able to do stuff!")
 
     if bashSystemState.needPickup then
       bashSystemState.needPickup = false
@@ -303,7 +299,9 @@ end
 ---------------------
 function setMoveQueue(queue)
   moveQueue = {}
-  if moveQueues[queue] then debug("Setting move queue to " .. queue) queue = moveQueues[queue] end
+  if moveQueues[queue] then 
+    queue = moveQueues[queue]
+  end
   for i,v in ipairs(queue) do addToMoveQueue(v) end
 end
 
@@ -320,7 +318,6 @@ function moveNextFromQueue()
     if not bashSystemState.moving and not prone and not hasAffliction("paralysis") 
       and not stunned and not unconscious and not asleep then
       dir = moveQueue[1]
-      debug("Sending direction: " .. dir)
       if class.onBeforeMove then class.onBeforeMove() end
       send(dir)
       bashSystemState.moving = true
@@ -351,7 +348,6 @@ end
 -------------------------
 function checkWhoHere()
   bashSystemState.state = "checkingWH"
-  debug("checkWhoHere()")
   send("who here")
   tempTrigger("^You see the following people here:$", function() whoHereChecked() end)
 end
@@ -378,7 +374,6 @@ function examineWhoHere()
     end
   end
 
-  debug("isParty: " .. tostring(isParty))
   if isParty then 
     checkIH()
   else
@@ -391,7 +386,6 @@ end
 --  IH CHECKING  --
 -------------------
 function checkIH()
-  debug("checkInfoHere()")
   targetList = {}
   send("ih")
   tempTrigger("You can see the following %d+ objects:", function() handleIHSuccess() end)
@@ -435,10 +429,8 @@ function removeMobTableTriggers()
 
   if #targetList > 0 then
     selectedTarget = targetList[1]
-    debug("selectedTarget: " .. selectedTarget)
     bashSystemState.state = "needAttack"
   else
-    debug("No target found... moving...")
     bashSystemState.state = "needMove"
   end
 
@@ -461,9 +453,7 @@ end
 function selectMobTable(t)
   if mobTable[t] then
     currentTargetList = mobTable[t]
-    debug("Switched target list to " .. t)
   elseif t then
-    debug("Switched target list")
     currentTargetList = t
   end
 end
