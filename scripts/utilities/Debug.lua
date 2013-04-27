@@ -1,40 +1,54 @@
 --Adds debugging functionality 
 echo("Loading Debug.lua")
-debug = {}
 
 aliases.debug = {
-   {pattern = "^debug(?: (list))?$", handler = function(i,p) debug:handleDebug(i,p) end},
-   {pattern = "^debugc(?: (.*))?$", handler = function(i,p) debug:handleDebugCategories(i,p) end}
+   {pattern = "^debug$", handler = function(i,p) debugger:toggleDebug() show_prompt() end},
+   {pattern = "^debug list$", handler = function(i,p) debugger:listCategories() show_prompt() end},
+   {pattern = "^debugc (.*)$", handler = function(i,p) debugger:handleDebugCategories(i,p) end},
+   {pattern = "^debugc$", handler = function(i,p) debugger:listCategories() show_prompt() end},
 }
 
-function debug:handleDebug(i,p)
-   local tmp = i:match(p)
-   if tmp then
-       debug:listCategories()
-   else
-       debug:toggleDebug()
-   end
-end
-
-function debug:handleDebugCategories(i,p)
-   local tmp = i:match(p)
-   if tmp then
-       debug:watchCategory( tmp )
-   else
-       debug:listCategories()
-   end
+debug = {}
+function debug:print(category, debugData)
+   debugger:printDebug(category, debugData)
 end
 
 debugger = debugger or {}
 debugger.debug = debugger.debug or {}
 debugger.debug.active = debugger.debug.active or nil
 debugger.debug.categories = debugger.debug.categories or { }
+
+function debugger:echo(str)
+   echo(str)
+end
+
+function handleDebug(i,p)
+   local tmp = i:match(p)
+   if tmp then
+      debugger:toggleDebug()
+   else
+      debugger:listCategories()
+   end
+   show_prompt()
+end
+
+function debugger:handleDebugCategories(i,p)
+   local tmp = i:match(p)
+   if tmp then
+       debugger:watchCategory( tmp )
+   else
+       debugger:listCategories()
+   end
+   show_prompt()
+end
+
+
 function debugger:Debug(category,debugData)
    if category then
-      if table.contains(debugger.debug.categories, category) then
+      if stringInTable(category, debugger.debug.categories) then
          if type(debugData) == "table" then
             debugger:echo("DEBUG " .. category .. ":" .. C.W)
-            display(debugData)
+            echo(printtable(debugData))
          elseif type(debugData) == "string" or type(debugData) == "number" then
             debugger:echo(C.R .. "DEBUG " .. category .. ":" .. C.W .. " " .. debugData .. "\n" )
          else
@@ -68,7 +82,8 @@ function debugger:toggleDebug()
 end
 
 function debugger:watchCategory( category )
-   if table.contains(debugger.debug.categories, category) then
+   -- echo("debugger.debug.categories: " .. printtable(debugger.debug.categories))
+   if stringInTable(category, debugger.debug.categories) then
       for i,v in ipairs(debugger.debug.categories) do
          if v == category then
             table.remove(debugger.debug.categories, i)
