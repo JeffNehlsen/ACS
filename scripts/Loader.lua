@@ -45,6 +45,7 @@ dofile("scripts/bashing/Bashing.lua")
 -- Attempt to load the current classType's stuff
 pcall(dofile, "scripts/classes/" .. classType .. ".lua")
 
+dofile("scripts/utilities/Debug.lua")
 
 -- Finalize the loading process, and if the class has a predetermined setup method, run it.
 pauseRedef = true
