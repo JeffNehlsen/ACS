@@ -9,51 +9,6 @@ attack_dodged = false
 
 enemyRestorationApplied = false
 
-enemyIsLycan = false
-
--- Damage constants.  Change these if you find more accurate numbers
--- CLAW_DAMAGE = 6
--- CLAW_DAMAGE_DIVERT = 5
--- CLAW_DAMAGE_HARDEN = 4.5
--- CLAW_DAMAGE_HARDEN_DIVERT = 3
-
--- REND_DAMAGE = 3
--- REND_DAMAGE_DIVERT = 2
--- REND_DAMAGE_HARDEN = 2
--- REND_DAMAGE_HARDEN_DIVERT = 1
-
--- HEAD_DAMAGE = 11
--- HEAD_DAMAGE_DIVERT = 6
--- HEAD_DAMAGE_HARDEN = 6
--- HEAD_DAMAGE_HARDEN_DIVERT = 5
-
--- BODYPUNCH_DAMAGE = 5.5
--- BODYPUNCH_DAMAGE_DIVERT = 5
--- BODYPUNCH_DAMAGE_HARDEN = 4.3
--- BODYPUNCH_DAMAGE_HARDEN_DIVERT = 3.7
-
--- SPINALCRACK_DAMAGE = 8
--- SPINALCRACK_DAMAGE_DIVERT = 7
--- SPINALCRACK_DAMAGE_HARDEN = 6
--- SPINALCRACK_DAMAGE_HARDEN_DIVERT = 5
-
--- SHRED_DAMAGE = 15
--- SHRED_DAMAGE_DIVERT = 15
--- SHRED_DAMAGE_HARDEN = 11.5
--- SHRED_DAMAGE_HARDEN_DIVERT = 15
-
--- ELEMENTAL_DAMAGE = 5.5
--- ELEMENTAL_DAMAGE_DIVERT = 4
--- ELEMENTAL_DAMAGE_HARDEN = 3.75
--- ELEMENTAL_DAMAGE_HARDEN_DIVERT = 3
-
--- AXESLASH_DAMAGE = 5.5
--- AXESLASH_DAMAGE_DIVERT = 4
--- AXESLASH_DAMAGE_HARDEN = 3.75
--- AXESLASH_DAMAGE_HARDEN_DIVERT = 3
-
-PRERESTORE_THRESHOLD = 15
-
 enemyLimbs = {
   head = {name = "head", damage = 0, status = "unbroken"},
   torso = {name = "torso", damage = 0, status = "unbroken"},
@@ -81,6 +36,13 @@ wounds = {
     ["left leg"] = {damage = 0, status = "unbroken"},
     ["right leg"] = {damage = 0, status = "unbroken"},
   }
+}
+
+limbAttacks = {
+  smite = {damage = 7.48, divert = 6.36},
+  smash = {damage = 29.99, divert = 29.99},
+  crushTower = {damage = 14.99, divert = 14.99},
+  crushBuckler = {damage = 2.99, divert = 2.99},
 }
 
 -- attacks = {
@@ -176,6 +138,9 @@ aliases.limbTrackingAliases = {
   {pattern = "^rlimbs$", handler = function(i,p) resetEnemyLimbs() end},
 }
 
+-------------------------
+-- Prerestore handling --
+-------------------------
 function woundsCheckHandler(p)
   local limb, damage = mb.line:match(p)
   lowerLimb = limb:lower()
@@ -183,7 +148,6 @@ function woundsCheckHandler(p)
   wounds[wounds.checking][lowerLimb].damage = tonumber(damage)
   local syntax ="%10s" .. " %5s%%"
 end
-
 
 function parseLimbDamage(p)
   local limb, damage = mb.line:match(p)
@@ -215,6 +179,42 @@ function preresComplete(p)
 
   afflictionCure(wounds.my[limb].aff)
 end
+
+-------------------------
+-- Enemy Limb Tracking --
+-------------------------
+
+function addEnemyLimbDamage(limb, attack)
+  wounds.enemy[limb].damage = wounds.enemy[limb].damage + attack.damage
+  ACSEcho("Enemy " .. limb .. " at " .. wounds.enemy[limb].damage)
+end
+
+function enemyLimbDamageReset()
+  for _, limb in pairs(wounds.enemy) do
+    limb.damage = 0
+  end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function showEnemyLimbs()
   -- echo("\nHead:\t" .. tostring(enemyLimbs.head.damage) .. "\tTorso:\t" .. tostring(enemyLimbs.torso.damage))

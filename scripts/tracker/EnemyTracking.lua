@@ -53,7 +53,8 @@ triggers.etrackTriggers = {
   {pattern = "^(%w+) shuffles %w+ feet in boredom.$", handler = function(p) etrack:impatienceHandler(p) end},
   
   -- Salve Applications
-  {pattern = "^(%w+) takes a salve of (%w+) and rubs it on (%w+) (.*).$", handler = function(p) etrack:enemySalveHandler(p) end},
+  {pattern = "^(%w+) takes a salve of (%w+) and rubs it on %w+ (.*).$", handler = function(p) etrack:enemySalveHandler(p) end},
+  {pattern = "^(%w+) takes %w+ (%w+) salve and rubs it on %w+ (.*).$", handler = function(p) etrack:enemySalveHandler(p) end},
   {pattern = "^(%w+) presses %w+ (%w+) poultice against %w+ (.*), rubbing the poultice into %w+ flesh.$", handler = function(p) etrack:enemyPoulticeHandler(p) end},
   
   -- Inject/Smoke
@@ -262,7 +263,7 @@ function etrack:sandWhipBodyHandler(p)
 end
 
 function etrack:enemySalveHandler(p)
-  person, salve, _, area = mb.line:match(p)
+  person, salve, area = mb.line:match(p)
   if isTarget(person) then
     etrack:enemySalveApplication(person, salve, area)
   end

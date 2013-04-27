@@ -160,9 +160,9 @@ function doWield(weapon1, weapon2)
     ACSEcho("Weapon " .. weapon2 .. " not found. Check your settings!")
     return
   end
+
   weapon1 = weapons[weapon1].item
   weapon2 = weapons[weapon2].item
-
 
   -- If you are trying to wield a 2h weapon, weapon2 will normally be nil
   if weapon2 == nil then weapon2 = weapon1 end

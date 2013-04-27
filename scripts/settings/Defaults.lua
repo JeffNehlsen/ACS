@@ -7,6 +7,7 @@ canClot = true
 canParry = true
 living = false
 artiPipes = false
+PRERESTORE_THRESHOLD = 15
 
 -- Your preferred pagelength
 defaultPagelength = 30

@@ -1,6 +1,8 @@
 echo("Luminary file loaded. Fire it up!")
 
+shieldType = shieldType or "tower"
 
+Luminary = {}
 --------------------
 -- ANGEL TRACKING --
 --------------------
@@ -149,7 +151,7 @@ aliases.classAliases = {
 
 aliases.attackAliases = {
   --{pattern = "^$", handler = function(i,p)  end},
-  {pattern = "^ar$", handler = function(i,p) sSmite() end},
+  -- {pattern = "^ar$", handler = function(i,p) sSmite() end},
   {pattern = "^lig$", handler = function(i,p) iLightning() end},
   {pattern = "^beck(.*)", handler = function(i,p) beckonHandler(i,p) end},
   {pattern = "^aura (%w+)", handler = function(i,p) auraHandler(i,p) end},
@@ -175,10 +177,135 @@ triggers.attackTriggers = {
 
   -- You ask your angel to afflict Daingean with self-pity and it glares at him, tormenting his soul.
   {pattern = {"^You direct a dark bolt of energy through your mace towards %w+. The curse of (.+) is brought down on to your victim.$",
-              "^You ask your angel to afflict %w+ with (.+) and it glares at %w+, tormenting %w+ soul.$"}, handler = function (p)
+              "^You ask your angel to afflict %w+ with (.+) and it glares at %w+, tormenting %w+ soul.$",
+              "^Your angel afflicts %w+ with (.+).$"}, handler = function (p)
     chastenHandler(p)
   end},
+
+  -- Smash/Smite
+  {pattern = "$You raise up your mace to smash %w+'s (.+).$", handler = function(p) Luminary:smashSmiteHandler(p) end},
+
+  -- Shatter
+  {pattern = "^You slowly pull back a spiritual mace, readying yourself for a devastating strike.$", handler = function(p)
+    Luminary.shattering = true
+    stopHeal()
+  end},
+
+  {pattern = "^You cease concentrating on shattering your opponent's limbs.$", handler = function(p)
+    Luminary.shattering = false
+    startHeal()
+  end},
+
+  {pattern = "You deal %w+'s (.+) a mighty blow.", handler = function(p) Luminary:shatterSuccess(p) end},
+
+  {pattern = {"^With careful aim you smash your mace into %w+'s (.+).$",
+              "^You swiftly follow up by slamming a .+ into %w+ (.+).$"}, handler = function(p) Luminary:handleCrushing(p) end},
+  {pattern = "^You connect to the (.*)!$", handler = function(p) Luminary:handleCrushed(p) end},
 }
+
+-----------------------------
+-- Attack Trigger Handlers --
+-----------------------------
+function Luminary:smashSmiteHandler(p)
+  local limb = mb.line:match(p)
+  local attack
+
+  if Luminary.lastAttack == "smite" then
+    attack = limbAttacks.smite
+  elseif Luminary.lastAttack == "smash" then
+    attack = limbAttacks.smash
+  else
+    ACSEcho("How the hell did you get this trigger with the wrong attack?")
+  end
+
+  addEnemyLimbDamage(limb, attack)
+end
+
+function Luminary:shatterSuccess(p)
+  local limb = mb.line:match(p)
+
+  wounds.enemy[limb].damage = 33.33
+  Luminary.shattering = false
+  startHeal()
+end
+
+function Luminary:handleCrushing(p)
+  local limb = mb.line:match(p)
+  Luminary.crushing = limb
+end
+
+function Luminary:handleCrushed(p)
+  local limb = mb.line:match(p)
+  local attack
+
+  if limb == Luminary.crushing then
+    if Luminary:getCurrentShieldType() == "tower" then
+      attack = limbAttacks.crushTower
+    elseif Luminary:getCurrentShieldType() == "buckler" then
+      attack = limbAttacks.crushBuckler
+    else
+      ACSEcho("Incorrect shield used... ")
+      return
+    end
+
+    addEnemyLimbDamage(limb, attack)
+  end
+end
+
+function chastenHandler(p)
+  local aff = mb.line:match(p)
+  etrack:addAff(aff)
+end
+
+
+
+
+function Luminary:getCurrentShieldType()
+  if (leftHand and leftHand:find("buckler")) or
+     (rightHand and rightHand:find("buckler")) then
+    return "buckler"
+  end
+
+  if (leftHand and leftHand:find("tower")) or
+     (rightHand and rightHand:find("tower")) then
+    return "tower"
+  end
+
+  ACSEcho("No shield found!")
+end
+
+----------------------
+-- Attack Functions --
+----------------------
+function Luminary:smite(limb)
+  Luminary.lastAttack = "smite"
+  if limb then
+    send("target " .. limb)
+  end
+  send("smite " .. target)
+end
+
+function Luminary:smash(limb)
+  Luminary.lastAttack = "smash"
+  send("smash " .. limb .. " " .. target)
+end
+
+function Luminary:shatter(limb)
+  Luminary.lastAttack = "shatter"
+  send("shatter " .. limb .. " " .. target)
+end
+
+function Luminary:crush(limb1, limb2, shield)
+  shield = shield or "tower"
+  Luminary.lastAttack = "crush"
+  doWield("mace", shield)
+  send("shield crush " .. target .. " ".. limb1 .. " " .. limb2)
+end
+
+function Luminary:strike()
+  doWield("mace", "buckler")
+  send("shield strike " .. target)
+end
 
 -- Smite: 6.36 damage, 2.66 seconds
 
@@ -192,10 +319,7 @@ triggers.attackTriggers = {
 -- Smash: 29.99 damage, 3 seconds
 
 
-function chastenHandler(p)
-  local aff = mb.line:match(p)
-  etrack:addAff(aff)
-end
+
 
 function seekHandler(i,p)
   local person = i:match(p)
@@ -205,10 +329,6 @@ end
 function doBliss(i,p)
   local tar = i:match(p)
   send("perform bliss " .. tar)
-end
-
-function smite()
-  send("smite " .. target)
 end
 
 function iLightning()
