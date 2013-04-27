@@ -65,7 +65,7 @@ afflictionTable = {
   addiction            = {name = "addiction",               cure = "ovary",                priority = 50,  type = "organ", tree = true, diag = "^horribly addicted.$"},
   blindness            = {name = "blindness",               cure = "stomach",              priority = 45,  type = "organ", tree = true},
   deafness             = {name = "deafness",                cure = "heart",                priority = 40,  type = "organ", tree = true},
-  selfpity             = {name = "selfpity",                cure = "liver",                priority = 35,  type = "organ", tree = true, diag = "^full of self-pity.$"},
+  selfpity             = {name = "self%-pity",               cure = "liver",                priority = 35,  type = "organ", tree = true, diag = "^full of self-pity.$"},
   hubris               = {name = "hubris",                  cure = "castorite",            priority = 30,  type = "organ", tree = true, rage = true, diag = "^full of overwhelming pride.$"},
   commitment_fear      = {name = "commitment_fear",         cure = "testis",               priority = 25,  type = "organ", tree = true, diag = "^fearful of commitment.$"},
   body_odor            = {name = "body_odor",               cure = "ovary",                priority = 20,  type = "organ", tree = true, diag = "^rank.$"},
@@ -513,6 +513,7 @@ end
 
 function afflictedHandler(pattern)
   local tmp = mb.line:match(pattern)
+  
   if tmp == "stun" then
     addStun()
   elseif tmp == "asleep" then
@@ -520,7 +521,7 @@ function afflictedHandler(pattern)
   elseif tmp == "belonephobia" then
     afflictionAdd("anorexia")
   elseif tmp == "self-pity" then
-    afflictionAdd("selfpity")
+    afflictionAdd("self%-pity")
   elseif tmp == "fear" then
     send("compose")
     send("compose")
@@ -545,7 +546,7 @@ function curedHandler(pattern)
   elseif tmp == "asleep" then
     alseep = false
   elseif tmp == "self-pity" then
-    afflictionCure("selfpity")
+    afflictionCure("self%-pity")
   elseif tmp == "voyria" then
     voyria = false
   elseif tmp == "lover's_effect" then

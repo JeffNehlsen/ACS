@@ -9,7 +9,7 @@ needPickup = false
 mihailHere = false
 hecreeHere = false
 targetList = {}
-showTotalToMilestone = true
+showTotalToMilestone = false
 
 maxExpList = {
   [1]  = 5001,

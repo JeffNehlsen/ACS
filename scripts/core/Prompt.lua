@@ -281,6 +281,7 @@ end
 
 function prompt:onPrompts()
   prompt_resetLimb()
+  checkLimbsForPrerestore()
 
   if healer and not stunned and not unconscious and not asleep then
     doFlick()

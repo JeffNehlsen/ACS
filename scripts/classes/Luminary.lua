@@ -161,7 +161,41 @@ triggers.attackTriggers = {
 
   {pattern = "^You strengthen your ties to the light and close your eyes briefly in concentration, only to realize", handler = function(p) stopHeal() end},
   {pattern = "^You will yourself to become corporeal once more.$", handler = function(p) startHeal() end},
+  
+  -- Slam. Gives asthma/haemophilia
+  {pattern = "^You slam .+ into %w+)'s chest, winding %w+ with the brutal attack.$", handler = function ()
+    etrack:addAff("asthma")
+    etrack:addAff("haemophilia")
+  end},
+
+  -- Strike. Gives paralysis
+  {pattern = "^With a swift movement, you strike %w+ with .*, the symbol of the Gods flaring as you attack.$", handler = function ()
+    etrack:addAff("paralysis")
+  end},
+
+  -- You ask your angel to afflict Daingean with self-pity and it glares at him, tormenting his soul.
+  {pattern = {"^You direct a dark bolt of energy through your mace towards %w+. The curse of (.+) is brought down on to your victim.$",
+              "^You ask your angel to afflict %w+ with (.+) and it glares at %w+, tormenting %w+ soul.$"}, handler = function (p)
+    chastenHandler(p)
+  end},
 }
+
+-- Smite: 6.36 damage, 2.66 seconds
+
+-- With careful aim you smash your mace into Daingean's left leg.
+-- You connect to the left leg!
+-- You swiftly follow up by slamming a tower shield into his right leg.
+-- You connect to the right leg!
+-- Crush (Tower): 14.99 damage, 3.22 seconds
+
+-- You raise up your mace to smash yourself's left leg.
+-- Smash: 29.99 damage, 3 seconds
+
+
+function chastenHandler(p)
+  local aff = mb.line:match(p)
+  etrack:addAff(aff)
+end
 
 function seekHandler(i,p)
   local person = i:match(p)
