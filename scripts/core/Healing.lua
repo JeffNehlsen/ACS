@@ -438,6 +438,10 @@ function doHeal()
       tryingVoid = true
       add_timer(1, function() tryingVoid = false end)
       doInject("antispasmadic")
+    elseif not organ_target and balances:check("organ") then
+      tryingVoid = true
+      add_timer(1, function() tryingVoid = false end)
+      doEat("lung")
     end
   end
 
@@ -477,7 +481,7 @@ end
 function cureReset()
   if lastEaten then
     for k,v in pairs(afflictionList) do
-      if v.cure:find(convertToUndead(lastEaten)) then
+      if v.cure and v.cure:find(convertToUndead(lastEaten)) then
         afflictionCure(v.name)
       end
     end
@@ -488,7 +492,7 @@ function cureReset()
 
   if lastApplied then
     for k,v in pairs(afflictionList) do
-      if v.cure and v.cure:find(convertToUndead(lastApplied)) then
+      if v.cure and v.cure and v.cure:find(convertToUndead(lastApplied)) then
         afflictionCure(v.name)
       end
     end
@@ -501,7 +505,7 @@ function cureReset()
     if lastInjected == "sudorific" then return end
 
     for k,v in pairs(afflictionList) do
-      if v.cure:find(convertToUndead(lastInjected)) then
+      if v.cure and v.cure:find(convertToUndead(lastInjected)) then
         afflictionCure(v.name)
       end
     end

@@ -36,7 +36,6 @@ triggers.balances = {
   {pattern = "^You press the last of an? (%w+) poultice against your (.+), rubbing it into your flesh.$", handler = function(p) balances:poulticeHandler(p) end},
   {pattern = "^You take out (.*) salve and quickly rub it on your (.+).$", handler = function(p) balances:poulticeHandler(p) end},
   {pattern = "^You take out a salve of (.*) and quickly rub it on your (.+).$", handler = function(p) balances:poulticeHandler(p) end},
-  {pattern = "^You messily spread the salve over your body, to no effect.$", handler = function(p) balances:poulticeHandler(p) end},
   {pattern = "^The salve dissolves and quickly disappears after you apply it.$", handler = function(p) balances:poulticeHandler(p) end},
   {pattern = "^You may apply another salve to yourself.$", handler = function(p) balances:give("poultice") end},
   {pattern = "You are again able to absorb a poultice.", handler = function(p) balances:give("poultice") end},
