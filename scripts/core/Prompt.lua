@@ -10,6 +10,7 @@ prompt = {
 function setupPrompt()
   send("config affliction_view on")
   send("config experience_change on")
+  send("config wrapwidth 0")
   send(prompt.config)
 end
 
@@ -56,13 +57,12 @@ function prompt:parse(line)
   prompt.xp,        prompt.maxXP, 
   extra, status, eq, bal, armbal = line:match(prompt.pattern)
 
-  if extra then
-    prompt.soul         = extra:match("Soul:(%d+)")
-    prompt.devotion     = extra:match("Devotion:(%d+)")
-    prompt.spark        = extra:match("Spark:(%d+)")
-    prompt.kai          = extra:match("Kai:(%d+)")
-    prompt.essence      = extra:match("Essence:(%d+)")
-  end
+  prompt.soul         = extra:match("Soul:(%d+)")
+  prompt.devotion     = extra:match("Devotion:(%d+)")
+  prompt.spark        = extra:match("Spark:(%d+)")
+  prompt.kai          = extra:match("Kai:(%d+)")
+  prompt.essence      = extra:match("Essence:(%d+)")
+
   prompt.cloak        = check(status, "c")
   prompt.silaris      = check(status, "s")
   prompt.prone        = check(status, "p")
