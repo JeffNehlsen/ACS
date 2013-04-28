@@ -56,12 +56,13 @@ function prompt:parse(line)
   prompt.xp,        prompt.maxXP, 
   extra, status, eq, bal, armbal = line:match(prompt.pattern)
 
-  prompt.soul         = extra:match("Soul:(%d+)")
-  prompt.devotion     = extra:match("Devotion:(%d+)")
-  prompt.spark        = extra:match("Spark:(%d+)")
-  prompt.kai          = extra:match("Kai:(%d+)")
-  prompt.essence      = extra:match("Essence:(%d+)")
-
+  if extra then
+    prompt.soul         = extra:match("Soul:(%d+)")
+    prompt.devotion     = extra:match("Devotion:(%d+)")
+    prompt.spark        = extra:match("Spark:(%d+)")
+    prompt.kai          = extra:match("Kai:(%d+)")
+    prompt.essence      = extra:match("Essence:(%d+)")
+  end
   prompt.cloak        = check(status, "c")
   prompt.silaris      = check(status, "s")
   prompt.prone        = check(status, "p")
