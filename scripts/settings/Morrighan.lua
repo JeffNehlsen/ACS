@@ -63,7 +63,7 @@ skills = {
   -- General
   vision = skillranks.transcendent,
   avoidance = skillranks.fabled,
-  survival = skillranks.virtuoso,
+  survival = skillranks.transcendent,
   weaponry = skillranks.fabled,
   tattoos = skillranks.expert,
   
