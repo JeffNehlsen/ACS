@@ -88,3 +88,130 @@ end
 function checkTrigger(string, pattern)
     echo(tostring(string:match(pattern)))
 end
+
+
+
+
+-- Living/Undead curing conversions
+toLiving = {
+  pineal                 = "skullcap",
+  bone                   = "sileris",
+  bladder                = "ash",
+  liver                  = "goldenseal",
+  eyeball                = "kelp",
+  testis                 = "lobelia",
+  ovary                  = "ginseng",
+  castorite              = "bellwort",
+  lung                   = "bloodroot",
+  kidney                 = "moss",
+  sulphurite             = "kola",
+  tongue                 = "cohosh",
+  heart                  = "hawthorn",
+  stomach                = "bayberry",
+  tumor                  = "myrrh",
+  spleen                 = "echinacea",
+
+  demulcent              = "elm",
+  antispasmadic          = "valerian",
+  sudorific              = "skullcap",
+
+  analeptic              = "health",
+  stimulant              = "mana",
+  euphoric               = "levitation",
+  calmative              = "immunity",
+  carminative            = "venom",
+  nervine                = "speed",
+  refrigerative          = "frost",
+
+  oculi                  = "epidermal",
+  orbis                  = "mending",
+  fumeae                 = "caloric",
+  jecis                  = "restoration",
+  pueri                  = "mass",
+  ["orbis to legs"]      = "mending to legs",
+  ["orbis to arms"]      = "mending to arms",
+  ["orbis to left leg"]  = "mending to left leg",
+  ["orbis to right leg"] = "mending to right leg",
+  ["orbis to left arm"]  = "mending to left arm",
+  ["orbis to right arm"] = "mending to right arm",
+  ["orbis to torso"]     = "mending to torso",
+  ["orbis to head"]      = "mending to head",
+  
+  ["jecis to legs"]      = "restoration to legs",
+  ["jecis to arms"]      = "restoration to arms",
+  ["jecis to left leg"]  = "restoration to left leg",
+  ["jecis to right leg"] = "restoration to right leg",
+  ["jecis to left arm"]  = "restoration to left arm",
+  ["jecis to right arm"] = "restoration to right arm",
+  ["jecis to torso"]     = "restoration to torso",
+  ["jecis to head"]      = "restoration to head",
+  
+  ["oculi to torso"]     = "epidermal to torso",
+  ["oculi to head"]      = "epidermal to head",
+}
+
+toUndead = {
+  skullcap                     = "pineal",
+  sileris                      = "bone",
+  ash                          = "bladder",
+  goldenseal                   = "liver",
+  kelp                         = "eyeball",
+  lobelia                      = "testis",
+  ginseng                      = "ovary",
+  bellwort                     = "castorite",
+  bloodroot                    = "lung",
+  moss                         = "kidney",
+  kola                         = "sulphurite",
+  cohosh                       = "tongue",
+  hawthorn                     = "heart",
+  bayberry                     = "stomach",
+  myrrh                        = "tumor",
+  echinacea                    = "spleen",
+
+  elm                          = "demulcent",
+  valerian                     = "antispasmadic",
+  skullcap                     = "sudorific",
+
+  health                       = "analeptic",
+  mana                         = "stimulant",
+  levitation                   = "euphoric",
+  immunity                     = "calmative",
+  venom                        = "carminative",
+  speed                        = "nervine",
+  frost                        = "refrigerative",
+
+  epidermal                    = "oculi",
+  mending                      = "orbis",
+  caloric                      = "fumeae",
+  restoration                  = "jecis",
+  mass                         = "pueri",
+  
+  ["mending to legs"]          = "orbis to legs",
+  ["mending to arms"]          = "orbis to arms",
+  ["mending to left leg"]      = "orbis to left leg",
+  ["mending to right leg"]     = "orbis to right leg",
+  ["mending to left arm"]      = "orbis to left arm",
+  ["mending to right arm"]     = "orbis to right arm",
+  ["mending to torso"]         = "orbis to torso",
+  ["mending to head"]          = "orbis to head",
+  
+  ["restoration to legs"]      = "jecis to legs",
+  ["restoration to arms"]      = "jecis to arms",
+  ["restoration to left leg"]  = "jecis to left leg",
+  ["restoration to right leg"] = "jecis to right leg",
+  ["restoration to left arm"]  = "jecis to left arm",
+  ["restoration to right arm"] = "jecis to right arm",
+  ["restoration to torso"]     = "jecis to torso",
+  ["restoration to head"]      = "jecis to head",
+  
+  ["epidermal to torso"]       = "oculi to torso",
+  ["epidermal to head"]        = "oculi to head",
+}
+
+function convertToLiving(cure)
+  return toLiving[cure] or cure
+end
+
+function convertToUndead(cure)
+  return toUndead[cure] or cure
+end
