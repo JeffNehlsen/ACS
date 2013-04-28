@@ -125,12 +125,14 @@ triggers.attackTriggers = {
   {pattern = "^Being careful not to poison yourself, you wipe off all the venoms from (.*).$", handler = function(p) wipedHandler(p) end},
   {pattern = "^There are no venoms on that item at present.$", handler = function(p) alreadyWipedHandler() end},
   
-  {pattern = "^Lunging in, you stick .* with .*", handler = function(p) syssinAI:dstabHandler() end},
-  {pattern = "^You drive .* into (%w+) with a vicious stab.$", handler = function(p) syssinAI:dstabHandler() end},
-  {pattern = "^You jab (%w+) with a .*$", handler = function(p) syssinAI:dstabHandler() end},
-  {pattern = "^You prick (%w+) quickly with your dirk.$", handler = function(p) syssinAI:dstabHandler() end},
-  {pattern = "^Deftly twirling the weapon in your hand, you jab (%w+) with it once more.$", handler = function(p) syssinAI:dstabHandler() end},
-  {pattern = "^Stepping quickly out of the way, (%w+) dodges the attack.$", handler = function(p) syssinAI:dodgeHandler() end},
+  -- {pattern = "^Lunging in, you stick .* with .*", handler = function(p) syssinAI:dstabHandler() end},
+  -- {pattern = "^You drive .* into (%w+) with a vicious stab.$", handler = function(p) syssinAI:dstabHandler() end},
+  -- {pattern = "^You jab (%w+) with a .*$", handler = function(p) syssinAI:dstabHandler() end},
+  -- {pattern = "^You prick (%w+) quickly with your dirk.$", handler = function(p) syssinAI:dstabHandler() end},
+  -- {pattern = "^Deftly twirling the weapon in your hand, you jab (%w+) with it once more.$", handler = function(p) syssinAI:dstabHandler() end},
+  {pattern = "^You discern that a layer of venom has rubbed off your weapon.$", handler = function(p) syssinAI:dstabHandler() end},
+
+  -- {pattern = "^Stepping quickly out of the way, (%w+) dodges the attack.$", handler = function(p) syssinAI:dodgeHandler() end},
   {pattern = "^The attack rebounds back onto you!$", handler = function(p) syssinAI:reboundHandler() end},
   {pattern = "^As you pierce through %w+'s rebounding, you send the tip of your whip to scourge %w+ flesh.$", handler = function(p) syssinAI:flayHandler() end},
   
@@ -539,32 +541,15 @@ end
 function syssinAI:dstabHandler()
   if #currentlyEnvenomed > 0 then 
     lastVenom = currentlyEnvenomed[1]
+    local aff = etrack:translate(etrack:venomConvert(lastVenom))
     table.remove(currentlyEnvenomed, 1)
-    setACSLabel(C.r .. "DSTAB: " .. C.G .. lastVenom)
-    etrack:addAff(
-      etrack:translate(
-        etrack:venomConvert(lastVenom)
-      )
-    )
+    setACSLabel(C.r .. "DSTAB: " .. C.G .. aff)
+    etrack:addAff(aff)
   end
-end
-
-function syssinAI:dodgeHandler()
-  setACSLabel(C.R .. "ATTACK DODGED!")
-  etrack:removeAff(
-    etrack:translate(
-      etrack:venomConvert(lastVenom)
-    )
-  )
 end
 
 function syssinAI:reboundHandler()
   setACSLabel(C.R .. "ATTACK REBOUNDED! ATTACK REBOUNDED! ATTACK REBOUNDED!")
-  etrack:removeAff(
-    etrack:translate(
-      etrack:venomConvert(lastVenom)
-    )
-  )
   enemyRebounding = true
 end
 
@@ -623,7 +608,7 @@ end
 
 function fullSetOfVenoms(numToMake)
   numToMake = numToMake or 1
-  
+
   for k,v in ipairs(possibleVenoms) do
     for i = 1,numToMake do
       addToMilk(v)
