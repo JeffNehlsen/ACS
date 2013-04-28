@@ -64,7 +64,7 @@ function testTrigger(pattern, input)
 end
 
 function isTarget(p)
-    return string.lower(p) == string.lower(target)
+    return string.lower(p):match(string.lower(target))
 end
 
 function hasSkill(skill)

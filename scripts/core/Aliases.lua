@@ -81,7 +81,7 @@ end
 function doWeb()
   if weapons and weapon.bola then
     -- TODO: Set this to properly use wielding
-    doWield("bola")
+    doWield("bola", "tower")
     send("throw bolas at " .. target)
   else
     send("touch web " .. target)

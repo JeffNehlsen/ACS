@@ -151,7 +151,6 @@ aliases.classAliases = {
 
 aliases.attackAliases = {
   --{pattern = "^$", handler = function(i,p)  end},
-  -- {pattern = "^ar$", handler = function(i,p) sSmite() end},
   {pattern = "^lig$", handler = function(i,p) iLightning() end},
   {pattern = "^beck(.*)", handler = function(i,p) beckonHandler(i,p) end},
   {pattern = "^aura (%w+)", handler = function(i,p) auraHandler(i,p) end},
@@ -165,7 +164,7 @@ triggers.attackTriggers = {
   {pattern = "^You will yourself to become corporeal once more.$", handler = function(p) startHeal() end},
   
   -- Slam. Gives asthma/haemophilia
-  {pattern = "^You slam .+ into %w+)'s chest, winding %w+ with the brutal attack.$", handler = function ()
+  {pattern = "^You slam .+ into %w+'s chest, winding %w+ with the brutal attack.$", handler = function ()
     etrack:addAff("asthma")
     etrack:addAff("haemophilia")
   end},
@@ -183,7 +182,7 @@ triggers.attackTriggers = {
   end},
 
   -- Smash/Smite
-  {pattern = "$You raise up your mace to smash %w+'s (.+).$", handler = function(p) Luminary:smashSmiteHandler(p) end},
+  {pattern = "^You raise up your mace to smash %w+'s (.+).$", handler = function(p) Luminary:smashSmiteHandler(p) end},
 
   -- Shatter
   {pattern = "^You slowly pull back a spiritual mace, readying yourself for a devastating strike.$", handler = function(p)
@@ -202,6 +201,22 @@ triggers.attackTriggers = {
               "^You swiftly follow up by slamming a .+ into %w+ (.+).$"}, handler = function(p) Luminary:handleCrushing(p) end},
   {pattern = "^You connect to the (.*)!$", handler = function(p) Luminary:handleCrushed(p) end},
 }
+----------------------
+-- Helper Functions --
+----------------------
+function Luminary:getCurrentShieldType()
+  if (leftHand and leftHand:find("buckler")) or
+     (rightHand and rightHand:find("buckler")) then
+    return "buckler"
+  end
+
+  if (leftHand and leftHand:find("tower")) or
+     (rightHand and rightHand:find("tower")) then
+    return "tower"
+  end
+
+  ACSEcho("No shield found!")
+end
 
 -----------------------------
 -- Attack Trigger Handlers --
@@ -258,22 +273,6 @@ function chastenHandler(p)
 end
 
 
-
-
-function Luminary:getCurrentShieldType()
-  if (leftHand and leftHand:find("buckler")) or
-     (rightHand and rightHand:find("buckler")) then
-    return "buckler"
-  end
-
-  if (leftHand and leftHand:find("tower")) or
-     (rightHand and rightHand:find("tower")) then
-    return "tower"
-  end
-
-  ACSEcho("No shield found!")
-end
-
 ----------------------
 -- Attack Functions --
 ----------------------
@@ -314,9 +313,6 @@ end
 -- You swiftly follow up by slamming a tower shield into his right leg.
 -- You connect to the right leg!
 -- Crush (Tower): 14.99 damage, 3.22 seconds
-
--- You raise up your mace to smash yourself's left leg.
--- Smash: 29.99 damage, 3 seconds
 
 
 

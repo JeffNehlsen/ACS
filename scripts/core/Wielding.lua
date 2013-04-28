@@ -27,8 +27,8 @@ triggers.wieldingTriggers = {
   
   -- Bow stuff
   -- TODO: Replace this with dynamic triggers and the weapons table.
-  {pattern = "^With a single fluid movement, you pull(.*)bow(.*)from your shoulder and wield it.$", handler = function(p) bowWielded() end},
-  {pattern = "^You cease to wield(.*)bow(.*).$", handler = function(p) removedBow() end},
+  -- {pattern = "^With a single fluid movement, you pull(.*)bow(.*)from your shoulder and wield it.$", handler = function(p) bowWielded() end},
+  -- {pattern = "^You cease to wield(.*)bow(.*).$", handler = function(p) removedBow() end},
 }
 
 function constructWieldingTriggers()
@@ -40,9 +40,15 @@ function constructWieldingTriggers()
   triggers.weapons = {}
 
   for _, weapon in pairs(weapons) do
-    if not weapon.twoHanded then
-
-      addTrigger("weapons", "You begin to wield " .. weapon.name .. " in your (%w+) hand.", function(p)
+    
+    if weapon.twoHanded then
+      addTrigger("weapons", "^You start to wield " .. weapon.name .. " in your hands.$", function(p)
+          leftHand = weapon.item
+          rightHand = weapon.item
+          wieldReplace(weapon.item, "both")
+      end)
+    else
+      addTrigger("weapons", "^You begin to wield " .. weapon.name .. " in your (%w+) hand.$", function(p)
           side = mb.line:match(p)
           if side:match("left") then
             leftHand = weapon.item
@@ -51,15 +57,6 @@ function constructWieldingTriggers()
           end
           wieldReplace(weapon.item, side)
       end)
-
-    else
-
-      addTrigger("weapons", "You start to wield " .. weapon.name .. " in your hands.", function(p)
-          leftHand = weapon.item
-          rightHand = weapon.item
-          wieldReplace(weapon.item, "both")
-      end)
-
     end
 
     if weapon.shield then
@@ -72,6 +69,19 @@ function constructWieldingTriggers()
           rightHand = ""
           wieldReplace(weapon.item, "right")
         end
+      end)
+    end
+
+    if weapon.bow then
+      addTrigger("weapons", "^With a single fluid movement, you pull " .. weapon.name .. " from your shoulder and wield it.", function()
+        leftHand = weapon.item
+        rightHand = weapon.item
+        wieldReplace(weapon.item, "both")
+      end)
+
+      addTrigger("weapons", "^You cease to weild " .. weapon.name .. ".$", function()
+        leftHand = ""
+        rightHand = ""
       end)
     end
   end
@@ -129,6 +139,7 @@ function wieldBow()
 end
 
 function unwieldBow()
+  debug:print("wielding", "unwieldBow()")
   send("unwield bow")
   send("wear bow")
 end
@@ -147,10 +158,30 @@ function setWielded(pattern)
   wieldReplace(weapon, side)
 end
 
+function doWieldBow()
+  debug:print("wielding", "Wielding bow")
+  doUnwield("both")
+
+  if isClass("syssin") then
+    send("bowstance")
+  else
+    local bow = weapons.bow.item
+    send("remove " .. bow)
+    send("wield " .. bow)
+  end
+end
+
 function doWield(weapon1, weapon2)
   local w1WieldedLeft, w1WieldedRight, w1WieldedLeft, w2WieldedRight, w1Wielded, w2Wielded
   w1WieldedLeft = false w1WieldedRight = false w2WieldedLeft = false w2WieldedRight = false w1Wielded = false w2Wielded = false
   
+  if weapon1 == "bow" then
+    doWieldBow()
+    return
+  end
+
+  debug:print("wielding", "Wielding " .. weapon1 .. " and " .. weapon2)
+
   if not weapons[weapon1] then
     ACSEcho("Weapon " .. weapon1 .. " not found. Check your settings!")
     return
@@ -218,7 +249,8 @@ function doWield(weapon1, weapon2)
 end
 
 function doUnwield(side)
-  if leftHand == bow or rightHand == bow then
+  debug:print("wielding", "doUnwield(" .. side .. ")")
+  if weapons.bow and (leftHand == weapons.bow.item or rightHand == weapons.bow.item) then
     unwieldBow()
   elseif side == "both" or side == nil then
     unwieldSide("left")

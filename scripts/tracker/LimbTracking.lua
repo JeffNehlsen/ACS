@@ -120,7 +120,7 @@ triggers.limbTrackingTriggers = {
   -- {pattern = "^(%w+) takes a salve of (%w+) and rubs it on (%w+) (%w+).$", handler = function(p) enemySalveGenerallyApplied(p) end},
   
   
-  -- Prerestore completel stuff
+  -- Prerestore complete stuff
   {pattern = "^You have restored your (.*) as best as you can!$", handler = function(p) preresComplete(p) end},
   
   -- Attacks on you.
@@ -131,6 +131,11 @@ triggers.limbTrackingTriggers = {
   {pattern = "^You take a moment to assess how damaged your limbs are.$", handler = function (p) wounds.checking = "my" end},
   {pattern = "^You take a moment to assess how damaged (%w+)'s limbs are.$", handler = function (p) wounds.checking = "enemy" end},
   {pattern = "^(.+):%s+(.+)%% %(no bruising%)$", handler = function (p) woundsCheckHandler(p) end},
+
+  -- Enemy salve healing
+  {pattern = "^(%w+) takes a salve of (%w+) and rubs it on %w+ (.*).$", handler = function(p) wounds:enemySalveHandler(p) end},
+  {pattern = "^(%w+) takes %w+ (%w+) salve and rubs it on %w+ (.*).$", handler = function(p) wounds:enemySalveHandler(p) end},
+  {pattern = "^(%w+) presses %w+ (%w+) poultice against %w+ (.*), rubbing the poultice into %w+ flesh.$", handler = function(p) wounds:enemySalveHandler(p) end},
 }
 
 aliases.limbTrackingAliases = {
@@ -195,6 +200,21 @@ function enemyLimbDamageReset()
   end
 end
 
+function wounds:enemySalveHandler(p)
+  
+  local person, salve, limb = mb.line:match(p)
+  if isTarget(person) and (salve == "restoration" or salve == "jecis") and not enemyRestorationApplied then
+    enemyRestorationApplied = true
+    add_timer(4, function()
+      enemyRestorationApplied = false
+      wounds.enemy[limb].damage = wounds.enemy[limb].damage - 33.33
+      if wounds.enemy[limb].damage < 0 then
+        wounds.enemy[limb].damage = 0
+      end
+      ACSEcho("Enemy " .. limb .. ": " .. wounds.enemy[limb].damage)
+    end)
+  end
+end
 
 
 

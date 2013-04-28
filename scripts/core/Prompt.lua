@@ -211,7 +211,7 @@ function prompt:build()
   end
 
   local angelDisplay = function()
-    if angel and angel.power and angel.max then
+    if isClass("Luminary") and angel and angel.power and angel.max then
       local perc = math.floor(angel.power / angel.max * 100)
       return promptLabelColor .. "A:" .. C.W .. perc .. promptLabelColor .. "%"
     end

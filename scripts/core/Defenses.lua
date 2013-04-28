@@ -2601,7 +2601,7 @@ defenses = {
     },
   },
 
-  ghost = {
+  ghosted = {
     requires = {},
     takes = {},
     initDef = true,
@@ -2610,13 +2610,10 @@ defenses = {
     able = isClass("syssin"),
     triggers = {
       up = {
-        "^You project a net of light about yourself until your image becomes faded and ghostly.$",
         "^You are shimmering with a ghostly light.$",
         "^You are already ghosting.$",
       },
-      down = {
-        "^Your ghostly image slowly intensifies until you appear flesh and blood again.$",
-      },
+      down = {},
     },
   },
 

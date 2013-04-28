@@ -53,9 +53,9 @@ triggers.etrackTriggers = {
   {pattern = "^(%w+) shuffles %w+ feet in boredom.$", handler = function(p) etrack:impatienceHandler(p) end},
   
   -- Salve Applications
-  {pattern = "^(%w+) takes a salve of (%w+) and rubs it on %w+ (.*).$", handler = function(p) etrack:enemySalveHandler(p) end},
-  {pattern = "^(%w+) takes %w+ (%w+) salve and rubs it on %w+ (.*).$", handler = function(p) etrack:enemySalveHandler(p) end},
-  {pattern = "^(%w+) presses %w+ (%w+) poultice against %w+ (.*), rubbing the poultice into %w+ flesh.$", handler = function(p) etrack:enemyPoulticeHandler(p) end},
+  {pattern = "^(%w+) takes a salve of (%w+) and rubs it on %w+ (.*).$", handler = function(p) etrack:enemySalveHandler(p) wounds:enemySalveHandler(p) end},
+  {pattern = "^(%w+) takes %w+ (%w+) salve and rubs it on %w+ (.*).$", handler = function(p) etrack:enemySalveHandler(p) wounds:enemySalveHandler(p) end},
+  {pattern = "^(%w+) presses %w+ (%w+) poultice against %w+ (.*), rubbing the poultice into %w+ flesh.$", handler = function(p) etrack:enemySalveHandler(p) wounds:enemySalveHandler(p) end},
   
   -- Inject/Smoke
   {pattern = "^(%w+) quickly injects (%w+) with a syringe filled with (%w+).$", handler = function(p) etrack:enemySmoked(p) end},
@@ -270,7 +270,6 @@ function etrack:enemySalveHandler(p)
 end
 
 function etrack:enemyPoulticeHandler(p)
-  
   person, poultice, area = mb.line:match(p)
   if isTarget(person) then
     etrack:enemySalveApplication(person, poultice, area)
@@ -357,10 +356,10 @@ function etrack:takeBal(bal, extra)
     if v.name == bal then
       --ACSEcho("Enemy balance taken: " .. bal)
       eBalances[k].balance = false
-      if not extra:match("jecis") or extra:match("restoration") then
-        add_timer(eBalances[k].btime, function() etrack:giveBal(bal) end)
-      else
+      if extra:match("jecis") or extra:match("restoration") then
         add_timer(eBalances[k].restoreTime, function() etrack:giveBal(bal) end)
+      else
+        add_timer(eBalances[k].btime, function() etrack:giveBal(bal) end)
       end
     end
   end

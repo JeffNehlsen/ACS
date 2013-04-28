@@ -460,13 +460,7 @@ end
 
 class = class or {}
 if isClass("syssin") then
-  class.bashAttack = function()
-    --send("wield whip")
-    --send("wield shield")
-    send("secrete camus")
-    send("bite " .. selectedTarget)
-    --send("garrote " .. selectedTarget)
-  end
+
 elseif isClass("carnifex") then
   class.bashAttack = function()
     send("wield bardiche")

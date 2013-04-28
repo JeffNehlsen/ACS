@@ -32,6 +32,19 @@ void = false
 
 targetIsUndead = false
 
+class = {
+  bashAttack = function()
+    send("stand")
+    doWield("whip", "tower")
+    -- send("secrete camus")
+    -- send("bite " .. selectedTarget)
+    send("garrote " .. selectedTarget)
+  end,
+  setup = function()
+
+  end
+}
+
 stackList = {
   scytherus = {
     venoms = {"curare", "darkshade", "euphorbia", "colocasia", "kalmia", "gecko", "slike"}, 
@@ -206,7 +219,7 @@ function syssinAI:biteAliasHandler(i,p)
 end
 
 function syssinAI:delphiniumStab()
-  doWield(dirk, tower)
+  doWield("dirk", "tower")
   syssinAI:shadowSelect()
   syssinAI:hypnosisManager()
   envenomDirk("delphinium", "delphinium")
@@ -239,7 +252,7 @@ function garroteLockKill()
 end
 
 function garrotelock()
-  doWield(whip, tower)
+  doWield("whip", "tower")
   send("garrotelock " .. target)
 end
 
@@ -288,19 +301,19 @@ function executeAttack()
     syssinAI:executeHypnosis()
     needSeal = false
   elseif not enemyRebounding and not enemyShielded then
-    doWield(dirk, tower)
+    doWield("dirk", "tower")
     envenomDirk(venom1, venom2)
     dstab()
     reportCurrentAttacks()
     syssinAI:executeHypnosis()
   elseif enemyShielded then
-    doWield(whip, tower)
+    doWield("whip", "tower")
     flay("shield")
     syssinAI:executeHypnosis()
   elseif enemyRebounding then
-    doWield(whip, tower)
+    doWield("whip", "tower")
     shadowAttack = "shadow sleight invasion " .. target
-    send("envenom " .. whip .. " with " .. venom1)
+    send("envenom " .. weapons.whip.item .. " with " .. venom1)
     flay("rebounding")
     syssinAI:executeHypnosis()
   end
@@ -324,13 +337,13 @@ end
 
 function garrote()
   syssinAI:shadowSelect()
-  doWield(whip, tower)  
+  doWield("whip", "tower")  
   send("garrote " .. target)
   doShadowSkill()
 end
 
 function flay(t)
-  doWield(whip, tower)
+  doWield("whip", "tower")
   send("flay " .. target .. " " .. t)
   lastFlay = t
 end
@@ -441,7 +454,7 @@ end
 function doEnvenom(venom)
   if targetIsUndead and venom == "kalmia" then venom = "strophanthus" end
   if targetUsesMagic and venom == "xentio" then venom = "colocasia" end
-  send("envenom " .. dirk .. " with " .. venom)
+  send("envenom " .. weapons.dirk.item .. " with " .. venom)
 end
 
 function hypnosisFailed()
@@ -587,7 +600,7 @@ end
 
 function syssinAI:snipe()
   local directions = {"nw", "n", "ne", "w", "e", "sw", "s", "se", "in", "out", "u", "d"}
-  doWield(bow)
+  doWield("bow")
   for _, dir in ipairs(directions) do
     send("snipe " .. target .. " " .. dir)
   end
@@ -609,6 +622,8 @@ function addToMilk(venom)
 end
 
 function fullSetOfVenoms(numToMake)
+  numToMake = numToMake or 1
+  
   for k,v in ipairs(possibleVenoms) do
     for i = 1,numToMake do
       addToMilk(v)

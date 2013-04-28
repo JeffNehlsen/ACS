@@ -15,6 +15,10 @@ weapons = {
     item = "dirk282342",
     name = "a needle%-pointed dirk"
   },
+  whip = {
+    item = "whip231265",
+    name = "an iron%-tipped whip"
+  },
   bola = {
     item = "bola281238",
     name = "a three%-weight bola"
@@ -37,7 +41,12 @@ weapons = {
     item = "tower169295",
     name = "a tower shield",
     shield = true
-  }
+  },
+  bow = {
+    item = "darkbow63726",
+    name = "an elegant, bladed darkbow.",
+    bow = true
+  },
 }
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
