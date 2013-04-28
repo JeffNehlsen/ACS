@@ -86,7 +86,7 @@ triggers.balances = {
 
   -- Recon/Erase/Purge
   {pattern = "^With a sinister grin, you will your body to repair itself of afflictions.$", handler = function(p) balances:reconHandler() end},
-  {pattern = "^With a faint but confident smile, you invoke the healing power of Life to purge afflictions from your body.$", handler = function(p) bbalances:reconHandler() end},
+  {pattern = "^With a faint but confident smile, you invoke the healing power of Life to purge afflictions from your body.$", handler = function(p) balances:reconHandler() end},
   {pattern = "^Marshalling your will, you bear down on one of your maladies and brutally wipe it from existence.$", handler = function(p) balances:reconHandler() end},
   {pattern = "^You feel able to reconstitute your body once more.$", handler = function(p) balances:give("reconstitute") end},
   {pattern = "^You feel able to renew your body once more.$", handler = function(p) balances:give("reconstitute") end},
