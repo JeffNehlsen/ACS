@@ -24,6 +24,7 @@ dofile("scripts/core/Prompt.lua")
 dofile("scripts/core/Defenses.lua")
 dofile("scripts/core/Wielding.lua")
 dofile("scripts/core/Afflictions.lua")
+dofile("scripts/core/PipeFiller.lua")
 
 dofile("scripts/settings/Setup.lua")
 
