@@ -2,6 +2,8 @@
 ACS = {}
 
 function ACS:addModule(module, name)
+    triggers[name] = {}
+    aliases[name] = {}
     if module.triggers then
         for _, trigger in ipairs(module.triggers) do
             table.insert(triggers[name], trigger)
@@ -15,6 +17,7 @@ function ACS:addModule(module, name)
     end
 
     if module.extraTriggers then
+        triggers[name .. "_Extra"] = {}
         for _, trigger in ipairs(module.extraTriggers) do
             table.insert(triggers[name .. "_Extra"], trigger)
         end

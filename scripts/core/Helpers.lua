@@ -215,3 +215,9 @@ end
 function convertToUndead(cure)
   return toUndead[cure] or cure
 end
+
+function getTableIndex(t, item)
+    for i, v in ipairs(t) do
+        if v == item then return i end
+    end
+end

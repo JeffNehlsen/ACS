@@ -6,16 +6,296 @@ echo("New bashing system loaded")
 
 
 Bashing = {}
+Bashing.state = ""
+Bashing.extraPickups = {}
+Bashing.states = {
+    NEED_CHECK = "NEED_CHECK",
+    NEED_ATTACK = "NEED_ATTACK",
+    NEED_MOVE = "NEED_MOVE",
+    WHO_HERE = "WHO_HERE",
+    INFO_HERE = "INFO_HERE",
+}
+Bashing.party = {atcp.name}
 Bashing.triggers = {
+    {pattern = "You have slain .*", handler = function(p) Bashing:mobKilled() end},
 
+    {pattern = {
+        "^You have recovered equilibrium.",
+        "You have recovered balance on your left arm.",
+        "You have recovered balance on your right arm.",
+        "You have recovered balance on all limbs.",
+        "You stand up and stretch your arms out wide.",
+        "^You have cured (.+)%.$"
+    }, handler = function(p) onPrompt(function() Bashing:checkForState() end) end},
+
+    {pattern = {
+        "You cannot see that being here.",
+        "I do not recognize anything called that here.",
+        "Ahh, I am truly sorry, but I do not see anyone by that name here.",
+        "Nothing can be seen here by that name.",
+        "You detect nothing here by that name."
+    }, handler = function(p) onPrompt(function() Bashing:checkIH() end) end},
 }
 
 Bashing.aliases = {
-
+    {pattern = "^beginbashing (%a+)$", handler = function(i,p) 
+        local area = i:match(p) 
+        reloadBashing:begin(area) 
+    end},
+    -- {pattern = "^stopbashing$", handler = function() moveQueue = {} ACSEcho("Move Queue is empty.  Feel free to move around!") end},
+    -- {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
 }
+
+Bashing.loop = { "ayhesa", "lich", "mamashi", "khauskin", "mor" }
+
+function Bashing:begin(area)
+    if not Bashing.areas[area] then
+        ACSEcho("Area not found. Try again!")
+        ACSEcho("Valid Areas:")
+        for k, _ in pairs(Bashing.areas) do
+            ACSEcho(k)
+        end
+        show_prompt()
+        return 
+    end
+
+    Bashing.currentArea = area
+
+    Walker:start({
+        queue = Bashing.areas[area].path,
+        onAfterMoveCallback = function()
+            Bashing:afterMove()
+        end,
+        setupFinishedCallback = function()
+            Bashing:ready()
+        end,
+        walkerFinishedCallback = function()
+            Bashing:walkingFinished()
+        end
+    })
+    Bashing:setTargets(Bashing.areas[area].mobs)
+    enableTriggers("Bashing")
+end
+
+function Bashing:setTargets(targets)
+    Bashing.currentTargets = {}
+    for _, target in ipairs(targets) do
+        table.insert(Bashing.currentTargets, target)
+    end
+end
+
+function Bashing:ready()
+    debug:print("Bashing", "ready()")
+    Bashing.state = Bashing.states.NEED_CHECK
+    Bashing:checkForState()
+end
+
+function Bashing:afterMove()
+    debug:print("Bashing", "afterMove()")
+    Bashing:checkWhoHere()
+end
+
+function Bashing:walkingFinished()
+    ACSEcho("Bashing finished!")
+    -- disableTriggers("Bashing")
+    Bashing:checkForNextArea()
+end
+
+function Bashing:checkForNextArea()
+    local index = getTableIndex(Bashing.loop, Bashing.currentArea) + 1
+    local nextArea
+    if not Bashing.loop[index] then
+        index = 1
+    end
+    nextArea = Bashing.areas[Bashing.loop[index]]
+    Bashing:gotoNextArea(Bashing.loop[index])
+end
+
+function Bashing:gotoNextArea(area)
+    local vnum = Bashing.areas[area].vnum
+    send("path find " .. vnum)
+    send("path go")
+    tempTrigger("You have reached your destination.", function()
+        Bashing:begin(area)
+        Bashing:cleanupMoveTriggers()
+    end)
+    tempTrigger("You are already there.", function()
+        Bashing:begin(area)
+        Bashing:cleanupMoveTriggers()
+    end)
+end
+
+function Bashing:cleanupMoveTriggers()
+    removeTemp("You are already there.")
+    removeTemp("You have reached your destination.")
+end
+
+-------------------------
+--  WHO HERE CHECKING  --
+-------------------------
+function Bashing:checkWhoHere()
+    debug:print("Bashing", "checkWhoHere()")
+  Bashing.state = Bashing.states.WHO_HERE
+  send("who here")
+  tempTrigger("^You see the following people here:$", function() Bashing:whoHereChecked() end)
+end
+
+function Bashing:whoHereChecked()
+    debug:print("Bashing", "whoHereChecked()")
+  tempTrigger("^(%w+)", function() Bashing:examineWhoHere() end)
+end
+
+function Bashing:examineWhoHere()
+    debug:print("Bashing", "examineWhoHere()")
+  local people = {}
+  local person, extra = mb.line:match("^(%w+)(.*)$")
+  if person then table.insert(people, person) end
+
+  while extra:find(", %w+") do
+    person, extra = extra:match(", (%w+)(.*)")
+    table.insert(people, person)
+  end
+
+  local isParty = true
+  for i,v in pairs(people) do
+    for j,w in pairs(Bashing.party) do
+      if v ~= w then isParty = false end
+    end
+  end
+
+  if isParty then 
+    Bashing:checkIH()
+  else
+    Bashing.state = Bashing.states.NEED_MOVE
+    add_timer(1, function() Bashing:checkForState() end)
+  end
+end
+
+
+
+-------------------
+--  IH CHECKING  --
+-------------------
+function Bashing:checkIH()
+    debug:print("Bashing", "checkIH()")
+  Bashing.targetList = {}
+  send("ih")
+  tempTrigger("You can see the following %d+ objects:", function() Bashing:handleIHSuccess() end)
+  tempTrigger("There is nothing here.", function() Bashing:removeIHStartTriggers() end)
+end 
+
+function Bashing:handleIHSuccess()
+    debug:print("Bashing", "handleIHSuccess()")
+  Bashing:removeIHStartTriggers()
+
+  Bashing.targetList = {}
+  Bashing.extraPickups = {}
+
+  triggers.Bashing_Mobs = {}
+  triggers.Bashing_Pickups = {}
+
+  for _, target in ipairs(Bashing.currentTargets) do
+    local trigger = {pattern = "^\"(.+)\"%s+" .. target, handler = function(p) Bashing:IHTargetHandler(p) end}
+    table.insert(triggers.Bashing_Mobs, trigger)
+  end
+
+  for _, extra in ipairs(Bashing.extraStuff) do
+    local trigger = {pattern = "^\"(.+)\"%s+" .. extra, handler = function(p) Bashing:extrasHandler(p) end}
+    table.insert(triggers.Bashing_Pickups, trigger)
+  end
+end
+
+function Bashing:mobKilled()
+    debug:print("Bashing", "mobKilled()")
+  Bashing.lastTarget = Bashing.selectedTarget
+  Bashing.selectedTarget = ""
+  Bashing.needPickup = true
+  Bashing.state = Bashing.states.NEED_CHECK
+end
+
+function Bashing:removeIHStartTriggers()
+    debug:print("Bashing", "removeIHStartTriggers()")
+    removeTemp("You can see the following %d+ objects:")
+    removeTemp("There is nothing here.")
+    addTemporaryPromptTrigger(function() 
+        Bashing:removeMobTableTriggers() 
+    end)
+end
+
+function Bashing:removeMobTableTriggers()
+    debug:print("Bashing", "removeMobTableTriggers()")
+  triggers.Bashing_Mobs = {}
+  triggers.Bashing_Pickups = {}
+
+  if #Bashing.targetList > 0 then
+    selectedTarget = Bashing.targetList[1]
+    debug:print("Bashing", "Setting state to Bashing.states.NEED_ATTACK")
+    Bashing.state = Bashing.states.NEED_ATTACK
+  else
+    debug:print("Bashing", "Setting state to Bashing.states.NEED_MOVE")
+    Bashing.state = Bashing.states.NEED_MOVE
+  end
+
+  Bashing:checkForState()
+end
+
+function Bashing:IHTargetHandler(p)
+    debug:print("Bashing", "IHTargetHandler: " .. p)
+  local mob = mb.line:match(p)
+  table.insert(Bashing.targetList, mob)
+end
+
+function Bashing:extrasHandler(p)
+  local extra = mb.line:match(p)
+  table.insert(Bashing.extraPickups, extra)
+end
+
+
+-----------------
+-- CHECK STATE --
+-----------------
+function Bashing:checkForState()
+    -- debug:print("Bashing", "checkForState: " .. Bashing.state)
+  if balances:check(baleq) and not hasAffliction("paralysis") and not hasAffliction("left_leg_broken") and not hasAffliction("right_leg_broken")
+    and not hasAffliction("left_arm_broken") and not hasAffliction("right_arm_broken") and not prone and not stunned and not isEntangled() then
+
+    if Bashing.needPickup then
+      Bashing.needPickup = false
+      send("get corpse")
+      send("get gold")
+    end
+
+    for _, extra in ipairs(Bashing.extraPickups) do
+      send("get " .. extra)
+    end
+    Bashing.extraPickups = {}
+
+    if Bashing.state == Bashing.states.NEED_CHECK then
+        debug:print("Bashing", "NEED_CHECK")
+      Bashing:checkWhoHere()
+    elseif Bashing.state == Bashing.states.NEED_ATTACK then
+        debug:print("Bashing", "NEED_ATTACK")
+        Bashing:performBashAttack()
+    elseif Bashing.state == Bashing.states.NEED_MOVE then
+        debug:print("Bashing", "NEED_MOVE")
+      add_timer(.5, function() Walker:walk() end)
+    end
+  end
+end
+
+
+function Bashing:performBashAttack()
+  if not class.bashAttack then
+    ACSEcho("No bash attack defined!")
+  else 
+    class.bashAttack()
+  end
+end
+
 
 Bashing.areas = {
     mamashi = {
+        vnum = "20855",
         mobs = {
             "a Githani inscriber.",
             "a Githani grappler.",
@@ -44,6 +324,7 @@ Bashing.areas = {
         },
     },
     khauskin = {
+        vnum = "25408",
         mobs = {
             "a stout Dwarven man",
             "a stocky Dwarven woman",
@@ -65,6 +346,7 @@ Bashing.areas = {
         },
     },
     mor = {
+        vnum = "19344",
         mobs = {
             "a ravenous, shadowy ghast.",
             "a robed, skeletal lich.",
@@ -86,6 +368,7 @@ Bashing.areas = {
         },
     },
     lich = {
+        vnum = "22868",
         mobs = {
             "a monstrous Infernal guard.",
             "a mindless experiment.",
@@ -110,6 +393,7 @@ Bashing.areas = {
         },
     },
     ayhesa = {
+        vnum = "19987",
         mobs = {
             "a Spellshaper Master.",
             "a Spellshaper Adept.",
@@ -125,7 +409,7 @@ Bashing.areas = {
             "ne", "out", "u", "w", "w", "n", "ne", "n"
         },
     },
-},
+}
 
 Bashing.extraStuff = {
     "a durable pickaxe.",
@@ -135,347 +419,10 @@ Bashing.extraStuff = {
 }
 
 
-
-
-function handleBeginBashing(i,p)
-  local area = i:match(p)
-  if not mobTable[area] then 
-    ACSEcho("Area " .. area .. " is not a valid bashing zone.") 
-    ACSEcho("Valid Areas:")
-    for k,v in pairs(mobTable) do
-      if k ~= "extras" then ACSEcho(k) end
-    end
-    show_prompt()
-    return 
-  end
-  beginBashing(area)
-end
-
 function Bashing:setup()
   ACS:addModule(Bashing, "Bashing")
 end
-
-aliases.newBashing = {
-    {pattern = "^beginbashing (%a+)$", handler = function(i,p) handleBeginBashing(i,p) end},
-    {pattern = "^stopbashing$", handler = function() moveQueue = {} ACSEcho("Move Queue is empty.  Feel free to move around!") end},
-    {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
-}
-
-triggers.newBash = {
-  {pattern = "You have slain .*", handler = function(p) mobKilled() end, disabled = true},
-
-  {pattern = "^You have recovered equilibrium.", 
-    handler = function(p) onPrompt(function() checkForState() end) end, disabled = true},
-
-  {pattern = "You have recovered balance on your left arm.", 
-    handler = function(p) onPrompt(function() checkForState() end) end, disabled = true},
-
-  {pattern = "You have recovered balance on your right arm.", 
-    handler = function(p) onPrompt(function() checkForState() end) end, disabled = true},
-
-  {pattern = "You have recovered balance on all limbs.", 
-    handler = function(p) onPrompt(function() checkForState() end) end, disabled = true},
-
-  {pattern = "^You have cured (.+)%.$", 
-    handler = function(p) onPrompt(function() checkForState() end) end, disabled = true},
-
-  {pattern = "You stand up and stretch your arms out wide.", 
-    handler = function(p) onPrompt(function() checkForState() end) end, disabled = true},
-
-  {pattern = "You cannot see that being here.",
-    handler = function(p) onPrompt(function() checkIH() end) end, disabled = true},
-
-  {pattern = "I do not recognize anything called that here.", 
-    handler = function(p) onPrompt(function() checkIH() end) end, disabled = true},
-
-  {pattern = "Ahh, I am truly sorry, but I do not see anyone by that name here.", 
-    handler = function(p) onPrompt(function() checkIH() end) end, disabled = true},
-
-  {pattern = "Nothing can be seen here by that name.", 
-    handler = function(p) onPrompt(function() checkIH() end) end, disabled = true},
-  {pattern = "You detect nothing here by that name.", 
-    handler = function(p) onPrompt(function() checkIH() end) end, disabled = true},
-    
-}
-
-
-targetList = {}
-extraPickups = {}
-lowHealthThreshold = 2000
-selectedTarget = ""
-
-
-bashSystemState = {
-  state = "needCheck",
-  moving = false,
-  checkWH = true,
-  needPickup = false,
-  party = {atcp.name}
-}
-
-
-
-
-
-function beginBashing(area)
-  setupBashQueues(area)
-  turnOnBash()
-  checkForState()
-end
-
-function turnOnBash()
-  enableTriggers("newBash")
-  bashSystemState.state = "needCheck"
-  ACSEcho("Bashing on!")
-end
-
-function turnOffBash()
-  disableTriggers("newBash")
-end
-
-function setupBashQueues(area)
-  setMoveQueue(area)
-  selectMobTable(area)
-end
-
-function checkForState()
-  if balances:check(baleq) and not hasAffliction("paralysis") and not hasAffliction("left_leg_broken") and not hasAffliction("right_leg_broken")
-    and not hasAffliction("left_arm_broken") and not hasAffliction("right_arm_broken") and not prone and not stunned and not isEntangled() then
-
-    if bashSystemState.needPickup then
-      bashSystemState.needPickup = false
-      send("get corpse")
-      send("get gold")
-    end
-
-    for i,v in ipairs(extraPickups) do
-      send("get " .. v)
-    end
-    extraPickups= {}
-
-    if bashSystemState.state == "needCheck" then
-      checkIH()
-    elseif bashSystemState.state == "needAttack" then
-      if health < lowHealthThreshold and class.onLowHealth then
-        class.onLowHealth()
-      else
-        performBashAttack()
-      end
-    elseif bashSystemState.state == "needMove" then
-      add_timer(1, function() moveNextFromQueue() end)
-    end
-  end
-end
-
----------------------
---  MOVE QUEUEING  --
----------------------
-function setMoveQueue(queue)
-  moveQueue = {}
-  if moveQueues[queue] then 
-    queue = moveQueues[queue]
-  end
-  for i,v in ipairs(queue) do addToMoveQueue(v) end
-end
-
-function addToMoveQueue(dir)
-  table.insert(moveQueue, dir)
-end
-
-function moveNextFromQueue()
-  if #moveQueue == 0 then
-    ACSEcho(C.R .. "No moves in queue!")
-    ACSEcho(C.R .. "Bashing done!")
-    turnOffBash()
-  else
-    if not bashSystemState.moving and not prone and not hasAffliction("paralysis") 
-      and not stunned and not unconscious and not asleep then
-      dir = moveQueue[1]
-      if class.onBeforeMove then class.onBeforeMove() end
-      send(dir)
-      bashSystemState.moving = true
-      add_timer(1, function() bashSystemState.moving = false end)
-      tempTrigger("You see exits leading .*", function() afterMove() end)
-      tempTrigger("You see a single exit .*", function() afterMove() end)
-      tempTrigger("A blizzard rages around you, blurring the world into a slate of uniform white.", function() afterMove() end)
-    end
-  end
-end
-
-function afterMove()
-  removeTemp("You see exits leading .*")
-  removeTemp("You see a single exit .*")
-  removeTemp("A blizzard rages around you, blurring the world into a slate of uniform white.")
-  table.remove(moveQueue, 1)
-
-  if bashSystemState.checkWH then
-    checkWhoHere()
-  else
-    checkIH()
-  end
-end
-
-
--------------------------
---  WHO HERE CHECKING  --
--------------------------
-function checkWhoHere()
-  bashSystemState.state = "checkingWH"
-  send("who here")
-  tempTrigger("^You see the following people here:$", function() whoHereChecked() end)
-end
-
-function whoHereChecked()
-  bashSystemState.state = "checkedWH"
-  tempTrigger("^(%w+)", function() examineWhoHere() end)
-end
-
-function examineWhoHere()
-  local people = {}
-  local person, extra = mb.line:match("^(%w+)(.*)$")
-  if person then table.insert(people, person) end
-
-  while extra:find(", %w+") do
-    person, extra = extra:match(", (%w+)(.*)")
-    table.insert(people, person)
-  end
-
-  local isParty = true
-  for i,v in pairs(people) do
-    for j,w in pairs(bashSystemState.party) do
-      if v ~= w then isParty = false end
-    end
-  end
-
-  if isParty then 
-    checkIH()
-  else
-    bashSystemState.state = "needMove"
-    add_timer(1, function() checkForState() end)
-  end
-end
-
--------------------
---  IH CHECKING  --
--------------------
-function checkIH()
-  targetList = {}
-  send("ih")
-  tempTrigger("You can see the following %d+ objects:", function() handleIHSuccess() end)
-  tempTrigger("There is nothing here.", function() removeIHStartTriggers() end)
-end 
-
-function handleIHSuccess()
-  removeIHStartTriggers()
-
-  targetList = {}
-  extraPickups = {}
-  triggers.mobTarget = {}
-  triggers.extraPickups = {}
-  for i,v in ipairs(currentTargetList) do
-    local trigger = {pattern = "^\"(.+)\"%s+" .. v, handler = function(p) IHTargetHandler(p) end}
-    table.insert(triggers.mobTarget, trigger)
-  end
-
-  for i,v in ipairs(mobTable.extras) do
-    local trigger = {pattern = "^\"(.+)\"%s+" .. v, handler = function(p) extrasHandler(p) end}
-    table.insert(triggers.extraPickups, trigger)
-  end
-end
-
-function mobKilled()
-  lastTarget = selectedTarget
-  selectedTarget = ""
-  bashSystemState.needPickup = true
-  bashSystemState.state = "needCheck"
-end
-
-function removeIHStartTriggers()
-  removeTemp("You can see the following %d+ objects:")
-  removeTemp("There is nothing here.")
-  addTemporaryPromptTrigger(function() removeMobTableTriggers() end)
-end
-
-function removeMobTableTriggers()
-  triggers.mobTarget = {}
-  triggers.extraPickups = {}
-
-  if #targetList > 0 then
-    selectedTarget = targetList[1]
-    bashSystemState.state = "needAttack"
-  else
-    bashSystemState.state = "needMove"
-  end
-
-  checkForState()
-end
-
-function IHTargetHandler(p)
-  local mob = mb.line:match(p)
-  table.insert(targetList, mob)
-end
-
-function extrasHandler(p)
-  local extra = mb.line:match(p)
-  table.insert(extraPickups, extra)
-end
-
---------------------------
---  MOB TABLE SELECTION --
---------------------------
-function selectMobTable(t)
-  if mobTable[t] then
-    currentTargetList = mobTable[t]
-  elseif t then
-    currentTargetList = t
-  end
-end
-
-class = class or {}
-if isClass("syssin") then
-
-elseif isClass("carnifex") then
-  class.bashAttack = function()
-    send("wield bardiche")
-    send("pole spinslash " .. selectedTarget)
-  end
-  class.onBeforeMove = function()
-    send("order hounds follow me")
-  end
-  class.onLowHealth = function()
-    send("soul consume for health")
-  end
-elseif isClass("teradrim") then
-  class.bashAttack = function()
-    doWield(crozier, tower)
-    send("sand shred " .. selectedTarget)
-  end
-elseif isClass("atabahi") then
-  class.bashAttack = function()
-    --doWield(crozier, tower)
-    send("claw " .. selectedTarget)
-    send("claw " .. selectedTarget)
-  end
-end
-
-
-
-function performBashAttack()
-  --removeBalanceTemps()
-
-  if not class.bashAttack then
-    ACSEcho("No bash attack defined!")
-  else 
-    class.bashAttack()
-  end
-end
-
-
-
-
-
-
-
+Bashing:setup()
 
 
 ---------------------------
