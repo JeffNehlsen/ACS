@@ -140,7 +140,7 @@ end
 
 function enableTriggers(input)
     if triggers[input] then
-        ACSEcho("Enabling " .. input .. " triggers!")
+        -- ACSEcho("Enabling " .. input .. " triggers!")
         switchTriggers(triggers[input], false)
     else
         ACSEcho("Error: " .. input .. " not found in triggers table.")
@@ -149,7 +149,7 @@ end
 
 function disableTriggers(input)
     if triggers[input] then
-        ACSEcho("Disabling " .. input .. " triggers!")
+        -- ACSEcho("Disabling " .. input .. " triggers!")
         switchTriggers(triggers[input], true)
     else
         ACSEcho("Error: " .. input .. " not found in triggers table.")
