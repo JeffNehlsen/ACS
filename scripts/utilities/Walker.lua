@@ -22,6 +22,7 @@ function Walker:startWalker(data)
     self[onAfterMoveCallback] = data.onAfterMoveCallback
     self[setupFinishedCallback] = data.setupFinishedCallback
     self[walkerFinishedCallback] = data.walkerFinishedCallback
+    self[onBeforeMoveCallback] = data.onBeforeMoveCallback or nil
     for _, dir in ipairs(data.queue) do
         self[queue]:insert(dir)
     end

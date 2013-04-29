@@ -4,194 +4,138 @@ echo("New bashing system loaded")
 -- 15067 = mamashi
 -- 12159 = lich gardens entrance
 
-aliases.pathRecording = {
-  {pattern = "^startrecording$", handler = function(i,p) recordingStartHandler() end},
-  {pattern = "^stoprecording$",  handler = function(i,p) recordingStopHandler() end},
-  {pattern = "^resetrecording$", handler = function(i,p) resetRecording() end},
-  {pattern = "^printrecording$", handler = function(i,p) printRecording() end},
-  {pattern = "^nw$",  handler = function(i,p) handleDirection("nw") end},
-  {pattern = "^n$",   handler = function(i,p) handleDirection("n") end},
-  {pattern = "^ne$",  handler = function(i,p) handleDirection("ne") end},
-  {pattern = "^w$",   handler = function(i,p) handleDirection("w") end},
-  {pattern = "^e$",   handler = function(i,p) handleDirection("e") end},
-  {pattern = "^sw$",  handler = function(i,p) handleDirection("sw") end},
-  {pattern = "^s$",   handler = function(i,p) handleDirection("s") end},
-  {pattern = "^se$",  handler = function(i,p) handleDirection("se") end},
-  {pattern = "^u$",   handler = function(i,p) handleDirection("u") end},
-  {pattern = "^d$",   handler = function(i,p) handleDirection("d") end},
-  {pattern = "^up$",   handler = function(i,p) handleDirection("u") end},
-  {pattern = "^down$",   handler = function(i,p) handleDirection("d") end},
-  {pattern = "^in$",  handler = function(i,p) handleDirection("in") end},
-  {pattern = "^out$", handler = function(i,p) handleDirection("out") end},
+
+Bashing = {}
+Bashing.triggers = {
+
 }
 
-aliases.newBashing = {
-  {pattern = "^beginbashing (%a+)$", handler = function(i,p) handleBeginBashing(i,p) end},
-  {pattern = "^stopbashing$", handler = function() moveQueue = {} ACSEcho("Move Queue is empty.  Feel free to move around!") end},
-  {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
+Bashing.aliases = {
+
 }
 
-recording = {active = false}
-recording.path = recording.path or {}
+Bashing.areas = {
+    mamashi = {
+        mobs = {
+            "a Githani inscriber.",
+            "a Githani grappler.",
+            "a Githani master.",
+            "a Mit'olk axeman.",
+            "a Mit'olk illusionist.",
+            "a Mit'olk bladesman.",
+            "a greater nalas.",
+            "a young nalas.",
+            "a mature nalas.",
+            "Garthun, the Maw.",
+        },
+        path = {
+            "d", "e", "n", "se", "s", "w", "n", "w", "n", "w", 
+            "n", "ne", "e", "se", "se", "n", "ne", "e", "w", "sw", 
+            "s", "sw", "se", "s", "n", "nw", "s", "w", "sw", "e", 
+            "se", "nw", "w", "nw", "w", "n", "ne", "n", "d", "nw", 
+            "w", "s", "w", "w", "e", "e", "n", "nw", "w", "sw", 
+            "ne", "e", "se", "e", "se", "sw", "e", "se", "sw", 
+            "w", "e", "ne", "e", "ne", "n", "ne", "s", "se", "s", 
+            "s", "sw", "nw", "nw", "se", "sw", "w", "sw", "w", 
+            "w", "n", "n", "s", "s", "w", "w", "e", "e", "e", 
+            "e", "e", "se", "ne", "e", "w", "ne", "nw", "se", 
+            "ne", "n", "s", "sw", "sw", "sw", "nw", "w", "w", 
+            "w", "n", "n", "w",
+        },
+    },
+    khauskin = {
+        mobs = {
+            "a stout Dwarven man",
+            "a stocky Dwarven woman",
+            "a powerful Dwarven warrior",
+            "a statuesque Dwarven guard",
+            "Gordak, Leader of Khauskin",
+            "a vampiric blood sentry",
+            "a vampiric blood guard",
+            "a burly Dwarven miner",
+            "Gordak, Leader of Khauskin.",
+        },
+        path = {
+            "s", "w", "e", "e", "w", "s", "w", "w", "e", "e", 
+            "s", "sw", "w", "e", "ne", "n", "n", "n", "s", "s", 
+            "s", "s", "d", "s", "e", "d", "n", "n", "n", "n", "nw", 
+            "nw", "w", "sw", "s", "s", "e", "e", "e", "w", "s", 
+            "sw", "s", "s", "se", "s", "n", "ne", "n", "n", "nw", 
+            "s", "s", "s", "n", "n", "n", "n", "w", "w", "sw"
+        },
+    },
+    mor = {
+        mobs = {
+            "a ravenous, shadowy ghast.",
+            "a robed, skeletal lich.",
+            "a stench%-ridden ghoul.",
+            "a vampiric warrior.",
+            "a vampiric sentry.",
+            "Aclyr, the vampiric general.",
+        },
+        path = {
+            "d", "n", "w", "nw", "w", "sw", "n", "nw", "sw", 
+            "s", "e", "e", "sw", "w", "n", "w", "sw", "e", 
+            "e", "n", "e", "e", "ne", "ne", "n", "e", "se", 
+            "se", "sw", "w", "nw", "w", "ne", "n", "n", "n", 
+            "se", "nw", "w", "nw", "se", "sw", "ne", "e", 
+            "n", "n", "e", "se", "nw", "w", "d", "e", "e", 
+            "nw", "nw", "nw", "n", "s", "s", "w", 
+            "w", "s", "e", "w", "se", "e", "e", "e", "e", 
+            "w", "w", 'u', 's', 's', 's', 's', 's', 'sw', 'e', 'se', 'e', 's', 'u'
+        },
+    },
+    lich = {
+        mobs = {
+            "a monstrous Infernal guard.",
+            "a mindless experiment.",
+            "a student of the lich.",
+            "a dark Cabalist scholar.",
+            "a guardian wraith.",
+            "a tattered Bahkatu experiment.",
+            "a studious lich scientist.",
+            "a commanding lich scientist.",
+        },
+        path = {
+            "ne", "ne", "nw", "w", "nw", "n", "ne", "e", "e", 
+            "se", "s", "sw", "w", "n", "n", "n", "n", "e", "ne", 
+            "se", "e", "n", "s", "e", "n", "s", "s", "n", "e", 
+            "e", "ne", "ne", "e", "se", "sw", "se", "s", "w", 
+            "nw", "ne", "e", "w", "nw", "w", "w", "w", "w", 
+            "nw", "sw", "w", "n", "nw", "nw", "sw", "w", "w", 
+            "sw", "nw", "nw", "nw", "sw", "se", "se", "se", 
+            "w", "se", "w", "ne", "nw", "nw", "sw", 
+            "se", "e", "e", "ne", "ne", "e", "e", "ne", "se", "se", 
+            "s", "s", "s", "s", "s", "se", "sw", "sw",
+        },
+    },
+    ayhesa = {
+        mobs = {
+            "a Spellshaper Master.",
+            "a Spellshaper Adept.",
+            "a Spellshaper Archon.",
+        },
+        path = {
+            "s", "sw", "s", "e", "e", "d", "in", "sw", "s", "n", "ne", 
+            "nw", "n", "s", "e", "n", "s", "n", "s", "d", "se", "n", 
+            "s", "s", "n", "in", "w", "e", "out", "e", "ne", "sw", "se", 
+            "nw", "e", "e", "e", "e", "ne", "ne", "se", "se", "sw", "sw", 
+            "nw", "ne", "w", "w", "w", "w", "w", "w", "s", "d", "u", "n", 
+            "nw", "u", "n", "s", "w", "n", "s", "se", "sw", "s", "n", 
+            "ne", "out", "u", "w", "w", "n", "ne", "n"
+        },
+    },
+},
 
-function handleDirection(dir)
-  if recording.active then
-    table.insert(recording.path, dir)
-  end
-  send(dir)
-end
-
-function recordingStartHandler() 
-  recording.active = true
-  ACSEcho("Starting recording...")
-end
-
-function recordingStopHandler()
-  recording.active = false
-  ACSEcho("Stoping recording")
-end
-
-function printRecording()
-  if #recording.path > 0 then
-    ACSEcho("Recording results:")
-    local str = "{"
-    for i,v in ipairs(recording.path) do
-      str = str .. "\"" .. v .. "\", "
-    end
-    str = str .. "},"
-    echo(str)
-  else
-    ACSEcho("No recording to print!")
-  end
-end
-
-function resetRecording()
-  recoring.path = {}
-  ACSEcho("Reset recording!")
-end
-
-targetList = {}
-extraPickups = {}
-lowHealthThreshold = 2000
-selectedTarget = ""
-mobTable = {
-  mamashi = {
-    "a Githani inscriber.",
-    "a Githani grappler.",
-    "a Githani master.",
-    "a Mit'olk axeman.",
-    "a Mit'olk illusionist.",
-    "a Mit'olk bladesman.",
-    "a greater nalas.",
-    "a young nalas.",
-    "a mature nalas.",
-    "Garthun, the Maw.",
-  },
-  khauskin = {
-    "a stout Dwarven man",
-    "a stocky Dwarven woman",
-    "a powerful Dwarven warrior",
-    "a statuesque Dwarven guard",
-    "Gordak, Leader of Khauskin",
-    "a vampiric blood sentry",
-    "a vampiric blood guard",
-    "a burly Dwarven miner",
-    "Gordak, Leader of Khauskin.",
-  },
-  mor = {
-    "a ravenous, shadowy ghast.",
-    "a robed, skeletal lich.",
-    "a stench%-ridden ghoul.",
-    "a vampiric warrior.",
-    "a vampiric sentry.",
-    "Aclyr, the vampiric general.",
-  },
-  lich = {
-    "a monstrous Infernal guard.",
-    "a mindless experiment.",
-    "a student of the lich.",
-    "a dark Cabalist scholar.",
-    "a guardian wraith.",
-    "a tattered Bahkatu experiment.",
-    "a studious lich scientist.",
-    "a commanding lich scientist.",
-  },
-  xoral = {
-    "a Xorali man.",
-    "a Xorali sentry.",
-    "a curious Xorali woman.",
-    "Lasotha, the sentry mother.",
-    "a Xorali woman.",
-    "an elite lizardfolk bodyguard.",
-    "Thorasa, the lizardfolk matron."
-  },
-  ayhesa = {
-    "a Spellshaper Master.",
-    "a Spellshaper Adept.",
-    "a Spellshaper Archon.",
-  },
-  extras = {
+Bashing.extraStuff = {
     "a durable pickaxe.",
     "a beaten Dwarven corpse.",
     "a worker's corpse.",
     "a vivisected Troll corpse.",
-  },
 }
 
 
-moveQueue = {}
-moveQueues = {
-  khauskin  = {"s", "w", "e", "e", "w", "s", "w", "w", "e", "e", 
-              "s", "sw", "w", "e", "ne", "n", "n", "n", "s", "s", 
-              "s", "s", "d", "s", "e", "d", "n", "n", "n", "n", "nw", 
-              "nw", "w", "sw", "s", "s", "e", "e", "e", "w", "s", 
-              "sw", "s", "s", "se", "s", "n", "ne", "n", "n", "nw", 
-              "s", "s", "s", "n", "n", "n", "n", "w", "w", "sw"},
-  mamashi   = {"d", "e", "n", "se", "s", "w", "n", "w", "n", "w", 
-               "n", "ne", "e", "se", "se", "n", "ne", "e", "w", "sw", 
-               "s", "sw", "se", "s", "n", "nw", "s", "w", "sw", "e", 
-               "se", "nw", "w", "nw", "w", "n", "ne", "n", "d", "nw", 
-               "w", "s", "w", "w", "e", "e", "n", "nw", "w", "sw", 
-               "ne", "e", "se", "e", "se", "sw", "e", "se", "sw", 
-               "w", "e", "ne", "e", "ne", "n", "ne", "s", "se", "s", 
-               "s", "sw", "nw", "nw", "se", "sw", "w", "sw", "w", 
-               "w", "n", "n", "s", "s", "w", "w", "e", "e", "e", 
-               "e", "e", "se", "ne", "e", "w", "ne", "nw", "se", 
-               "ne", "n", "s", "sw", "sw", "sw", "nw", "w", "w", 
-               "w", "n", "n", "w",},
-  mor       = {"d", "n", "w", "nw", "w", "sw", "n", "nw", "sw", 
-               "s", "e", "e", "sw", "w", "n", "w", "sw", "e", 
-               "e", "n", "e", "e", "ne", "ne", "n", "e", "se", 
-               "se", "sw", "w", "nw", "w", "ne", "n", "n", "n", 
-               "se", "nw", "w", "nw", "se", "sw", "ne", "e", 
-               "n", "n", "e", "se", "nw", "w", "d", "e", "e", 
-               "nw", "nw", "nw", "n", "s", "s", "w", 
-               "w", "s", "e", "w", "se", "e", "e", "e", "e", 
-               "w", "w", 'u', 's', 's', 's', 's', 's', 'sw', 'e', 'se', 'e', 's', 'u'},
-  lich      = {"ne", "ne", "nw", "w", "nw", "n", "ne", "e", "e", 
-               "se", "s", "sw", "w", "n", "n", "n", "n", "e", "ne", 
-               "se", "e", "n", "s", "e", "n", "s", "s", "n", "e", 
-               "e", "ne", "ne", "e", "se", "sw", "se", "s", "w", 
-               "nw", "ne", "e", "w", "nw", "w", "w", "w", "w", 
-               "nw", "sw", "w", "n", "nw", "nw", "sw", "w", "w", 
-               "sw", "nw", "nw", "nw", "sw", "se", "se", "se", 
-               "w", "se", "w", "ne", "nw", "nw", "sw", 
-               "se", "e", "e", "ne", "ne", "e", "e", "ne", "se", "se", 
-               "s", "s", "s", "s", "s", "se", "sw", "sw",},
-   ayhesa = {"s", "sw", "s", "e", "e", "d", "in", "sw", "s", "n", "ne", "nw", "n", "s", "e", "n", "s", "n", "s", "d", "se", "n", 
-"s", "s", "n", "in", "w", "e", "out", "e", "ne", "sw", "se", "nw", "e", "e", "e", "e", "ne", "ne", 
-"se", "se", "sw", "sw", "nw", "ne", "w", "w", "w", "w", "w", "w", "s", "d", "u", "n", "nw", "u", "n",
- "s", "w", "n", "s", "se", "sw", "s", "n", "ne", "out", "u", "w", "w", "n", "ne", "n", },
-  xoral     = {},
-}
 
-bashSystemState = {
-  state = "needCheck",
-  moving = false,
-  checkWH = true,
-  needPickup = false,
-  party = {atcp.name}
-}
 
 function handleBeginBashing(i,p)
   local area = i:match(p)
@@ -206,6 +150,16 @@ function handleBeginBashing(i,p)
   end
   beginBashing(area)
 end
+
+function Bashing:setup()
+  ACS:addModule(Bashing, "Bashing")
+end
+
+aliases.newBashing = {
+    {pattern = "^beginbashing (%a+)$", handler = function(i,p) handleBeginBashing(i,p) end},
+    {pattern = "^stopbashing$", handler = function() moveQueue = {} ACSEcho("Move Queue is empty.  Feel free to move around!") end},
+    {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
+}
 
 triggers.newBash = {
   {pattern = "You have slain .*", handler = function(p) mobKilled() end, disabled = true},
@@ -243,6 +197,25 @@ triggers.newBash = {
     handler = function(p) onPrompt(function() checkIH() end) end, disabled = true},
     
 }
+
+
+targetList = {}
+extraPickups = {}
+lowHealthThreshold = 2000
+selectedTarget = ""
+
+
+bashSystemState = {
+  state = "needCheck",
+  moving = false,
+  checkWH = true,
+  needPickup = false,
+  party = {atcp.name}
+}
+
+
+
+
 
 function beginBashing(area)
   setupBashQueues(area)
