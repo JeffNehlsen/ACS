@@ -1,21 +1,21 @@
 echo("Templar loaded. Forward, unto Dawn!")
 
+Templar = {}
 
 -- TODO: Finish converting the aliases to Templar ones.
-aliases.classAliases = {
-  --{pattern = "^fol$", handler = function(i,p) houndsFollow() end},
+Templar.aliases = {
+  -- {pattern = "^bat$", handler = function(i,p) hBatter() end},
 
+
+  -- {pattern = "^bf$", handler = function(i,p) bruteforce() end},
+  -- {pattern = "^hr$", handler = function(i,p) hRage() end},
+  -- {pattern = "^cha$", handler = function(i,p) setCharge() end},
+
+  -- {pattern = "^dsl$", handler = function(i,p) dsl() end},
 }
 
-aliases.attackAliases = {
-  {pattern = "^bat$", handler = function(i,p) hBatter() end},
-
-
-  {pattern = "^bf$", handler = function(i,p) bruteforce() end},
-  {pattern = "^hr$", handler = function(i,p) hRage() end},
-  {pattern = "^cha$", handler = function(i,p) setCharge() end},
-
-  {pattern = "^dsl$", handler = function(i,p) dsl() end},
+Templar.triggers = {
+  
 }
 
 -- TODO: Gather attack lines for the weapons
@@ -23,72 +23,75 @@ aliases.attackAliases = {
 
 
 -- Righteousness: Attacks
-function wither() 
+function Templar:wither() 
   send("aura withering " .. target)
 end
 
 -- Bladefire
-function wither() 
+function Templar:wither() 
   send("aura withering " .. target)
 end
 
 -- Battlefury: Attacks
 
-function stk()
+function Templar:strike()
   send("strike " .. target)
 end
 
-function raze()
+function Templar:raze()
   send("raze " .. target)
 end
 
-function rsl()
+function Templar:rsl()
   send("razestrike " .. target)
 end
 
-function block(direction)
+function Templar:block(direction)
   send("block " .. direction)
 end
 
-function dsl()
-  send("dsk " .. target)
+function Templar:dsl()
+  if leftHand == rightHand then
+    send("dsw " .. target)
+  else
+    send("dsk " .. target)
+  end
 end
 
-function dsw()
-  send("dsw " .. target)
-end
-
-function impale()
+function Templar:impale()
   send("impale " .. target)
 end
 
-function zeal()
+function Templar:zeal()
   send("zeal " .. target)
 end
 
-function lunge()
+function Templar:lunge()
   send("lunge " .. target)
 end
 
-function rpt(limb)
+function Templar:rupture(limb)
   send("rupture " .. target .. " " .. limb)
 end
 
-function tmp()
-  send("tempest " .. target)
+function Templar:tempest()
+  send("tempest")
 end
 
-function dsb()
+function Templar:disembowel()
   send("disembowel " .. target)
 
-function charge()
+function Templar:charge()
   send("charge " .. target)
 end
 
-function rnd()
+function Templar:rend()
   send("rend " .. target)
 end
 
-function clv()
+function Templar:cleave()
   send ("cleave" .. target)
 end
+
+-- Setup the class now that it is defnied
+ACS:addModule(Templar, "Templar")

@@ -512,6 +512,7 @@ function Bashing:setup()
   ACS:addModule(Bashing, "Bashing")
 end
 Bashing:setup()
+disableTriggers("Bashing")
 
 
 ---------------------------

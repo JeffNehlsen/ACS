@@ -212,7 +212,7 @@ function doHeal()
         table.insert(writheaffs, v)
       end
       
-      if v.rage and isClass("atabahi") then
+      if v.rage and (isClass("atabahi") or isClass("templar")) then
         table.insert(rageaffs, v)
       end
       
