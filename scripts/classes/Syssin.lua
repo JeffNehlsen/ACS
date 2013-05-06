@@ -598,11 +598,11 @@ possibleVenoms = {"Aconite","Araceae","Colocasia","Curare","Darkshade","Delphini
 
 function doMilk(venom)
   send("secrete " .. venom)
-  send("milk venom into empty")
+  send("milk venom into emptyvial")
 end
 
 function addToMilk(venom)
-  addAction("doMilk('" .. venom .. "')", true)
+  actions:add(function() doMilk(venom) end, baleq, {"balance"})
   echo("Added " .. venom .. " to be milked.")
 end
 
@@ -615,4 +615,3 @@ function fullSetOfVenoms(numToMake)
     end
   end
 end
-

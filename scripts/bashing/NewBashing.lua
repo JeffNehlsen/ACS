@@ -4,6 +4,73 @@ echo("New bashing system loaded")
 -- 15067 = mamashi
 -- 12159 = lich gardens entrance
 
+-- simpleBashing = false
+-- triggers.simpleBashing = {
+--     {pattern = {
+--         "^You have recovered equilibrium.",
+--         "You have recovered balance on your left arm.",
+--         "You have recovered balance on your right arm.",
+--         "You have recovered balance on all limbs.",
+--         "You stand up and stretch your arms out wide.",
+--         "^You have cured (.+)%.$"
+--     }, handler = function(p) onPrompt(function() if simpleBashing then class.bashAttack() end end) end},
+-- }
+-- aliases.simpleBashing = {
+--     {pattern = "^autobash$", handler = function()
+--         simpleBashing = not simpleBashing
+--         ACSEcho("Simple Bashing " .. tostring(simpleBashing))
+--     end},
+--     {pattern = "^bash$", handler = function()
+--         class.bashAttack()
+--     end}
+-- }
+
+
+-- --- Area 404: Xaanhal ------------ v36740 ---                                
+--      [^]
+--       | 
+--      [ ] [ ]-[ ]         [ ]
+--       | /       \       /   \
+--      [ ]         [ ]-[ ]     [ ]
+--         \           /         | 
+--          [ ]-[ ]-[ ]         [ ]-[ ]
+--           | /       \       /       \
+--          [ ]         [+]-[ ]         [ ]
+--             \       /       \         | 
+--              [ ]-[ ]         [ ]-[ ] [ ]
+--               |     \       /       \ | 
+--              [ ]     [ ]-[ ]         [ ]
+--               |       |   |         /
+--              [ ]     [ ]-[ ]     [ ]
+--                 \   /       \   /   \
+--                  [ ]         [ ]     [ ]
+--                                         \
+--                                          [ ]-[ ]-[_]
+                                             
+-- ------------------ -3:0:-2 ------------------
+
+
+-- --- Area 404: Xaanhal ------------ v36781 ---                                             
+--                                      [^]
+--                                     /
+--                      [ ]-[ ]-[ ]-[ ]
+--                     /       \   /   \
+--                  [ ]         [ ]     [ ]
+--                 /           /   \       \
+--              [ ]         [ ]     [ ]     [ ]
+--             /   \         |         \       \
+--          [ ]     [ ]-[+]-[ ]         [ ]     [ ]
+--         /       /         |         /   \   /
+--      [ ]     [ ]         [ ]     [ ]     [ ]
+--       |       |         /   \     |     /
+--      [ ]-[ ]-[ ]     [ ]     [ ]-[ ]-[ ]
+--         \ |   |     /
+--          [ ]-[ ]-[ ]
+                                             
+                                             
+                                             
+                                             
+
 
 Bashing = {}
 Bashing.state = ""
@@ -46,7 +113,7 @@ Bashing.aliases = {
     -- {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
 }
 
-Bashing.loop = { "ayhesa", "lich", "mamashi", "khauskin", "mor" }
+Bashing.loop = { "xaanhal", "ayhesa", "lich", "mamashi"} --, "khauskin", "mor" }
 
 function Bashing:begin(area)
     if not Bashing.areas[area] then
@@ -104,7 +171,7 @@ end
 function Bashing:checkForNextArea()
     local index = getTableIndex(Bashing.loop, Bashing.currentArea) + 1
     local nextArea
-    if not Bashing.loop[index] then
+    if not index or not Bashing.loop[index] then
         index = 1
     end
     nextArea = Bashing.areas[Bashing.loop[index]]
@@ -167,7 +234,7 @@ function Bashing:examineWhoHere()
     Bashing:checkIH()
   else
     Bashing.state = Bashing.states.NEED_MOVE
-    add_timer(1, function() Bashing:checkForState() end)
+    add_timer(.5, function() Bashing:checkForState() end)
   end
 end
 
@@ -294,6 +361,28 @@ end
 
 
 Bashing.areas = {
+    xaanhal = {
+        vnum = "36688",
+        path = {
+            "d", "s", "s", "ne", "e", "se", "e", "ne", "se", "s", 
+            "e", "se", "s", "s", "sw", "sw", "nw", "w", "sw", "nw", 
+            "n", "n", "nw", "n", "nw", "se", "e", "sw", "ne", "e", 
+            "se", "e", "ne", "sw", "se", "e", "w", "sw", "w", "nw", 
+            "ne", "e", "se", "e", "se", "sw", "se", "se", "e", "e", 
+            "d", "sw", "w", "w", "w", "sw", "sw", "sw", "sw", "s", 
+            "se", "n", "e", "s", "e", "ne", "ne", "n", "w", "w", 
+            "sw", "ne", "e", "e", "n", "ne", "se", "se", "sw", "s",
+            "w", "nw", "se", "e", "e", "ne", "ne", "nw", "nw", "nw"
+        },
+        mobs = {
+            "a cautious Xorani guard.",
+            "a merciless Xorani warrior.",
+            "a wiry Xorani guard.",
+            "a willowy nest guardian.",
+            "a suspicious Xorani patrol.",
+            "an arrogant Xorani master at arms.",
+        }
+    },
     mamashi = {
         vnum = "20855",
         mobs = {

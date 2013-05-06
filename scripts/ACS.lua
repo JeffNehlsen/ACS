@@ -1,6 +1,5 @@
 
 ACS = {}
-
 function ACS:addModule(module, name)
     triggers[name] = {}
     aliases[name] = {}
