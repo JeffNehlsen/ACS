@@ -2601,11 +2601,7 @@ defenses = {
   -------------
   -- TEMPLAR --
   -------------
-  blessing_protection = {
-    requires = baleq,
-    takes = {"equilibrium"}
-    initDef = false,
-  }
+
 }
 
 -- Adds the triggers for give/take.

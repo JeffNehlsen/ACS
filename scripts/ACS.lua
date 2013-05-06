@@ -11,7 +11,7 @@ function ACS:addModule(module, name)
 
     if module.aliases then
         for _, alias in ipairs(module.aliases) do
-            table.insert(aliases[name], trigger)
+            table.insert(aliases[name], alias)
         end
     end
 

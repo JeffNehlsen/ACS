@@ -10,6 +10,10 @@ function setACSLabel(str)
     replace(acsLabel .. str .. C.x)
 end
 
+function ACSLabel(str)
+  setACSLabel(str)
+end
+
 function ACSEcho(str)
     echo("\n" .. acsLabel .. str .. C.x)
     show_prompt()
