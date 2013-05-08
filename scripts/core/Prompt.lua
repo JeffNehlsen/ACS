@@ -63,7 +63,7 @@ function prompt:parse(line)
   prompt.kai          = extra:match("Kai:(%d+)")
   prompt.essence      = extra:match("Essence:(%d+)")
   prompt.leftCharge   = extra:match("LC:(%d+)")
-  prompt.rightCHarge  = extra:match("RC:(%d+)")
+  prompt.rightCharge  = extra:match("RC:(%d+)")
 
   prompt.cloak        = check(status, "c")
   prompt.silaris      = check(status, "s")
@@ -223,10 +223,10 @@ function prompt:build()
   local chargeDisplay = function()
     if not isClass("templar") or (prompt.leftCharge == "" and prompt.rightCharge == "") then return "" end
 
-    prompt.leftCharge = prompt.leftCharge or 0
-    prompt.rightCharge = prompt.rightCharge or 0
+    prompt.leftCharge = prompt.leftCharge
+    prompt.rightCharge = prompt.rightCharge 
 
-    return promptLabelColor .. "LC:" .. p_stat(prompt.leftCharge, 100, false) .. " RC: " .. p_stat(prompt.rightCharge, 100, false)
+    return promptLabelColor .. "LC:" .. p_stat(prompt.leftCharge, 100, false) .. " RC:" .. p_stat(prompt.rightCharge, 100, false)
   end
 
   local balanceDisplay = check(prompt.equilibrium, C.C .. "e" .. C.x, "-") .. check(prompt.balance, C.C .. "b" .. C.x, "-")

@@ -1,6 +1,8 @@
 echo("Templar loaded. Forward, unto Dawn!")
 
-Templar = {}
+Templar = {
+    enemyImpaled = false
+}
 
 -- TODO: Finish converting the aliases to Templar ones.
 Templar.aliases = {
@@ -27,40 +29,73 @@ Templar.triggers = {
 
     {pattern = "You are already benefiting from an aura of (%w+).", handler = function(p) Templar:setAura(p) end},
     {pattern = "You are already benefiting from the (%w+) blessing.", handler = function(p) Templar:addedBlessing(p) end},
+
+    {pattern = "Focusing your mind, you utter a quiet prayer and imbue (.*) with (%w+).", handler = function(p) Templar:empowerHandler(p) end},
+
+    -- Impale/Lunge to Disembowel
+    {pattern = "You draw your .* back and plunge it deep into the body of (%w+) impaling %w+.", handler = function(p) Templar:impaleHandler(p) end},
+    {pattern = "With a cry of delight you skewer (%w+) on your .*, who writhes and screams as the weapon is driven deep into %w+ flesh.", handler = function(p) Templar:impaleHandler(p) end},
+    
+    -- Unimpaled/disemboweled
+    {pattern = "With a look of agony on his face, (%w+) manages to writhe %w+ free of the weapon which impaled %w+.", handler = function(p) Templar:unimpaledHandler(p) end},
+    {pattern = "(%w+) has writhed free of %w+ impalement.", handler = function(p) Templar:unimpaledHandler(p) end},
+    {pattern = "With a vicious snarl you carve a merciless swathe through the steaming guts of %w+, who oyagurgles and chokes as you withdraw your dripping .*, its blade glistening with gore.", handler = function(p) Templar:disemboweledHandler(p) end},
+
+    -- Cripple: crippled/crippled_body
+    -- As a Basilican mace strikes, a surge of energy cascades along it, striking yourself's legs.
+    -- Gives crippled_body, cures crippled
+    -- As a Basilican mace strikes, a surge of energy cascades along it, striking yourself's body.
+
+    -- Disrupt: mental_disruption/physical_disruption
+    -- A flash of energy cascades down a Basilican mace, disrupting yourself's equilibrium.
+    -- A flash of energy cascades down a Basilican mace, disrupting yourself's balance.
+
+    -- Trauma: Extra 4.99% limb damage
+    -- As a Basilican mace strikes yourself's left leg, it sends a pulse of destructive power into it.
+
+    -- Burst: Hit once to do delayed damage (second message). Second attack in a row will do AoE, but deal no damage to the target.
+    -- As a Basilican mace strikes Kaed, you feel its stored power dissipating into him.
+    -- You feel a faint tingling feeling behind your eyes as the energy planted by a Basilican mace shatters yourself's mind.
+
+
+    -- Blaze + rebounding.  Blaze blocked the hit on the left leg.  Going to have to capture the reobunding strip and reduce the enemy leg damage.
+    -- You brutally batter Alistaire's left leg with a Basilican mace.
+    -- White flames suddenly encase a Basilican mace as your attack strikes Alistaire's rebounding aura, 
+    -- burning the aura away.
+    -- Numbing force behind the blow, you pound Alistaire's right leg with a Basilican mace.
+    -- As a Basilican mace strikes Alistaire, you feel its stored power dissipating into him.
+    -- Balance Used: 2.36 seconds
 }
 
 -- TODO: Gather attack lines for the weapons
 -- TODO: Figure out how empowerments/releases are going to work
 -- Double Raze: empower blaze/razeslash
 
-
-
-function Templar:setAura(p)
-    Templar.currentAura = mb.line:match(p)
-    Templar.currentAura = string.lower(Templar.currentAura)
-    ACSLabel("AURA: " .. Templar.currentAura)
+function Templar:impaleHandler(p)
+    local person = mb.line:match(p)
+    Templar.enemyImpaled = true
+    addTemp("You have recovered balance on all limbs.", function() send("disembowel " .. person) end)
 end
 
-function Templar:addedBlessing(p)
-    local blessing = mb.line:match(p)
-    ACSLabel("Added Blessing: " .. blessing)
-    table.insert(Templar.currentBlessings, blessing)
-end
-
-function Templar:removedBlessing(p)
-    local blessing = mb.line:match(p)
-    for i, cBlessing in ipairs(self.currentBlessings) do
-        if blessing == cBlessing then
-            ACSLabel("Removed Blessing: " .. blessing)
-            table.remove(self.currentBlessings, i)
-        end
+function Templar:unimpaledHandler(p)
+    local person = mb.line:match(p)
+    if isTarget(person) then
+        Templar.enemyImpaled = false
     end
 end
 
+function Templar:disemboweledHandler(p)
+    Templar.enemyImpaled(false);
+    -- Trigger a double hemorrhage hit?
+end
+
+function Templar:empowerHandler(p)
+    local weapon, empower = mb.line:match(p);
+end
 
 -- Righteousness: Attacks
 function Templar:wither() 
-  send("aura withering " .. target)
+    send("aura withering " .. target)
 end
 
 -- Bladefire
@@ -68,63 +103,63 @@ end
 -- Battlefury: Attacks
 
 function Templar:strike()
-  send("strike " .. target)
+    send("strike " .. target)
 end
 
 function Templar:raze()
-  send("raze " .. target)
+    send("raze " .. target)
 end
 
 function Templar:rsl()
-  send("razestrike " .. target)
+    send("razestrike " .. target)
 end
 
 function Templar:block(direction)
-  send("block " .. direction)
+    send("block " .. direction)
 end
 
-function Templar:dsl()
-  if leftHand == rightHand then
-    send("dsw " .. target)
-  else
-    send("dsk " .. target)
-  end
+function Templar:dsl(tar)
+    if leftHand == rightHand then
+        send("dsw " .. target)
+    else
+        send("dsk " .. target)
+    end
 end
 
 function Templar:impale()
-  send("impale " .. target)
+    send("impale " .. target)
 end
 
 function Templar:zeal()
-  send("zeal " .. target)
+    send("zeal " .. target)
 end
 
 function Templar:lunge()
-  send("lunge " .. target)
+    send("lunge " .. target)
 end
 
 function Templar:rupture(limb)
-  send("rupture " .. target .. " " .. limb)
+    send("rupture " .. target .. " " .. limb)
 end
 
 function Templar:tempest()
-  send("tempest")
+    send("tempest")
 end
 
 function Templar:disembowel()
-  send("disembowel " .. target)
+    send("disembowel " .. target)
 end
 
 function Templar:charge()
-  send("charge " .. target)
+    send("charge " .. target)
 end
 
 function Templar:rend()
-  send("rend " .. target)
+    send("rend " .. target)
 end
 
 function Templar:cleave()
-  send ("cleave" .. target)
+    send ("cleave" .. target)
 end
 
 --------------------
@@ -134,14 +169,14 @@ Templar.currentAura = ""
 Templar.currentBlessings = {}
 
 Templar.blessings = {
-  bashing = {
-    aura = "protection",
-    blessings = {"healing", "meditation", "redemption"}
-  },
-  steamroller = {
-    aura = "purity",
-    blessings = {"protection", "meditation", "redemption"}
-  }
+    bashing = {
+        aura = "protection",
+        blessings = {"healing", "meditation", "redemption"}
+    },
+    steamroller = {
+        aura = "purity",
+        blessings = {"protection", "meditation", "redemption"}
+    }
 }
 
 function Templar:blessingHandler(i,p)
@@ -171,6 +206,38 @@ function Templar:setBlessings(type)
     end
 end
 
+function Templar:setAura(p)
+    Templar.currentAura = mb.line:match(p)
+    Templar.currentAura = string.lower(Templar.currentAura)
+    ACSLabel("AURA: " .. Templar.currentAura)
+end
+
+function Templar:addedBlessing(p)
+    local blessing = mb.line:match(p)
+    ACSLabel("Added Blessing: " .. blessing)
+    table.insert(Templar.currentBlessings, blessing)
+end
+
+function Templar:removedBlessing(p)
+    local blessing = mb.line:match(p)
+    for i, cBlessing in ipairs(self.currentBlessings) do
+        if blessing == cBlessing then
+            ACSLabel("Removed Blessing: " .. blessing)
+            table.remove(self.currentBlessings, i)
+        end
+    end
+end
+
 -- Setup the class now that it is defnied
 ACS:addModule(Templar, "Templar")
 
+class = {
+    bashAttack = function()
+        send("wield warhammer")
+        send("cleanse left")
+        send("cleanse right")
+        send("empower left with sacrifice")
+        send("empower right with sacrifice")
+        send("dsw " .. selectedTarget)
+    end
+}

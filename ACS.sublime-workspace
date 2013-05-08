@@ -1,0 +1,732 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"aff",
+				"Afflictions"
+			],
+			[
+				"afflictin",
+				"afflictionTable"
+			],
+			[
+				"checkW",
+				"checkWhoHere"
+			],
+			[
+				"anti",
+				"antispasmadic"
+			],
+			[
+				"pasr",
+				"parseEmpty"
+			],
+			[
+				"righ",
+				"rightHand"
+			],
+			[
+				"list",
+				"listCategories"
+			],
+			[
+				"she",
+				"shieldType"
+			],
+			[
+				"walkerFin",
+				"walkerFinishedCallback"
+			],
+			[
+				"setupf",
+				"setupFinishedCallback"
+			],
+			[
+				"spirit",
+				"spiritwrack"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/D/workspace/auditoryTraining/audtrain/database.py",
+			"settings":
+			{
+				"buffer_size": 661,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/classes/Templar.lua",
+			"settings":
+			{
+				"buffer_size": 4651,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/ACS.lua",
+			"settings":
+			{
+				"buffer_size": 1463,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/core/Helpers.lua",
+			"settings":
+			{
+				"buffer_size": 6876,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/core/Balances.lua",
+			"settings":
+			{
+				"buffer_size": 11019,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/classes/Syssin.lua",
+			"settings":
+			{
+				"buffer_size": 19282,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/bashing/NewBashing.lua",
+			"settings":
+			{
+				"buffer_size": 17424,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/core/Defenses.lua",
+			"settings":
+			{
+				"buffer_size": 72948,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/F/MGO/player.js",
+		"/D/workspace/ACS/scripts/core/Helpers.lua",
+		"/D/workspace/auditoryTraining/audtrain/__init__.py",
+		"/D/workspace/ACSNew/Loader.lua",
+		"/D/workspace/ACSNew/Prompt.lua",
+		"/D/workspace/ACSNew/Afflictions.lua",
+		"/D/workspace/ACS/scripts/bashing/NewBashing.lua",
+		"/D/workspace/ACSNew/Healer.lua",
+		"/D/Users/Jeff/.config/ACS.xml",
+		"/D/workspace/ACS/scripts/core/Healing.lua",
+		"/D/workspace/ACS/scripts/classes/Luminary.lua",
+		"/D/workspace/ACS/scripts/core/ActionQueueing.lua",
+		"/D/workspace/ACS/scripts/classes/Syssin.lua",
+		"/D/workspace/ACS/scripts/core/Defenses.lua",
+		"/D/workspace/ACS/scripts/core/Afflictions.lua",
+		"/D/workspace/auditoryTraining/audtrain/dbTest.py",
+		"/D/workspace/auditoryTraining/db/dbAccess.py",
+		"/D/Users/Jeff/.config/mudlet/profiles/ACS_NEW/current/29-04-2013#20-33-04.xml",
+		"/D/Users/Jeff/.config/mudlet/profiles/ACS/current/27-04-2013#17-06-37.xml",
+		"/D/workspace/ACS/scripts/Test.lua",
+		"/D/Users/Jeff/Downloads/Debug/Debug.xml",
+		"/D/Users/Jeff/Downloads/Debug/config.lua",
+		"/D/workspace/luapackage/new/Lua.tmLanguage",
+		"/D/workspace/luapackage/Lua.tmLanguage",
+		"/D/workspace/ACS/scripts/bashing/PathRecorder.lua",
+		"/D/workspace/ACS/scripts/ACS.lua",
+		"/D/workspace/ACS/scripts/core/PipeFiller.lua",
+		"/D/workspace/ACS/scripts/Loader.lua",
+		"/D/workspace/ACS/scripts/utilities/Walker.lua",
+		"/D/workspace/luapackage/Lua/Lua.tmLanguage",
+		"/D/workspace/luapackage/Lua - Copy/Lua.tmLanguage",
+		"/D/Users/Jeff/AppData/Roaming/Sublime Text 3/Packages/User/Lua.sublime-settings",
+		"/D/workspace/ACS/scripts/tracker/LimbTracking.lua",
+		"/D/workspace/ACS/scripts/core/Core.lua",
+		"/D/Users/Jeff/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/D/workspace/ACS/scripts/core/Wielding.lua",
+		"/D/workspace/ACS/scripts/core/Balances.lua",
+		"/D/workspace/ACS/scripts/settings/Kaed.lua",
+		"/D/workspace/ACS/scripts/core/Prompt.lua",
+		"/D/workspace/ACS/scripts/init.lua",
+		"/D/Users/Jeff/.config/mudlet/profiles/ACS/log/27-04-2013#21-40-19.dat",
+		"/D/workspace/ACS/scripts/tracker/EnemyTracking.lua",
+		"/D/workspace/ACS/scripts/core/Aliases.lua",
+		"/D/workspace/ACS/scripts/classes/Monk.lua",
+		"/D/workspace/ACS/scripts/classes/BaseMonk.lua",
+		"/D/workspace/ACS/scripts/classes/Zealot.lua",
+		"/D/workspace/ACS/i_lua.c",
+		"/D/workspace/ACS/config.ilua.txt",
+		"/D/workspace/ACS/i_lua.o",
+		"/D/workspace/Xon's mapper/Mudbot/Makefile.win",
+		"/C/Mudbot/INSTALL",
+		"/C/Mudbot/winmain.c",
+		"/C/Mudbot/.gitignore",
+		"/C/Mudbot/README",
+		"/D/workspace/Xon's mapper/Mudbot/Makefile",
+		"/D/workspace/Xon's mapper/Mudbot/README",
+		"/D/workspace/Xon's mapper/Mudbot/INSTALL",
+		"/D/workspace/Xon's mapper/Mudbot/.gitignore",
+		"/D/workspace/ACS/scripts/utilities/Debug.lua",
+		"/D/workspace/ACS/scripts/bashing/Bashing.lua",
+		"/D/workspace/ACS/scripts/settings/Defaults.lua",
+		"/D/workspace/ACS/scripts/classes/Atabahi.lua",
+		"/D/workspace/ACS/scripts/utilities/Concoctions.lua",
+		"/D/workspace/ACS/README.md",
+		"/D/workspace/ACS/scripts/utilities/Reanimation.lua",
+		"/D/workspace/ACS/scripts/utilities/AutoWalker.lua",
+		"/D/workspace/ACS/scripts/utilities/Debugger.lua",
+		"/D/Users/Jeff/Documents/Concoctions.xml",
+		"/D/acsMudlet.trigger.xml",
+		"/D/workspace/ACS/scripts/utilities/Elixlist.lua",
+		"/D/Users/Jeff/Documents/ACS-Luminary.lua",
+		"/D/workspace/ACS/scripts/core/Triggers.lua",
+		"/D/workspace/ACS/scripts/settings/Setup.lua",
+		"/D/Users/Jeff/Documents/Aetolia Classes/Aetolia Classes/ACS-AtabahiAttack.lua",
+		"/D/Users/Jeff/Documents/Aetolia Classes/Aetolia Classes/ACS-Teradrim.lua",
+		"/D/Users/Jeff/Documents/Aetolia Classes/Aetolia Classes/ACS-Indorani.lua",
+		"/D/Users/Jeff/Documents/Aetolia Classes/Aetolia Classes/ACS-Carnifex.lua",
+		"/D/Users/Jeff/Documents/Aetolia Classes/Aetolia Classes/ACS-Bloodborn.lua",
+		"/D/workspace/ACS/scripts/classes/Teradrim.lua",
+		"/D/workspace/ACS/scripts/settings/Bodin.lua",
+		"/D/workspace/ACS/scripts/settings/Neithan.lua",
+		"/D/workspace/ACS/scripts/settings/Saybre.lua",
+		"/D/workspace/ACS/scripts/utilities/Announcer.lua",
+		"/D/workspace/ACS/scripts/Reanimation.lua",
+		"/D/workspace/ACS/scripts/Triggers.lua",
+		"/D/Users/Jeff/Documents/ACS-NewBashing.lua",
+		"/D/workspace/ACS/scripts/LimbTracking.lua",
+		"/D/workspace/ACS/scripts/aetolia.lua",
+		"/D/workspace/ACS/scripts/Elixlist.lua"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"D:\\workspace\\ACS\\scripts",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"grip",
+			"table.remove",
+			"actions:add",
+			"equil",
+			"stringintable",
+			"isintable",
+			"charge",
+			"rage",
+			"brutefor",
+			"blessings",
+			"Templar",
+			"rage",
+			"fitness",
+			"sip",
+			"drink",
+			"send",
+			"actions:add",
+			"addaction",
+			"checkwhohere",
+			"(\\w+)",
+			", diag = .*,?\\}",
+			"\\\\\\[",
+			"\\[",
+			"stop",
+			"extrapickups",
+			"bashsystemstate",
+			"NEED_CHECK",
+			"checkih",
+			"checkwhohere",
+			"checkih",
+			"turnonbash",
+			"queue",
+			"finished",
+			"needcheck",
+			"check",
+			"state",
+			"needcheck",
+			"start",
+			"turnonbash",
+			"setmovequeue",
+			"setupbashqueues",
+			"beginbashing",
+			"disabletriggers",
+			"disable",
+			"prompt_resetLimb",
+			"onBeforeMoveCallback",
+			"kipup",
+			"fill\\(\\)",
+			"gagLine",
+			"killLine",
+			"mirroring",
+			"disabletri",
+			"SyringeCheckTime",
+			"syringechecktime",
+			"bbalances",
+			"siphon",
+			"pipe",
+			"poulticehandler",
+			"setupprompt",
+			"dodgehan",
+			"dodgehanlder",
+			"parry",
+			"dodgeHandler",
+			"reboundhandler",
+			"dstabhandler",
+			"setup",
+			"shrug",
+			"shrugBalance",
+			"shrug",
+			"bite",
+			"class.setup",
+			"whip",
+			"dirm",
+			"shroud",
+			"unwieldbow",
+			"function unwieldbow",
+			"dounwield",
+			"function isclass",
+			"you cease to wield",
+			"doWield",
+			"dowield",
+			"tower",
+			"dowield",
+			"get_variable",
+			"cmp",
+			"debug",
+			"addenemylimbdamage",
+			"enemysalveapplication",
+			"enemysalvehandler",
+			"ate",
+			"enemylimbcure",
+			"function istarget",
+			"istarget",
+			"eathandler",
+			"eats",
+			"eathandler",
+			"ash",
+			"ate",
+			"debugger.debug.categories",
+			"printdebug",
+			"debugger:echo",
+			"debug",
+			"printdebug",
+			"smite\\(",
+			"smite",
+			"limbattack",
+			"enemysalvehandler",
+			"enemysalveapplica",
+			"enemysalvehandler",
+			"enemysalveapplication",
+			"getcure",
+			"wieldweapon",
+			"setlastattack",
+			"attackparried",
+			"reduceLimbDamage",
+			"prerescomplete",
+			"setacslabel",
+			"parseLimbDamageCure",
+			"onprompt",
+			"checklimbdamageafterrestoration",
+			"checkforpreres",
+			"PRERESTORE_THRESHOLD",
+			"lower",
+			"haem",
+			"aff",
+			"self-",
+			"selfpity",
+			"Afflicted with"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"\"\\1\",",
+			"}",
+			"--\\1debug(\\2)",
+			"C.R .. \"",
+			"C.R",
+			"debugger",
+			"cost = function() return \\1 end",
+			"    \\1 = {\\n      cost = \\2,\\n    },"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 7,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/D/workspace/auditoryTraining/audtrain/database.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 661,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								661,
+								661
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "scripts/classes/Templar.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4651,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1766,
+								1766
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "scripts/ACS.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1463,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								368,
+								368
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scripts/core/Helpers.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6876,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								405,
+								405
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "scripts/core/Balances.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11019,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8831,
+								8831
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1358.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "scripts/classes/Syssin.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19282,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7805.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "scripts/bashing/NewBashing.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17424,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17099,
+								17099
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6952.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "scripts/core/Defenses.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 72948,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17189,
+								17189
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8017.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"project": "ACS.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"test.lua",
+				"scripts\\Test.lua"
+			],
+			[
+				"balances",
+				"scripts\\core\\Balances.lua"
+			],
+			[
+				"healing",
+				"scripts\\core\\Healing.lua"
+			],
+			[
+				"promp",
+				"scripts\\core\\Prompt.lua"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 257.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

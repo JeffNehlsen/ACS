@@ -18,7 +18,7 @@ function init_setup()
   send("config affliction_view on")
   send("config experience_change on")
   send("config wrapwidth 0")
-  send("config prompt custom H:@health/@maxhealth M:@mana/@maxmana E:@end/@maxend W:@will/@maxwill B:@blood/@maxblood XP:@xp/@xpmax Essence:@essence Spark:@spark Soul:@soul Devotion:@devotion Kai:@kai [@stats @eqbal]")
+  send("config prompt custom H:@health/@maxhealth M:@mana/@maxmana E:@end/@maxend W:@will/@maxwill B:@blood/@maxblood XP:@xp/@xpmax Essence:@essence Spark:@spark Soul:@soul Devotion:@devotion Kai:@kai @wcharge [@stats @eqbal]")
 end
 
 mb.client_aliases = alias_handler
