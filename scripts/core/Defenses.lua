@@ -818,7 +818,7 @@ defenses = {
         "^You are already graced with Divine speed.$",
       },
       down = {
-        "^The Divine-granted rush of adrenaline fades.",
+        "granted rush of adrenaline fades.",
 --        "^Your divine_speed defence has been stripped.$",
       },
     },
@@ -1885,6 +1885,25 @@ defenses = {
   ---------------
   --  Vampire  --
   ---------------
+  stalking = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("stalk") end,
+    able = isVampire() or hasSkill("stalking"),
+    triggers = {
+      up = {
+        "^You silently summon the shadows to soften and conceal your footsteps.$",
+        "^You stalk the night as a predator.$",
+      },
+      down = {
+        "^The shadows fade, leaving your footfalls audible once again.$",
+        "^Your power to conceal your movement is ineffective during the day.$",
+      },
+    },
+  },
+
   elusion = {
     requires = baleq,
     takes = {"balance"},
@@ -2051,6 +2070,7 @@ defenses = {
         "^You are already moving at supernatural speed.$",
       },
       down = {
+        "^You are no longer moving so quickly.$",
       },
     },
   },
@@ -2101,7 +2121,7 @@ defenses = {
   wisp_stigmata = {
     requires = baleq,
     takes = {"equilibrium"},
-    initDef = false,
+    initDef = true,
     redef = false,
     give = function() send("wisp stigmata on") end,
     take = function() send("wisp stigmata off") end,
@@ -2139,7 +2159,7 @@ defenses = {
   wisp_anxiety = {
     requires = baleq,
     takes = {"equilibrium"},
-    initDef = false,
+    initDef = true,
     redef = false,
     give = function() send("wisp anxiety on") end,
     take = function() send("wisp anxiety off") end,
@@ -2210,7 +2230,7 @@ defenses = {
     },
   },
 
-    concentration = {
+  concentration = {
     requires = baleq,
     takes = {},
     initDef = false,
@@ -2224,6 +2244,42 @@ defenses = {
       },
       down = {
         "^You feel your blood becoming thinner again.$",
+      },
+    },
+  },
+
+  mindsurge = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = isClass("bloodborn"),
+    triggers = {
+      up = {
+        "^A pair of glowing runes appears on your tongue and forehead, and they glow with a burst of energy",
+        "^Your words bring pain to the mind.$",
+      },
+      down = {
+        "^The runes on your tongue and forehead flare up one last time before disappearing entirely.$",
+      },
+    },
+  },
+
+  bloodsense = {
+    requires = baleq,
+    takes = {"equilibrium"},
+    initDef = true,
+    redef = false,
+    give = function() send("stalk") end,
+    able = isClass("bloodborn"),
+    triggers = {
+      up = {
+        "^You broaden your senses to encompass the bleeding of those around you.$",
+        "^You are already sensing the bleeding of others.$",
+        "^You are sensing the bleeding of others.$",
+      },
+      down = {
       },
     },
   },

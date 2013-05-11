@@ -26,6 +26,20 @@ aliases.attackAliases = {
 
   {pattern = "^kis$", handler = function(i,p) hKiss() end}, 
   {pattern = "^bath$", handler = function(i,p) hBath() end}, 
+
+--  {pattern = "^rr$", handler = function(i,p) mDWhisper("epilepsy", "impatience") end},
+  {pattern = "^ee$", handler = function(i,p) mDWhisper("seduction", "temptation") end},
+  {pattern = "^ww$", handler = function(i,p) mDWhisper("stupidity", "confusion") end},
+  {pattern = "^aa$", handler = function(i,p) mDWhisper("indifference", "impatience") end},
+  {pattern = "^ss$", handler = function(i,p) mDWhisper("anorexia", "belonephobia") end},
+  {pattern = "^dd$", handler = function(i,p) mDWhisper("paranoia", "agoraphobia") end},
+  {pattern = "^ff$", handler = function(i,p) mDWhisper("masochism", "recklessness") end},
+  {pattern = "^zz$", handler = function(i,p) mDWhisper("loneliness", "peace") end},
+  {pattern = "^xx$", handler = function(i,p) mDWhisper("epilepsy", "dementia") end},
+  {pattern = "^cc$", handler = function(i,p) mDWhisper("berserk", "vertigo") end},
+  {pattern = "^vv$", handler = function(i,p) mDWhisper("amnesia", "stupidity") end},
+
+  {pattern = "^ann$", handler = function(i,p) mAnnihilate() end},
 }
 
 triggers.attackTriggers = {
@@ -118,6 +132,16 @@ end
 
 function mWhisper(whisper)
   send("whisper " .. whisper .. " " .. target)
+end
+
+function mDWhisper(whisper1, whisper2)
+--  send("contemplate " .. target)
+--  send("slash " .. target)
+  send("dwhisper " .. whisper1 .. " " .. whisper2 .. " " .. target)
+end
+
+function mAnnihilate()
+  send("annihilate " .. target)
 end
 
 --function soulTorture()
