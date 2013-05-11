@@ -1,7 +1,11 @@
 echo("Templar loaded. Forward, unto Dawn!")
 
 Templar = {
-    enemyImpaled = false
+    enemyImpaled = false,
+    offense = {
+        type = "MACE",
+        types = {MACE = "MACE", AFFLICTION = "AFFLICTION"}
+    }
 }
 
 -- TODO: Finish converting the aliases to Templar ones.
@@ -65,11 +69,104 @@ Templar.triggers = {
     -- Numbing force behind the blow, you pound Alistaire's right leg with a Basilican mace.
     -- As a Basilican mace strikes Alistaire, you feel its stored power dissipating into him.
     -- Balance Used: 2.36 seconds
+
+
+
+    {pattern = "Your strikes cause (%w+) bruising on (%w+)'s (.*).", handler = function(p) Templar:enemyBruisedHandler(p) end},
+    -- Your strikes cause light bruising on Daingean's torso.
+    -- Your strikes cause moderate bruising on Daingean's torso.
+    -- Your strikes cause critical bruising on Daingean's torso.
 }
 
 -- TODO: Gather attack lines for the weapons
 -- TODO: Figure out how empowerments/releases are going to work
 -- Double Raze: empower blaze/razeslash
+
+
+function Templar:enemyBruisedHandler(p)
+    local bruise, person, limb = mb.line:match(p)
+    if bruise == "light" then
+        etrack:addAff(limb .. "_bruised")
+    else
+        etrack:addAff(limb .. "_bruised_" .. bruise)
+    end
+end
+
+function Templar:empower(left, right)
+    send("cleanse left")
+    send("cleanse right")
+    send("empower right with burst")
+    send("empower left with " .. left)
+    send("empower right with " .. right)
+end
+
+function Templar:attack()
+    -- Perform raze/aura checks here.
+
+
+    if self.offense.type == self.offense.types.MACE then
+        self:maceAttack()
+    end
+end
+
+function Templar:maceAttack()
+    local limb_priority = {"torso", "head", "left leg", "right leg", "left arm", "right arm"}
+    local _limb_priority = {"torso", "head", "left_leg", "right_leg", "left_arm", "right_arm"}
+    local non_critical_bruises = {"_bruised_moderate", "_bruised"}
+
+    -- If the enemy is ruptured, then hit them with hemo!
+    if etrack:hasAff("ruptured") then
+        self:empower("hemorrhage", "hemorrhage")
+        self:target("nothing", "nothing")
+        self:dsk()
+        etrack:removeAff("ruptured")
+        return
+    end
+
+    -- Attempt to rupture critically bruised areas
+    for i, limb in ipairs(_limb_priority) do
+        if etrack:hasAff(limb .. "_bruised_critical") then
+            self:rupture(limb_priority[i])
+            return
+        end
+    end
+
+    -- Attempt to get a critical bruise by hitting non-critically bruised areas
+    for _, aff in ipairs(non_critical_bruises) do
+        for i, limb in ipairs(_limb_priority) do
+            if etrack:hasAff(limb .. aff) then
+                self:attackLimbOrArms(limb_priority[i])
+                return
+            end
+        end
+    end
+
+    for i, limb in ipairs(limb_priority) do
+        if etrack:getParry() ~= limb then
+            self:target(limb, limb)
+            self:dsk()
+            return
+        end
+    end
+
+    debug:print("Templar", "After loops")
+end
+
+function Templar:attackLimbOrArms(limb)
+    debug:print("Templar", "Attempting to attack " .. limb)
+    if etrack:getParry() == limb then
+        self:target("left arm", "right arm")
+    else
+        self:target(limb, limb)
+    end
+
+    self:dsk()
+end
+
+function Templar:target(limb1, limb2)
+    send("target " .. limb1 .. " with left")
+    send("target " .. limb2 .. " with right")
+end
 
 function Templar:impaleHandler(p)
     local person = mb.line:match(p)
@@ -118,7 +215,7 @@ function Templar:block(direction)
     send("block " .. direction)
 end
 
-function Templar:dsl(tar)
+function Templar:dsk(tar)
     if leftHand == rightHand then
         send("dsw " .. target)
     else
@@ -139,6 +236,7 @@ function Templar:lunge()
 end
 
 function Templar:rupture(limb)
+    debug:print("Templar", "Sending: Rupture: " .. limb)
     send("rupture " .. target .. " " .. limb)
 end
 

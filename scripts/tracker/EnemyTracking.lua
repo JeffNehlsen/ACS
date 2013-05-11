@@ -29,6 +29,7 @@ mending_rightarm_afflictions = {"right_arm_broken" }
 mending_leftleg_afflictions = {"right_leg_broken" }
 mending_rightleg_afflictions = {"left_leg_broken" }
 mending_head_afflictions = {"crippled_throat", "throatclaw"}
+mending_torso_afflictions = {"torso_bruised_critical", "torso_bruised_moderate", "torso_bruised"}
 caloric_afflictions = {"frozen", "shivering"}
 
 elm_afflictions = { "aeon", "hellsight", "deadening" }
@@ -408,6 +409,7 @@ function etrack:getCure(cure)
   elseif cure:match("orbis to legs") or cure:match("mending to legs") then return mending_legs_afflictions
   elseif cure:match("orbis to arms") or cure:match("mending to arms") then return mending_arms_afflictions
   elseif cure:match("orbis to head") or cure:match("mending to head") then return mending_head_afflictions
+  elseif cure:match("orbis to torso") or cure:match("mending to torso") then return mending_torso_afflictions
   elseif cure:match("orbis to left arm") or cure:match("mending to left arm") then return mending_leftarm_afflictions
   elseif cure:match("orbis to right arm") or cure:match("mending to right arm") then return mending_rightarm_afflictions
   elseif cure:match("orbis to left leg") or cure:match("mending to left leg") then return mending_leftleg_afflictions
@@ -519,4 +521,14 @@ function etrack:venomConvert(venom)
   -- Venoms that don't give a real affliction. Amnesia, random, damage, sleep, etc.
   elseif venom == "camus" or venom == "sumac" or venom == "loki" or venom == "delphinium" or venom == "domoin" then return ""
   end
+end
+
+
+-- Parry Stuff
+function etrack:getParry()
+  if self:hasAff("left_arm_broken") and self:hasAff("right_arm_broken") then return "" end
+
+  if not self.parry then self.parry = "head" end
+
+  return self.parry
 end

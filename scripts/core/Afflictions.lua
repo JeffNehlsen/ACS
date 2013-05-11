@@ -105,6 +105,8 @@ afflictionTable = {
   crushed_elbows       = {name = "crushed_elbows",          cure = "orbis to arms",        priority = 72,  type = "poultice", diag = "^suffering from crushed elbow joints.$"},
   destroyed_throat     = {name = "destroyed_throat",        cure = "orbis to head",        priority = 71,  type = "poultice", diag = "^suffering from a crushed throat.$"},
   
+  torso_mangled        = {name = "torso_mangled",           cure = "jecis to torso",       priority = 72,  type = "poultice", diag = "^has serious internal trauma.$"},
+  torso_damaged        = {name = "torso_damaged",           cure = "jecis to torso",       priority = 72,  type = "poultice", diag = "^has mild internal trauma.$"},
   torso_bruised_critical = {name = "torso_bruised_critical", cure = "orbis to torso",       priority = 71,  type = "poultice", diag = "^affected by a bruised torso.$"},
   head_bruised_critical  = {name = "head_bruised_critical",  cure = "orbis to head",        priority = 71,  type = "poultice", diag = "^affected by a bruised head.$"},
   torso_bruised_moderate = {name = "torso_bruised_moderate", cure = "orbis to torso",       priority = 71,  type = "poultice", diag = "^affected by a bruised torso.$"},
@@ -134,8 +136,7 @@ afflictionTable = {
   frozen               = {name = "frozen",                  cure = "fumeae",               priority = 55,  type = "poultice", tree = true, diag = "^frozen stiff.$"},
   shivering            = {name = "shivering",               cure = "fumeae",               priority = 50,  type = "poultice", tree = true, diag = "^shivering.$"},
   needcaloric          = {name = "needcaloric",             cure = "fumeae",               priority = 49,  type = "poultice"},
-  torso_mangled        = {name = "torso_mangled",           cure = "jecis to torso",       priority = 47,  type = "poultice", diag = "^has serious internal trauma.$"},
-  torso_damaged        = {name = "torso_damaged",           cure = "jecis to torso",       priority = 47,  type = "poultice", diag = "^has mild internal trauma.$"},
+  
   collapsed_lung       = {name = "collapsed_lung",          cure = "jecis to torso",       priority = 47,  type = "poultice", diag = "^having trouble breathing.$"},
   effused_blood        = {name = "effused_blood",           cure = "oculi",                priority = 45,  type = "poultice", tree = true, diag = "^being effused of blood.$"},
   effused_phlegm       = {name = "effused_phlegm",          cure = "oculi",                priority = 40,  type = "poultice", tree = true, diag = "^being effused of phlegm.$"},

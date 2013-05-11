@@ -222,11 +222,26 @@ function prompt:build()
 
   local chargeDisplay = function()
     if not isClass("templar") or (prompt.leftCharge == "" and prompt.rightCharge == "") then return "" end
+    local setChargeColor = function(num)
+      num = tonumber(num)
+
+      if num == nil or num == 0 then return C.W .. 0 .. C.x end
+
+      if num < 50 then
+        return C.W .. num .. C.x
+      elseif num < 100 then
+        return C.Y .. num .. C.x
+      elseif num < 150 then
+        return C.R .. num .. C.x
+      else
+        return C.B .. num .. C.x
+      end
+    end
 
     prompt.leftCharge = prompt.leftCharge
     prompt.rightCharge = prompt.rightCharge 
 
-    return promptLabelColor .. "LC:" .. p_stat(prompt.leftCharge, 100, false) .. " RC:" .. p_stat(prompt.rightCharge, 100, false)
+    return promptLabelColor .. "LC:" .. setChargeColor(prompt.leftCharge) .. " RC:" .. setChargeColor(prompt.rightCharge)
   end
 
   local balanceDisplay = check(prompt.equilibrium, C.C .. "e" .. C.x, "-") .. check(prompt.balance, C.C .. "b" .. C.x, "-")
