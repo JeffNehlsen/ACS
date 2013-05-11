@@ -45,8 +45,8 @@ aliases.classAliases = {
   {pattern = "^empe (%w+)$", handler = function(i,p) tEmperor(i,p) end},
   {pattern = "^mag (%w+)$", handler = function(i,p) tMagician(i,p) end},
   {pattern = "^mag$", handler = function(i,p) tMagician2() end},
-  {pattern = "^prie (%w+)$", handler = function(i,p) tPriestess(i,p) end},
-  {pattern = "^prie$", handler = function(i,p) tPriestess2() end},
+  {pattern = "^pri (%w+)$", handler = function(i,p) tPriestess(i,p) end},
+  {pattern = "^pri$", handler = function(i,p) tPriestess2() end},
 
 
   {pattern = "^sheal$", handler = function(i,p) send("vigour") end},
