@@ -11,28 +11,28 @@ eBalances = {
   focus = {name = "focus", balance = true, btime = 4.7}, 
 }
 
-bladder_afflictions = { "sadness", "dementia", "hallucinations", "confusion", "paranoia", "hypersomnia", "hatred", "blood_curse" }
-liver_afflictions = { "self-pity", "stupidity", "dizziness", "shyness", "epilepsy", "impatience", "dissonance" }
-eyeball_afflictions = { "baldness", "clumsiness", "magic_impaired", "hypochondria", "weariness", "asthma", "sensitivity", "blood_poison" }
-testis_afflictions = { "commitment_fear", "recklessness", "masochism", "agoraphobia", "loneliness", "vertigo", "claustrophobia", "berserking" }
-ovary_afflictions = { "body_odor", "haemophilia", "sunlight_allergy", "lethargy", "vomiting", "thin_blood", "addiction" }
-castorite_afflictions = { "hubris", "pacifism", "peace", "lover's_effect", "justice", "generosity" }
-lung_afflictions = { "paralysis", "slickness", "sandrot", "heartflutter" }
+ash_afflictions = { "sadness", "dementia", "hallucinations", "confusion", "paranoia", "hypersomnia", "hatred", "blood_curse", "blighted" }
+goldenseal_afflictions = { "self-pity", "stupidity", "dizziness", "shyness", "epilepsy", "impatience", "resonance", "dissonance", "infested" }
+kelp_afflictions = { "baldness", "clumsiness", "magic_impaired", "hypochondria", "weariness", "asthma", "sensitivity", "blood_poison" }
+lobelia_afflictions = { "commitment_fear", "recklessness", "masochism", "agoraphobia", "loneliness", "vertigo", "claustrophobia", "berserking" }
+ginseng_afflictions = { "body_odor", "haemophilia", "sunlight_allergy", "mental_disruption", "physical_disruption", "vomiting", "thin_blood", "lethargy", "addiction" }
+bellwort_afflictions = { "hubris", "pacifism", "peace", "lover's_effect", "superstition", "generosity", "justice" }
+bloodroot_afflictions = { "paralysis", "mirroring", "crippled_body", "crippled", "slickness", "heartflutter", "sandrot" }
 
-oculi_afflictions = { "anorexia", "gorge", "blood_effusion", "phlegm_effusion", "yellow_bile_effusion", "black_bile_effusion", "indifference", "stuttering", "blurry_vision" }
+epidermal_afflictions = { "anorexia", "gorge", "blood_effusion", "phlegm_effusion", "yellow_bile_effusion", "black_bile_effusion", "indifference", "stuttering", "blurry_vision" }
 oculitorso_afflictions = {"anorexia", "stuttering"}
-orbis_afflictions = { "right_leg_broken", "left_leg_broken", "right_arm_broken", "left_arm_broken", "selarnia", "ablaze", "crippled_throat" }
-orbisarms_afflictions = { "right_arm_broken", "left_arm_broken" }
-orbislegs_afflictions = { "right_leg_broken", "left_leg_broken" }
-orbisleftarm_afflictions = {"left_arm_broken" }
-orbisrightarm_afflictions = {"right_arm_broken" }
-orbisleftleg_afflictions = {"right_leg_broken" }
-orbisrightleg_afflictions = {"left_leg_broken" }
-orbishead_afflictions = {"crippled_throat", "throatclaw"}
-fumeae_afflictions = {"frozen", "shivering"}
+mending_afflictions = { "right_leg_broken", "left_leg_broken", "right_arm_broken", "left_arm_broken", "selarnia", "ablaze", "crippled_throat" }
+mending_arms_afflictions = { "right_arm_broken", "left_arm_broken" }
+mending_legs_afflictions = { "right_leg_broken", "left_leg_broken" }
+mending_leftarm_afflictions = {"left_arm_broken" }
+mending_rightarm_afflictions = {"right_arm_broken" }
+mending_leftleg_afflictions = {"right_leg_broken" }
+mending_rightleg_afflictions = {"left_leg_broken" }
+mending_head_afflictions = {"crippled_throat", "throatclaw"}
+caloric_afflictions = {"frozen", "shivering"}
 
-demulcent_afflictions = { "aeon", "hellsight", "deadening" }
-antispasmadic_afflictions = {"slickness", "disfigurement"}
+elm_afflictions = { "aeon", "hellsight", "deadening" }
+valerian_afflictions = {"slickness", "disfigurement"}
 smoke_afflictions = { "aeon", "hellsight", "slickness", "disfigurement" }
 
 focus_afflictions = {"stupidity", "anorexia", "epilepsy", "paranoia", "hallucinations", "shyness", "stuttering", "dizziness", "indifference", "berserking", "pacifism", "lover's_effect", "hatred", "generosity", "claustrophobia", "vertigo", "loneliness", "agoraphobia", "masochism", "recklessness", "weariness", "magic_impaired", "confusion", "dementia" }
@@ -393,40 +393,48 @@ function etrack:translate(aff)
 end
 
 function etrack:getCure(cure)
-  if cure:match("kelp") or cure:match("eyeball") then return eyeball_afflictions 
-  elseif cure:match("testis") or cure:match("lobelia") then return testis_afflictions
-  elseif cure:match("bladder") or cure:match("ash") then return bladder_afflictions
-  elseif cure:match("liver") or cure:match("goldenseal") then return liver_afflictions
-  elseif cure:match("ovary") or cure:match("ginseng") then return ovary_afflictions
-  elseif cure:match("castorite") or cure:match("bellwort") then return castorite_afflictions
-  elseif cure:match("lung") or cure:match("bloodroot") then return lung_afflictions
+  if cure:match("kelp") or cure:match("eyeball") then return kelp_afflictions 
+  elseif cure:match("testis") or cure:match("lobelia") then return lobelia_afflictions
+  elseif cure:match("bladder") or cure:match("ash") then return ash_afflictions
+  elseif cure:match("liver") or cure:match("goldenseal") then return goldenseal_afflictions
+  elseif cure:match("ovary") or cure:match("ginseng") then return ginseng_afflictions
+  elseif cure:match("castorite") or cure:match("bellwort") then return bellwort_afflictions
+  elseif cure:match("lung") or cure:match("bloodroot") then return bloodroot_afflictions
   
-  elseif cure:match("demulcent") or cure:match("elm") then return demulcent_afflictions
-  elseif cure:match("antispasmadic") or cure:match("valerian") then return antispasmadic_afflictions
+  elseif cure:match("demulcent") or cure:match("elm") then return elm_afflictions
+  elseif cure:match("antispasmadic") or cure:match("valerian") then return valerian_afflictions
   
   elseif cure:match("oculi to torso") or cure:match("epidermal to torso") then return oculitorso_afflictions
-  elseif cure:match("orbis to legs") or cure:match("mending to legs") then return orbislegs_afflictions
-  elseif cure:match("orbis to arms") or cure:match("mending to arms") then return orbisarms_afflictions
-  elseif cure:match("orbis to head") or cure:match("mending to head") then return orbishead_afflictions
-  elseif cure:match("orbis to left arm") or cure:match("mending to left arm") then return orbisleftarm_afflictions
-  elseif cure:match("orbis to right arm") or cure:match("mending to right arm") then return orbisrightarm_afflictions
-  elseif cure:match("orbis to left leg") or cure:match("mending to left leg") then return orbisleftleg_afflictions
-  elseif cure:match("orbis to right arm") or cure:match("mending to right leg") then return orbisrightleg_afflictions
-  elseif cure:match("oculi") or cure:match("epidermal") then return oculi_afflictions
-  elseif cure:match("orbis") or cure:match("mending") then return orbis_afflictions
-  elseif cure:match("fumeae") or cure:match("caloric") then return fumeae_afflictions
+  elseif cure:match("orbis to legs") or cure:match("mending to legs") then return mending_legs_afflictions
+  elseif cure:match("orbis to arms") or cure:match("mending to arms") then return mending_arms_afflictions
+  elseif cure:match("orbis to head") or cure:match("mending to head") then return mending_head_afflictions
+  elseif cure:match("orbis to left arm") or cure:match("mending to left arm") then return mending_leftarm_afflictions
+  elseif cure:match("orbis to right arm") or cure:match("mending to right arm") then return mending_rightarm_afflictions
+  elseif cure:match("orbis to left leg") or cure:match("mending to left leg") then return mending_leftleg_afflictions
+  elseif cure:match("orbis to right arm") or cure:match("mending to right leg") then return mending_rightleg_afflictions
+  elseif cure:match("oculi") or cure:match("epidermal") then return epidermal_afflictions
+  elseif cure:match("orbis") or cure:match("mending") then return mending_afflictions
+  elseif cure:match("fumeae") or cure:match("caloric") then return caloric_afflictions
   else return {}
   end
 end
 
 function etrack:enemyCure(cure)
   for i,v in ipairs(cure) do
-    if etrack:hasAff(cure[i]) then etrack:removeAff(cure[i]) enemyLastCured = cure[i] break end 
+    if etrack:hasAff(cure[i]) then 
+      etrack:removeAff(cure[i]) 
+      enemyLastCured = cure[i] 
+      break 
+    end 
   end
 end
 
 function etrack:addAff(aff)
-  if not etrack:hasAff(etrack:translate(aff)) and aff ~= "" then table.insert(enemyAfflictions, aff) echo() ACSEcho(C.g .. "Enemy afflict with " .. C.G .. aff) end
+  if not etrack:hasAff(etrack:translate(aff)) and aff ~= "" then 
+    table.insert(enemyAfflictions, aff) 
+    echo() 
+    ACSEcho(C.g .. "Enemy afflict with " .. C.G .. aff) 
+  end
 end
 
 function etrack:hasAff(aff)

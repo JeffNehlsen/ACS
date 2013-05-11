@@ -1,7 +1,7 @@
 echo("Prompt file loaded.")
 prompt = {
   pattern = "^H:(%d+)/(%d+) M:(%d+)/(%d+) E:(%d+)/(%d+) W:(%d+)/(%d+) B:(%d+)/(%d+) XP:(%d+)/(%d+) (.*) ?%[([cspdba@]*) ?([e-])([b-]) ?([l-]?[r-]?)%]",
-  config = "config prompt custom H:@health/@maxhealth M:@mana/@maxmana E:@end/@maxend W:@will/@maxwill B:@blood/@maxblood XP:@xp/@xpmax Essence:@essence Spark:@spark Soul:@soul Devotion:@devotion Kai:@kai [@stats @eqbal]",
+  config = "config prompt custom H:@health/@maxhealth M:@mana/@maxmana E:@end/@maxend W:@will/@maxwill B:@blood/@maxblood XP:@xp/@xpmax Essence:@essence Spark:@spark Soul:@soul Devotion:@devotion Kai:@kai @wcharge [@stats @eqbal]",
   lastHealth = 0,
   lastMana = 0,
   blackoutPattern = "^:$"
@@ -62,6 +62,8 @@ function prompt:parse(line)
   prompt.spark        = extra:match("Spark:(%d+)")
   prompt.kai          = extra:match("Kai:(%d+)")
   prompt.essence      = extra:match("Essence:(%d+)")
+  prompt.leftCharge   = extra:match("LC:(%d+)")
+  prompt.rightCharge  = extra:match("RC:(%d+)")
 
   prompt.cloak        = check(status, "c")
   prompt.silaris      = check(status, "s")
@@ -218,6 +220,15 @@ function prompt:build()
     end
   end
 
+  local chargeDisplay = function()
+    if not isClass("templar") or (prompt.leftCharge == "" and prompt.rightCharge == "") then return "" end
+
+    prompt.leftCharge = prompt.leftCharge
+    prompt.rightCharge = prompt.rightCharge 
+
+    return promptLabelColor .. "LC:" .. p_stat(prompt.leftCharge, 100, false) .. " RC:" .. p_stat(prompt.rightCharge, 100, false)
+  end
+
   local balanceDisplay = check(prompt.equilibrium, C.C .. "e" .. C.x, "-") .. check(prompt.balance, C.C .. "b" .. C.x, "-")
   local armBalDisplay = check(prompt.leftArmBal, C.C .. "l" .. C.x, "-") .. check(prompt.rightArmBal, C.C .. "r" .. C.x, "-")
   local statusDisplay = check(prompt.cloak, "c", "") ..
@@ -244,6 +255,7 @@ function prompt:build()
   if essenceDisplay() ~= "" then add(essenceDisplay, true) end
   if devotionDisplay() ~= "" then add(devotionDisplay, true) end
   if angelDisplay() ~= "" then add(angelDisplay, true) end
+  if chargeDisplay() ~= "" then add(chargeDisplay, true) end
   if xpDisplay() ~= "" then add(xpDisplay, true) end
   add("[", false)
   add(balanceDisplay,   spaceAfterBalance)

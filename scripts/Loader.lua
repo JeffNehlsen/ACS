@@ -2,6 +2,7 @@
 -- Performs dofiles on all the ACS files needed to run
 -- This script is run on 'load' and 'reload'
 
+dofile("scripts/ACS.lua")
 dofile("scripts/core/Core.lua")
 dofile("scripts/core/Helpers.lua")
 
@@ -36,12 +37,14 @@ if skills and skills.concoctions and skills.concoctions > skillranks.unknown the
 	dofile("scripts/utilities/Concoctions.lua")
 elseif skills and skills.reanimation and skills.reanimation > skillranks.unknown then
 	dofile("scripts/utilities/Reanimation.lua")
-end 
+end
+
+dofile("scripts/utilities/Walker.lua")
 dofile("scripts/utilities/Announcer.lua")
 -- dofile("scripts/utilities/Elixlist.lua")
 
-dofile("scripts/bashing/Bashing.lua")
--- dofile("scripts/bashing/NewBashing.lua")
+-- dofile("scripts/bashing/Bashing.lua")
+dofile("scripts/bashing/NewBashing.lua")
 
 -- Attempt to load the current classType's stuff
 pcall(dofile, "scripts/classes/" .. classType .. ".lua")

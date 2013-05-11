@@ -120,7 +120,7 @@ class = {
     send("stand")
     send("wield mace")
     send("smite " .. selectedTarget)
-    if tonumber(prompt.health) < 3500 then
+    if tonumber(prompt.health) < 4000 then
       send("angel drain")
     elseif not hasDefense("inspiration") then
       send("perform inspiration")

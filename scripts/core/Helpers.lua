@@ -10,6 +10,10 @@ function setACSLabel(str)
     replace(acsLabel .. str .. C.x)
 end
 
+function ACSLabel(str)
+  setACSLabel(str)
+end
+
 function ACSEcho(str)
     echo("\n" .. acsLabel .. str .. C.x)
     show_prompt()
@@ -214,4 +218,10 @@ end
 
 function convertToUndead(cure)
   return toUndead[cure] or cure
+end
+
+function getTableIndex(t, item)
+    for i, v in ipairs(t) do
+        if v == item then return i end
+    end
 end

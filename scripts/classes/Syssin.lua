@@ -72,6 +72,8 @@ aliases.classAliases = {
   {pattern = "^ec?focus$", handler = function(i,p) switchEnemyCanFocus() end},
   {pattern = "^undead$", handler = function(i,p) switchUndead() end},
   {pattern = "^magic$", handler = function(i,p) switchMagicUser() end},
+
+  {pattern = "^milk (%w+)$", handler = function(i,p) milkAliasHandler(i,p) end},
 }
 
 aliases.attackAliases = {
@@ -594,15 +596,20 @@ end
 -------------------
 -- VENOM MILKING --
 -------------------
-possibleVenoms = {"Aconite","Araceae","Colocasia","Curare","Darkshade","Delphinium","Digitalis","Epseth","Epteth","Euphorbia","Eurypteria","Gecko","Kalmia","Larkspur","Monkshood","Oculus","Prefarar","Selarnia","Slike","Strophanthus","Vernalius","Voyria","Xentio"}
+possibleVenoms = {"Aconite","Araceae","Colocasia","Curare","Darkshade","Delphinium","Digitalis","Epseth","Epteth","Euphorbia","Eurypteria","Gecko","Hepafarin","Kalmia","Larkspur","Monkshood","Oculus","Prefarar","Selarnia","Slike","Strophanthus","Vernalius","Voyria","Xentio"}
+
+function milkAliasHandler(i,p)
+  local venom = i:match(p)
+  addToMilk(venom)
+end
 
 function doMilk(venom)
   send("secrete " .. venom)
-  send("milk venom into empty")
+  send("milk venom into emptyvial")
 end
 
 function addToMilk(venom)
-  addAction("doMilk('" .. venom .. "')", true)
+  actions:add(function() doMilk(venom) end, baleq, {"balance"})
   echo("Added " .. venom .. " to be milked.")
 end
 
@@ -615,4 +622,3 @@ function fullSetOfVenoms(numToMake)
     end
   end
 end
-
