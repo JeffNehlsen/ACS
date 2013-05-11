@@ -47,6 +47,12 @@ aliases.attackAliases = {
   {pattern = "^ero$", handler = function(i,p) soulErosion() end},
 }
 
+triggers.defenseTriggers = {
+  {pattern = "A powerful mastiff settles down in a corner to sleep.", handler = function(p) hSleepFollow() end},
+  {pattern = "A powerful mastiff slowly wakens, looking fit and refreshed.", handler = function(p) hSleepFollow() end},
+  {pattern = "A powerful mastiff bounds into the room, its delivery complete.", handler = function(p) send("order asimov follow me") end},
+}
+
 -- TODO: Weapon swing triggers for afflictions
 -- TODO: Soul tracking triggers
 -- TODO: Attack/venom selection. Combos.
@@ -99,6 +105,12 @@ end
 
 function hPassive() 
   send("hound initiative cease")
+end
+
+function hSleepFollow()
+  send("order asimov follow me")
+  send("queue bal order asimov follow me")
+  send("queue eq order asimov follow me")
 end
 
 function wHammer()
