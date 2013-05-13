@@ -9,6 +9,8 @@ artiPipes = false
 -- Set this to be whatever class you currently are.
 classType = LoadArg or "Syssin"
 
+artiring = "ring281250"
+
 -- Numbers for specific types of weapons for the wielding system.
 weapons = {
   dirk = {

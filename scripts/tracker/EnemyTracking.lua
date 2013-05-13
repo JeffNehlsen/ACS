@@ -97,27 +97,21 @@ triggers.etrackTriggers = {
   {pattern = "^A dizzying beam of energy strikes you as your attack rebounds off of (%w+)'s shield.$", handler = function(p) etrack:enemyIsShielded(p) end},
   {pattern = "^With a swift motion, you splice away (%w+)'s shield defence, and turn to strike with your other blade.$", handler = function(p) etrack:enemyUnshielded(p) end},
   {pattern = "^With a swift motion, you splice away (%w+)'s rebounding defence, and turn to strike with your other blade.$", handler = function(p) etrack:enemyReboundingFlayed(p) end},
+
+    {pattern = "(%w+) steps into the attack on his (%w+), grabs your arm, and throws you violently to the ground.", handler = function(p) etrack:parriedHandler(p) end},
+    {pattern = "(%w+) parries the attack on his (%w+) with a deft maneuver.", handler = function(p) etrack:parriedHandler(p) end},
+
+    {pattern = "(Web): %w+ says, \"Afflicted (%w+): (%w+).\"", handler = function(p) etrack:webAfflictionAnnounceHandler(p) end},
 }
 
-function etrack:allFlayed()
-  if lastFlay == "rebounding" then
-    enemyRebounding = false
-    setACSLabel("FLAYED REBOUNDING!")
-  elseif lastFlay == "shield" then
-    enemyShielded = false
-    setACSLabel("FLAYED SHIELD!")
-  elseif lastFlay == "sileris" then
-    enemyBiteProtected = false
-    setACSLabel("FLAYED BITE PROTECT!")
-  end
+function etrack:webAfflictionAnnounceHandler(p)
+    local person, affliction = mb.line:match(p)
+    if isTarget(person) then
+        etrack:addAff(string.lower(affliction))
+    end
 end
 
-function etrack:biteProtectionSlickedOff(p)
-  local person = mb.line:match(p)
-  if person == target then
-    etrack:biteProtectionFlayed()
-  end
-end
+
 
 function etrack:darkshadeParalysisHandler(p)
   person = mb.line:match(p)
@@ -145,74 +139,6 @@ function etrack:vomitHandler(p)
   person = mb.line:match(p)
   if isTarget(person) then
     etrack:addAff("vomiting")
-  end
-end
-
-function etrack:enemyBiteProtected(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyBiteProtected = true
-    setACSLabel(C.R .. person .. C.r .." protected from bites!")
-  end
-end
-
-function etrack:biteProtectionFlayed()
-  enemyBiteProtected = false
-  setACSLabel(C.G .. target .. C.g .. " bite protection flayed!")
-end
-
-function etrack:biteProtectionFlayed()
-  enemyBiteProtected = false
-  enemySheidled = false
-  enemyRebounding = false
-  setACSLabel(C.G .. target .. C.g .. " flayed!")
-end
-
-function etrack:enemyIsShielded(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyShielded = true
-    setACSLabel(C.R .. person .. C.r .." shielded!")
-  end
-end
-
-function etrack:shieldFlayed(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyShielded = false
-    setACSLabel(C.G .. person .. C.g .." shield flayed!")
-  end
-end
-
-function etrack:enemyUnshielded(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyShielded = true
-    setACSLabel(C.G .. person .. C.g .." sheild disappeared!")
-  end
-end
-
-function etrack:enemyReboundingUp(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyRebounding = true
-    setACSLabel(C.R .. person .. C.r .." rebounded!")
-  end
-end
-
-function etrack:enemyReboundingDown(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyRebounding = false
-    setACSLabel(C.G .. person .. C.g .." not rebounded!")
-  end
-end
-
-function etrack:enemyReboundingFlayed(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
-    enemyRebounding = false
-    setACSLabel(C.G .. person .. C.g .." rebounding flayed!")
   end
 end
 
@@ -263,6 +189,53 @@ function etrack:sandWhipBodyHandler(p)
   if isTarget(person) then etrack:addAff(etrack:translate(tmp)) end  
 end
 
+
+
+
+
+
+-- Aff tracking
+function etrack:enemyCure(cure)
+  for i,v in ipairs(cure) do
+    if etrack:hasAff(cure[i]) then 
+      etrack:removeAff(cure[i]) 
+      enemyLastCured = cure[i] 
+      break 
+    end 
+  end
+end
+
+function etrack:addAff(aff)
+  if not etrack:hasAff(etrack:translate(aff)) and aff ~= "" then 
+    table.insert(enemyAfflictions, aff) 
+    echo() 
+    ACSEcho(C.g .. "Enemy afflict with " .. C.G .. aff) 
+  end
+end
+
+function etrack:hasAff(aff)
+  for i,v in ipairs(enemyAfflictions) do
+    if enemyAfflictions[i] == aff then return true end
+  end
+  return false
+end
+
+function etrack:removeAff(aff)
+  for i,v in ipairs(enemyAfflictions) do
+    if enemyAfflictions[i] == aff then table.remove(enemyAfflictions, i) ACSEcho(C.r .. "Enemy cured " .. C.R .. aff) break end
+  end
+end
+
+function etrack:reset()
+  enemyAfflictions = {}
+end
+
+function etrack:manualReset()
+  etrack:reset()
+  ACSEcho("Reset enemy afflictions")
+end
+
+-- Handlers
 function etrack:enemySalveHandler(p)
   person, salve, area = mb.line:match(p)
   if isTarget(person) then
@@ -334,10 +307,6 @@ function etrack:enemyFocusHandler(p)
   end
 end
 
-function etrack:enemyReboundingStart()
-  add_timer(5.75, function() enemyRebounding = true ACSEcho("Possible rebounding... Flagging.") end)
-end
-
 function enemyLimbCure(person, poultice, limb)
   curDamage = 0
   
@@ -350,6 +319,13 @@ function enemyLimbCure(person, poultice, limb)
   end
 end
 
+
+
+
+
+
+
+-- Enemy Balance tracking
 function etrack:takeBal(bal, extra)
   if extra == nil then extra = "" end
   
@@ -376,6 +352,13 @@ function etrack:giveBal(bal)
   end
 end
 
+
+
+
+
+
+
+-- Helpers
 function etrack:translate(aff)
   if aff:find("belonephobia") then return "anorexia"
   elseif aff:find("colocasia") then return "magic_impaired"
@@ -419,46 +402,6 @@ function etrack:getCure(cure)
   elseif cure:match("fumeae") or cure:match("caloric") then return caloric_afflictions
   else return {}
   end
-end
-
-function etrack:enemyCure(cure)
-  for i,v in ipairs(cure) do
-    if etrack:hasAff(cure[i]) then 
-      etrack:removeAff(cure[i]) 
-      enemyLastCured = cure[i] 
-      break 
-    end 
-  end
-end
-
-function etrack:addAff(aff)
-  if not etrack:hasAff(etrack:translate(aff)) and aff ~= "" then 
-    table.insert(enemyAfflictions, aff) 
-    echo() 
-    ACSEcho(C.g .. "Enemy afflict with " .. C.G .. aff) 
-  end
-end
-
-function etrack:hasAff(aff)
-  for i,v in ipairs(enemyAfflictions) do
-    if enemyAfflictions[i] == aff then return true end
-  end
-  return false
-end
-
-function etrack:removeAff(aff)
-  for i,v in ipairs(enemyAfflictions) do
-    if enemyAfflictions[i] == aff then table.remove(enemyAfflictions, i) ACSEcho(C.r .. "Enemy cured " .. C.R .. aff) break end
-  end
-end
-
-function etrack:reset()
-  enemyAfflictions = {}
-end
-
-function etrack:manualReset()
-  etrack:reset()
-  ACSEcho("Reset enemy afflictions")
 end
 
 function etrack:toxinConvert(toxin) return etrack:venomConvert(toxin) end
@@ -524,6 +467,14 @@ function etrack:venomConvert(venom)
 end
 
 
+
+
+
+
+
+
+
+
 -- Parry Stuff
 function etrack:getParry()
   if self:hasAff("left_arm_broken") and self:hasAff("right_arm_broken") then return "" end
@@ -531,4 +482,110 @@ function etrack:getParry()
   if not self.parry then self.parry = "head" end
 
   return self.parry
+end
+
+function etrack:setParry(limb)
+    self.parry = limb
+end
+
+function etrack:parriedHandler(p)
+    local person, limb = mb.line:match(p)
+    if isTarget(person) then
+        self:setParry(limb)
+    end
+end
+
+
+
+-- Shield, rebounding and Sileris
+function etrack:enemyIsShielded(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyShielded = true
+    setACSLabel(C.R .. person .. C.r .." shielded!")
+  end
+end
+
+function etrack:enemyBiteProtected(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyBiteProtected = true
+    setACSLabel(C.R .. person .. C.r .." protected from bites!")
+  end
+end
+
+function etrack:allFlayed()
+  if lastFlay == "rebounding" then
+    enemyRebounding = false
+    setACSLabel("FLAYED REBOUNDING!")
+  elseif lastFlay == "shield" then
+    enemyShielded = false
+    setACSLabel("FLAYED SHIELD!")
+  elseif lastFlay == "sileris" then
+    enemyBiteProtected = false
+    setACSLabel("FLAYED BITE PROTECT!")
+  end
+end
+
+function etrack:biteProtectionSlickedOff(p)
+  local person = mb.line:match(p)
+  if person == target then
+    etrack:biteProtectionFlayed()
+  end
+end
+
+function etrack:biteProtectionFlayed()
+  enemyBiteProtected = false
+  setACSLabel(C.G .. target .. C.g .. " bite protection flayed!")
+end
+
+function etrack:biteProtectionFlayed()
+  enemyBiteProtected = false
+  enemySheidled = false
+  enemyRebounding = false
+  setACSLabel(C.G .. target .. C.g .. " flayed!")
+end
+
+function etrack:shieldFlayed(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyShielded = false
+    setACSLabel(C.G .. person .. C.g .." shield flayed!")
+  end
+end
+
+function etrack:enemyUnshielded(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyShielded = true
+    setACSLabel(C.G .. person .. C.g .." sheild disappeared!")
+  end
+end
+
+function etrack:enemyReboundingUp(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyRebounding = true
+    setACSLabel(C.R .. person .. C.r .." rebounded!")
+  end
+end
+
+function etrack:enemyReboundingDown(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyRebounding = false
+    setACSLabel(C.G .. person .. C.g .." not rebounded!")
+  end
+end
+
+function etrack:enemyReboundingFlayed(p)
+  person = mb.line:match(p)
+  if isTarget(person) then
+    enemyRebounding = false
+    setACSLabel(C.G .. person .. C.g .." rebounding flayed!")
+  end
+end
+
+function etrack:enemyReboundingStart()
+  add_timer(5.75, function() enemyRebounding = true ACSEcho("Possible rebounding... Flagging.") end)
 end

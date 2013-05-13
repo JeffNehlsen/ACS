@@ -68,7 +68,8 @@ function testTrigger(pattern, input)
 end
 
 function isTarget(p)
-    return string.lower(p):match(string.lower(target))
+    if target == "" then return false end
+    return string.lower(p):match(string.lower(target)) ~= nil
 end
 
 function hasSkill(skill)

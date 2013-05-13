@@ -23,16 +23,21 @@ Templar.aliases = {
 }
 
 Templar.triggers = {
+    -- Auras
     {pattern = "You focus momentarily as you envelop yourself in the righteous aura of (%w+).", handler = function(p) Templar:setAura(p) end},
     {pattern = "You focus and the aura of %w+ flickers and fades away.", handler = function(p) currentAura = "" end},
     {pattern = "Your aura flickers and fades as you lack the mana to maintain it.", handler = function(p) currentAura = "" end},
+    {pattern = "You are protected by an aura of (%w+).", handler = function(p) Templar:auraDefHandler(p) end},
+    {pattern = "You are already benefiting from an aura of (%w+).", handler = function(p) Templar:setAura(p) end},
 
+    -- Blessings
     {pattern = "You focus on your (%w+) aura and draw its power into you, focusing it onto your body.", handler = function(p) Templar:addedBlessing(p) end},
     {pattern = "You focus and cleanse yourself of the (%w+) blessing.", handler = function(p) Templar:removedBlessing(p) end},
     {pattern = "You cleanse yourself of any active blessings.", handler = function(p) Templar.currentBlessings = {} end},
-
-    {pattern = "You are already benefiting from an aura of (%w+).", handler = function(p) Templar:setAura(p) end},
     {pattern = "You are already benefiting from the (%w+) blessing.", handler = function(p) Templar:addedBlessing(p) end},
+    {pattern = {"You are benefiting from the blessings of (%w+) and (%w+) and (%w+).",
+                "You are benefiting from the blessings of (%w+) and (%w+).",
+                "You are benefiting from the blessings of (%w+)."}, handler = function(p) Templar:blessingDefHandler(p) end},
 
     {pattern = "Focusing your mind, you utter a quiet prayer and imbue (.*) with (%w+).", handler = function(p) Templar:empowerHandler(p) end},
 
@@ -71,16 +76,25 @@ Templar.triggers = {
     -- Balance Used: 2.36 seconds
 
 
-
     {pattern = "Your strikes cause (%w+) bruising on (%w+)'s (.*).", handler = function(p) Templar:enemyBruisedHandler(p) end},
-    -- Your strikes cause light bruising on Daingean's torso.
-    -- Your strikes cause moderate bruising on Daingean's torso.
-    -- Your strikes cause critical bruising on Daingean's torso.
+    {pattern = "Your strike ruptures %w+ bruises and blood begins to flow freely from the wound.", handler = function(p) Templar:enemyRuptured(p) end},
+    
+
+
+    -- You spy an opening in Neithan's defenses and quickly assume a steady, braced stance. With practiced 
+    -- ease, you position your weapon and gather your resolve, before engaging your art  with a yell. A 
+    -- Basilican mace warms in your grasp and flashes just once as you impose a Penance upon him.
+
+    -- You are once again able to impose Penance upon other people.
 }
 
 -- TODO: Gather attack lines for the weapons
 -- TODO: Figure out how empowerments/releases are going to work
 -- Double Raze: empower blaze/razeslash
+
+
+
+
 
 
 function Templar:enemyBruisedHandler(p)
@@ -92,6 +106,10 @@ function Templar:enemyBruisedHandler(p)
     end
 end
 
+function Templar:enemyRuptured(p)
+    etrack:addAff("ruptured")
+end
+
 function Templar:empower(left, right)
     send("cleanse left")
     send("cleanse right")
@@ -100,13 +118,52 @@ function Templar:empower(left, right)
     send("empower right with " .. right)
 end
 
-function Templar:attack()
-    -- Perform raze/aura checks here.
+function Templar:canAttack()
+    return balances:check({"balance", "equilibrium"}) and not hasAffliction("paralysis") and 
+           not hasAffliction("left_arm_broken") and not hasAffliction("right_arm_broken") and
+           not prompt.prone and not stunned and not unconscious
+end
 
+function Templar:attack()
+    if not self:canAttack() then
+        debug:print("Templar", "Cannot attack. Returning")
+        return
+    end
+
+    if self.wantedAura == "" or #self.wantedBlessings == 0 then
+        self:setWantedBlessings(self.offense.type)
+    end
+
+    if self:checkAura() then
+        return
+    end
+
+    if self:checkBlessings() then
+        return
+    end
+
+    if enemyShielded and enemyRebounded then
+        -- Double raze
+        Templar:doubleRaze()
+        balances:take("balance")
+        return
+    end
+
+    if enemyShielded or enemyRebounded then
+        -- Single raze
+        send("raze " .. target)
+        balances:take("balance")
+        return
+    end
 
     if self.offense.type == self.offense.types.MACE then
         self:maceAttack()
     end
+end
+
+function Templar:doubleRaze()
+    send("empower right with blaze")
+    send("razestrike " .. target)
 end
 
 function Templar:maceAttack()
@@ -116,16 +173,15 @@ function Templar:maceAttack()
 
     -- If the enemy is ruptured, then hit them with hemo!
     if etrack:hasAff("ruptured") then
-        self:empower("hemorrhage", "hemorrhage")
-        self:target("nothing", "nothing")
-        self:dsk()
-        etrack:removeAff("ruptured")
+        self:afterRuptureAttack()
         return
     end
 
     -- Attempt to rupture critically bruised areas
     for i, limb in ipairs(_limb_priority) do
         if etrack:hasAff(limb .. "_bruised_critical") then
+            -- Setup penance
+            -- double iceblast if possible
             self:rupture(limb_priority[i])
             return
         end
@@ -135,7 +191,7 @@ function Templar:maceAttack()
     for _, aff in ipairs(non_critical_bruises) do
         for i, limb in ipairs(_limb_priority) do
             if etrack:hasAff(limb .. aff) then
-                self:attackLimbOrArms(limb_priority[i])
+                self:attackLimbOrArmsWithMaces(limb_priority[i])
                 return
             end
         end
@@ -145,6 +201,7 @@ function Templar:maceAttack()
         if etrack:getParry() ~= limb then
             self:target(limb, limb)
             self:dsk()
+            balances:take("balance")
             return
         end
     end
@@ -152,7 +209,22 @@ function Templar:maceAttack()
     debug:print("Templar", "After loops")
 end
 
-function Templar:attackLimbOrArms(limb)
+function Templar:afterRuptureAttack()
+    if false and hasSkill("ice_breath") then
+        -- Wield a sword
+        -- Empower sword with hemorrhage
+        -- double iceblast release if not done already
+        -- icebreath
+        -- rend
+    else
+        self:empower("hemorrhage", "hemorrhage")
+        self:target("nothing", "nothing")
+        self:dsk()
+        etrack:removeAff("ruptured")
+    end
+end
+
+function Templar:attackLimbOrArmsWithMaces(limb)
     debug:print("Templar", "Attempting to attack " .. limb)
     if etrack:getParry() == limb then
         self:target("left arm", "right arm")
@@ -160,7 +232,9 @@ function Templar:attackLimbOrArms(limb)
         self:target(limb, limb)
     end
 
+    self:empower("trauma", "trauma")
     self:dsk()
+    balances:take("balance")
 end
 
 function Templar:target(limb1, limb2)
@@ -193,6 +267,7 @@ end
 -- Righteousness: Attacks
 function Templar:wither() 
     send("aura withering " .. target)
+    balances:take("equilibrium")
 end
 
 -- Bladefire
@@ -201,14 +276,17 @@ end
 
 function Templar:strike()
     send("strike " .. target)
+    balances:take("balance")
 end
 
 function Templar:raze()
     send("raze " .. target)
+    balances:take("balance")
 end
 
 function Templar:rsl()
     send("razestrike " .. target)
+    balances:take("balance")
 end
 
 function Templar:block(direction)
@@ -221,43 +299,53 @@ function Templar:dsk(tar)
     else
         send("dsk " .. target)
     end
+    balances:take("balance")
 end
 
 function Templar:impale()
     send("impale " .. target)
+    balances:take("balance")
 end
 
 function Templar:zeal()
     send("zeal " .. target)
+    balances:take("balance")
 end
 
 function Templar:lunge()
     send("lunge " .. target)
+    balances:take("balance")
 end
 
 function Templar:rupture(limb)
     debug:print("Templar", "Sending: Rupture: " .. limb)
     send("rupture " .. target .. " " .. limb)
+    balances:take("balance")
 end
 
 function Templar:tempest()
     send("tempest")
+    balances:take("balance")
 end
 
 function Templar:disembowel()
     send("disembowel " .. target)
+    balances:take("balance")
 end
 
 function Templar:charge()
     send("charge " .. target)
+    balances:take("balance")
 end
 
 function Templar:rend()
     send("rend " .. target)
+    balances:take("balance")
 end
 
 function Templar:cleave()
     send ("cleave" .. target)
+    balances:take("balance")
 end
 
 --------------------
@@ -265,6 +353,8 @@ end
 --------------------
 Templar.currentAura = ""
 Templar.currentBlessings = {}
+Templar.wantedAura = ""
+Templar.wantedBlessings = {}
 
 Templar.blessings = {
     bashing = {
@@ -274,12 +364,80 @@ Templar.blessings = {
     steamroller = {
         aura = "purity",
         blessings = {"protection", "meditation", "redemption"}
+    },
+
+
+--for damage I do purity aura, pestilence blessing, healing blessing, and either protection or meditation
+
+-- [5/10/2013 6:15:57 PM] Saybre: the idea for scimitar was to have spellbane as the AURA, and purity/pestilence/cleansing blessings
+-- [5/10/2013 6:16:59 PM] Saybre: heck, I think I might add spellbane to my offense blessings anyway
+    MACE = {
+        aura = "purity",
+        blessings = {"spellbane", "healing", "meditation"}
     }
 }
+
+function Templar:auraDefHandler(p)
+    local aura = mb.line:match(p)
+    self.currentAura = aura
+end
+
+function Templar:blessingDefHandler(p)
+    local b1, b2, b3 = mb.line:match(p)
+
+    self.currentBlessings = {}
+    table.insert(self.currentBlessings, b1)
+
+    if b2 then
+        table.insert(self.currentBlessings, b2)
+    end
+
+    if b3 then
+        table.insert(self.currentBlessings, b3)
+    end
+end
 
 function Templar:blessingHandler(i,p)
     local set = i:match(p)
     self:setBlessings(set)
+end
+
+function Templar:checkAura()
+    if self.wantedAura ~= self.currentAura then 
+        send("aura off")
+        send("aura " .. self.wantedAura)
+        balances:take("equilibrium")
+        return true
+    end
+
+    return false
+end
+
+function Templar:checkBlessings()
+    debug:print("Templar", "checkBlessings()");
+    for _, blessing in ipairs(Templar.currentBlessings) do
+        debug:print("Templar", "checking " .. blessing);
+        if not stringInTable(blessing, Templar.wantedBlessings) then
+            send("aura off blessing " .. blessing)
+        end
+    end
+
+    for _, blessing in ipairs(Templar.wantedBlessings) do
+        debug:print("Templar", "wantedBlessing check: "  .. blessing)
+        if not stringInTable(blessing, Templar.currentBlessings) then
+            send("aura blessing " .. blessing)
+            balances:take("equilibrium")
+            return true
+        end
+    end
+
+    return false
+end
+
+function Templar:setWantedBlessings(type)
+    debug:print("Templar", "setWantedBlessings(" .. type .. ")");
+    self.wantedAura = self.blessings[type].aura
+    self.wantedBlessings = self.blessings[type].blessings
 end
 
 function Templar:setBlessings(type)
@@ -287,6 +445,9 @@ function Templar:setBlessings(type)
         ACSEcho("Blessing set " .. type .. " not found.")
         return
     end
+
+    self.wantedAura = self.blessings[type].aura
+    self.wantedBlessings = self.blessings[type].blessings
 
     if self.currentAura ~= "" then
         actions:add(function() send("aura off " .. self.currentAura) end)
@@ -297,7 +458,6 @@ function Templar:setBlessings(type)
     end
 
     actions:add(function() send("aura " .. self.blessings[type].aura) end, baleq, {"equilibrium"})
-
 
     for _, blessing in ipairs(self.blessings[type].blessings) do
         actions:add(function() send("aura blessing " .. blessing) end, baleq, {"equilibrium"})
@@ -331,11 +491,12 @@ ACS:addModule(Templar, "Templar")
 
 class = {
     bashAttack = function()
-        send("wield warhammer")
+        send("wield mace")
+        send("wield mace")
         send("cleanse left")
         send("cleanse right")
         send("empower left with sacrifice")
         send("empower right with sacrifice")
-        send("dsw " .. selectedTarget)
+        send("dsk " .. selectedTarget)
     end
 }
