@@ -225,7 +225,7 @@ afflictionTable = {
   numbed_skin          = {name = "numbed_skin", diag = "^suffering from numbed skin.$"},
   oiled                = {name = "oiled", diag = "^Oiled.$"},
   omen                 = {name = "omen", diag = "^Afflicted with omen.$"},
-  one_eye              = {name ="one-eye", diag = "^You have but a single eye.$"},
+  ["one%-eye"]           = {name ="one-eye", diag = "^You have but a single eye.$"},
   penance              = {name = "penance", diag = "^suffering an imposed Penance.$"},
   petrified            = {name = "petrified", diag = "^petrified.$"},
   ripped_groin         = {name = "ripped_groin", diag = "^moving slowly due to a ripped groin.$"},
@@ -250,7 +250,7 @@ function afflictionTablePrepare()
   for k,v in pairs(afflictionTable) do
     if type(v) == "table" and v.diag then
       table.insert(diagnoseTriggers, {pattern = v.diag, handler = function(p) afflictionAdd(v.name) end})
-      table.insert(diagnoseTriggers, {pattern = "^afflicted with " .. v.name .. ".$", handler = function (p) afflictionAdd(v.name) end})
+      table.insert(diagnoseTriggers, {pattern = "^afflicted with " .. k .. ".$", handler = function (p) afflictionAdd(k) end})
     end
   end
 end

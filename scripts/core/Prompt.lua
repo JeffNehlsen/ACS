@@ -57,13 +57,16 @@ function prompt:parse(line)
   prompt.xp,        prompt.maxXP, 
   extra, status, eq, bal, armbal = line:match(prompt.pattern)
 
-  prompt.soul         = extra:match("Soul:(%d+)")
-  prompt.devotion     = extra:match("Devotion:(%d+)")
-  prompt.spark        = extra:match("Spark:(%d+)")
-  prompt.kai          = extra:match("Kai:(%d+)")
-  prompt.essence      = extra:match("Essence:(%d+)")
-  prompt.leftCharge   = extra:match("LC:(%d+)")
-  prompt.rightCharge  = extra:match("RC:(%d+)")
+  if extra then
+    prompt.soul         = extra:match("Soul:(%d+)")
+    prompt.devotion     = extra:match("Devotion:(%d+)")
+    prompt.spark        = extra:match("Spark:(%d+)")
+    prompt.kai          = extra:match("Kai:(%d+)")
+    prompt.essence      = extra:match("Essence:(%d+)")
+    prompt.leftCharge   = extra:match("LC:(%d+)")
+    prompt.rightCharge  = extra:match("RC:(%d+)")
+  end
+
 
   prompt.cloak        = check(status, "c")
   prompt.silaris      = check(status, "s")
@@ -238,8 +241,8 @@ function prompt:build()
       end
     end
 
-    prompt.leftCharge = prompt.leftCharge
-    prompt.rightCharge = prompt.rightCharge 
+    prompt.leftCharge = tonumber(prompt.leftCharge)
+    prompt.rightCharge = tonumber(prompt.rightCharge)
 
     return promptLabelColor .. "LC:" .. setChargeColor(prompt.leftCharge) .. " RC:" .. setChargeColor(prompt.rightCharge)
   end
@@ -320,6 +323,9 @@ function prompt:onPrompts()
     doParry()
     defenses:redef()
     actions:check()
+    if class.attack then
+      class.attack()
+    end
   end
 
   doTemporaryPromptTriggers()

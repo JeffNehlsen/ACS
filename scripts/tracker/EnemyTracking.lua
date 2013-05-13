@@ -20,16 +20,18 @@ bellwort_afflictions = { "hubris", "pacifism", "peace", "lover's_effect", "super
 bloodroot_afflictions = { "paralysis", "mirroring", "crippled_body", "crippled", "slickness", "heartflutter", "sandrot" }
 
 epidermal_afflictions = { "anorexia", "gorge", "blood_effusion", "phlegm_effusion", "yellow_bile_effusion", "black_bile_effusion", "indifference", "stuttering", "blurry_vision" }
-oculitorso_afflictions = {"anorexia", "stuttering"}
-mending_afflictions = { "right_leg_broken", "left_leg_broken", "right_arm_broken", "left_arm_broken", "selarnia", "ablaze", "crippled_throat" }
-mending_arms_afflictions = { "right_arm_broken", "left_arm_broken" }
-mending_legs_afflictions = { "right_leg_broken", "left_leg_broken" }
-mending_leftarm_afflictions = {"left_arm_broken" }
-mending_rightarm_afflictions = {"right_arm_broken" }
-mending_leftleg_afflictions = {"right_leg_broken" }
-mending_rightleg_afflictions = {"left_leg_broken" }
-mending_head_afflictions = {"crippled_throat", "throatclaw"}
+epidermal_torso_afflictions = {"anorexia", "stuttering"}
+
+mending_affliction = {"right_leg_bruised_critical", "left_leg_bruised_critical", "right_arm_bruised_critical", "left_arm_bruised_critical", "torso_bruised_critical", "head_bruised_critical", "right_leg_broken", "left_leg_broken", "right_arm_broken", "left_arm_broken", "right_leg_bruised_moderate", "right_leg_bruised", "left_leg_bruised_moderate", "left_leg_bruised", "right_arm_bruised_moderate", "right_arm_bruised", "left_arm_bruised_moderate", "left_arm_bruised", "torso_bruised_moderate", "torso_bruised", "head_bruised_moderate", "head_bruised" ,"selarnia", "ablaze", "crippled_throat"}
+mending_arms_afflictions = { "right_arm_bruised_critical", "left_arm_bruised_critical", "right_arm_broken", "left_arm_broken", "right_arm_bruised_moderate", "right_arm_bruised", "left_arm_bruised_moderate", "left_arm_bruised" }
+mending_legs_afflictions = { "right_leg_bruised_critical", "left_leg_bruised_critical", "right_leg_broken", "left_leg_broken", "right_leg_bruised_moderate", "right_leg_bruised", "left_leg_bruised_moderate", "left_leg_bruised" }
+mending_leftarm_afflictions = { "left_arm_bruised_critical", "left_arm_broken", "left_arm_bruised_moderate", "left_arm_bruised" }
+mending_rightarm_afflictions = { "right_arm_bruised_critical", "right_arm_broken", "right_arm_bruised_moderate", "right_arm_bruised" }
+mending_leftleg_afflictions = { "right_leg_bruised_critical", "right_leg_broken", "right_leg_bruised_moderate",  "right_leg_bruised" }
+mending_rightleg_afflictions = { "left_leg_bruised_critical", "left_leg_broken", "left_leg_bruised_moderate", "left_leg_bruised" }
+mending_head_afflictions = { "head_bruised_critical", "crippled_throat", "throatclaw", "head_bruised_moderate", "head_bruised" }
 mending_torso_afflictions = {"torso_bruised_critical", "torso_bruised_moderate", "torso_bruised"}
+
 caloric_afflictions = {"frozen", "shivering"}
 
 elm_afflictions = { "aeon", "hellsight", "deadening" }
@@ -81,7 +83,8 @@ triggers.etrackTriggers = {
   
   {pattern = "^You suddenly perceive the vague outline of an aura of rebounding around (%w+).$", handler = function(p) etrack:enemyReboundingUp(p) end},
   {pattern = "^(%w+)'s aura of weapons rebounding disappears.$", handler = function(p) etrack:enemyReboundingDown(p) end},
-  {pattern = "^With a flick of your whip, you flay the aura of rebounding from (%w+).$", handler = function(p) etrack:enemyReboundingFlayed(p) end},
+  {pattern = "^With a flick of your whip, you flay the aura of rebounding from (%w+).$", handler = function(p) etrack:enemyReboundingFlayed() end},
+  {pattern = "^You raze %w+'s magical shield with .*%.", handler = function(p) etrack:enemyReboundingFlayed() end},
   
   {pattern = "^You flay the hard waxy coating from (%w+).$", handler = function(p) etrack:biteProtectionFlayed() end},
   {pattern = "^The bone marrow coating (%w+)'s body sloughs off, unable to stick to .* unnaturally slick skin.$", handler = function(p) etrack:biteProtectionSlickedOff(p) end},
@@ -96,7 +99,7 @@ triggers.etrackTriggers = {
   {pattern = "^The protective shield around (%w+) dissipates.$", handler = function(p) etrack:enemyUnshielded(p) end},
   {pattern = "^A dizzying beam of energy strikes you as your attack rebounds off of (%w+)'s shield.$", handler = function(p) etrack:enemyIsShielded(p) end},
   {pattern = "^With a swift motion, you splice away (%w+)'s shield defence, and turn to strike with your other blade.$", handler = function(p) etrack:enemyUnshielded(p) end},
-  {pattern = "^With a swift motion, you splice away (%w+)'s rebounding defence, and turn to strike with your other blade.$", handler = function(p) etrack:enemyReboundingFlayed(p) end},
+  {pattern = "^With a swift motion, you splice away (%w+)'s rebounding defence, and turn to strike with your other blade.$", handler = function(p) etrack:enemyReboundingFlayed() end},
 
     {pattern = "(%w+) steps into the attack on his (%w+), grabs your arm, and throws you violently to the ground.", handler = function(p) etrack:parriedHandler(p) end},
     {pattern = "(%w+) parries the attack on his (%w+) with a deft maneuver.", handler = function(p) etrack:parriedHandler(p) end},
@@ -107,7 +110,7 @@ triggers.etrackTriggers = {
 function etrack:webAfflictionAnnounceHandler(p)
     local person, affliction = mb.line:match(p)
     if isTarget(person) then
-        etrack:addAff(string.lower(affliction))
+        etrack:addAff(string.lower(etrack:translate(affliction)))
     end
 end
 
@@ -208,8 +211,7 @@ end
 function etrack:addAff(aff)
   if not etrack:hasAff(etrack:translate(aff)) and aff ~= "" then 
     table.insert(enemyAfflictions, aff) 
-    echo() 
-    ACSEcho(C.g .. "Enemy afflict with " .. C.G .. aff) 
+    ACSLabel(C.g .. "Enemy afflict with " .. C.G .. aff) 
   end
 end
 
@@ -399,6 +401,7 @@ function etrack:getCure(cure)
   elseif cure:match("orbis to right arm") or cure:match("mending to right leg") then return mending_rightleg_afflictions
   elseif cure:match("oculi") or cure:match("epidermal") then return epidermal_afflictions
   elseif cure:match("orbis") or cure:match("mending") then return mending_afflictions
+  elseif cure:match("orbis to body") or cure:match("mending to body") then return mending_afflictions
   elseif cure:match("fumeae") or cure:match("caloric") then return caloric_afflictions
   else return {}
   end
@@ -578,12 +581,9 @@ function etrack:enemyReboundingDown(p)
   end
 end
 
-function etrack:enemyReboundingFlayed(p)
-  person = mb.line:match(p)
-  if isTarget(person) then
+function etrack:enemyReboundingFlayed()
     enemyRebounding = false
-    setACSLabel(C.G .. person .. C.g .." rebounding flayed!")
-  end
+    setACSLabel(C.G .. person .. C.g .." rebounding gone!")
 end
 
 function etrack:enemyReboundingStart()

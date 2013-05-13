@@ -1,6 +1,7 @@
 echo("Templar loaded. Forward, unto Dawn!")
 
 Templar = {
+    canPenance = true,
     enemyImpaled = false,
     offense = {
         type = "MACE",
@@ -50,6 +51,9 @@ Templar.triggers = {
     {pattern = "(%w+) has writhed free of %w+ impalement.", handler = function(p) Templar:unimpaledHandler(p) end},
     {pattern = "With a vicious snarl you carve a merciless swathe through the steaming guts of %w+, who oyagurgles and chokes as you withdraw your dripping .*, its blade glistening with gore.", handler = function(p) Templar:disemboweledHandler(p) end},
 
+
+    -- Maingauche
+    {pattern = "^With a swift movement you dart in toward (%w+) and stab %w+ with .*%.$", handler = function(p) Templar:maingaucheHandler(p) end},
     -- Cripple: crippled/crippled_body
     -- As a Basilican mace strikes, a surge of energy cascades along it, striking yourself's legs.
     -- Gives crippled_body, cures crippled
@@ -81,11 +85,12 @@ Templar.triggers = {
     
 
 
-    -- You spy an opening in Neithan's defenses and quickly assume a steady, braced stance. With practiced 
-    -- ease, you position your weapon and gather your resolve, before engaging your art  with a yell. A 
-    -- Basilican mace warms in your grasp and flashes just once as you impose a Penance upon him.
+    {pattern = "^You spy an opening in (%w+)'s defenses and quickly assume a steady", handler = function(p) Templar:penanceHandler(p) end},
+    {pattern = "You are once again able to impose Penance upon other people.", handler = function(p) Templar:penanceReturnedHandler() end},
+    {pattern = "You are not yet able to impose a Penance on another person.", handler = function(p) Templar:unableToPenanceHandler() end},
 
-    -- You are once again able to impose Penance upon other people.
+    {pattern = {"You will now target attacks with your %w+ arm wherever you see an opening.",
+                "You will now target the .* of your opponent with your %w+ arm."}, handler = function(p) Templar:targetHandler() end},
 }
 
 -- TODO: Gather attack lines for the weapons
@@ -94,11 +99,15 @@ Templar.triggers = {
 
 
 
-
-
+function Templar:targetHandler()
+    if class.autoattack then
+        killLine()
+    end
+end
 
 function Templar:enemyBruisedHandler(p)
     local bruise, person, limb = mb.line:match(p)
+    limb = limb:gsub(" ", "_")
     if bruise == "light" then
         etrack:addAff(limb .. "_bruised")
     else
@@ -111,11 +120,38 @@ function Templar:enemyRuptured(p)
 end
 
 function Templar:empower(left, right)
+    debug:print("Templar", "empowering with " .. left .. " and " .. right)
     send("cleanse left")
     send("cleanse right")
+
+    -- Set up for maingauche
+    send("empower right with combustion")
     send("empower right with burst")
+
+    -- Empower the weapons with the target
     send("empower left with " .. left)
     send("empower right with " .. right)
+end
+
+function Templar:getCharges()
+    local lcharge = prompt.leftCharge or 0
+    local rcharge = prompt.rightCharge or 0
+    return {left = lcharge, right = rcharge}
+end
+
+function Templar:iceblast()
+    local charges = self:getCharges()
+    if charges.left > 100 then
+        Templar:release("left", "iceblast")
+    end
+
+    if charges.right > 100 then
+        Templar:release("right", "iceblast")
+    end
+end
+
+function Templar:release(side, attack)
+    send("blade release " .. side .. " " .. attack .. " " .. target)
 end
 
 function Templar:canAttack()
@@ -161,11 +197,6 @@ function Templar:attack()
     end
 end
 
-function Templar:doubleRaze()
-    send("empower right with blaze")
-    send("razestrike " .. target)
-end
-
 function Templar:maceAttack()
     local limb_priority = {"torso", "head", "left leg", "right leg", "left arm", "right arm"}
     local _limb_priority = {"torso", "head", "left_leg", "right_leg", "left_arm", "right_arm"}
@@ -173,6 +204,8 @@ function Templar:maceAttack()
 
     -- If the enemy is ruptured, then hit them with hemo!
     if etrack:hasAff("ruptured") then
+        self:penance()
+        self:iceblast()
         self:afterRuptureAttack()
         return
     end
@@ -180,8 +213,8 @@ function Templar:maceAttack()
     -- Attempt to rupture critically bruised areas
     for i, limb in ipairs(_limb_priority) do
         if etrack:hasAff(limb .. "_bruised_critical") then
-            -- Setup penance
-            -- double iceblast if possible
+            self:penance()
+            -- self:iceblast()
             self:rupture(limb_priority[i])
             return
         end
@@ -199,6 +232,7 @@ function Templar:maceAttack()
 
     for i, limb in ipairs(limb_priority) do
         if etrack:getParry() ~= limb then
+            self:empower("trauma", "trauma")
             self:target(limb, limb)
             self:dsk()
             balances:take("balance")
@@ -242,6 +276,39 @@ function Templar:target(limb1, limb2)
     send("target " .. limb2 .. " with right")
 end
 
+function Templar:doubleRaze()
+    send("empower right with blaze")
+    send("razestrike " .. target)
+end
+
+function Templar:penance()
+    if self.canPenance then
+        send("penance " .. target)
+    end
+end
+
+function Templar:penanceHandler(p)
+    local person = mb.line:match(p)
+    Templar.canPenance = false
+    ACSLabel(C.R .. "Penanced " .. person)
+end
+
+function Templar:penanceReturnedHandler()
+    Templar.canPenance = true
+    ACSLabel(C.G .. "Penance balance returned!");
+end
+
+function Templar:unableToPenanceHandler()
+    Templar.canPenance = false
+    ACSLabel(C.R .. "Unable to penance!")
+end
+
+function Templar:maingaucheHandler(p)
+    local person = mb.line:match(p)
+
+    ACSLabel(C.R .. "MainGauche'd " .. person)
+end
+
 function Templar:impaleHandler(p)
     local person = mb.line:match(p)
     Templar.enemyImpaled = true
@@ -261,7 +328,8 @@ function Templar:disemboweledHandler(p)
 end
 
 function Templar:empowerHandler(p)
-    local weapon, empower = mb.line:match(p);
+    local weapon, empowerment = mb.line:match(p)
+    ACSLabel(C.r .. "Empowered " .. weapon .. " with " .. C.G .. empowerment)
 end
 
 -- Righteousness: Attacks
@@ -379,7 +447,7 @@ Templar.blessings = {
 
 function Templar:auraDefHandler(p)
     local aura = mb.line:match(p)
-    self.currentAura = aura
+    self.currentAura = string.lower(aura)
 end
 
 function Templar:blessingDefHandler(p)
@@ -414,16 +482,16 @@ function Templar:checkAura()
 end
 
 function Templar:checkBlessings()
-    debug:print("Templar", "checkBlessings()");
+    debug:print("Blessings", "checkBlessings()");
     for _, blessing in ipairs(Templar.currentBlessings) do
-        debug:print("Templar", "checking " .. blessing);
+        debug:print("Blessings", "checking " .. blessing);
         if not stringInTable(blessing, Templar.wantedBlessings) then
             send("aura off blessing " .. blessing)
         end
     end
 
     for _, blessing in ipairs(Templar.wantedBlessings) do
-        debug:print("Templar", "wantedBlessing check: "  .. blessing)
+        debug:print("Blessings", "wantedBlessing check: "  .. blessing)
         if not stringInTable(blessing, Templar.currentBlessings) then
             send("aura blessing " .. blessing)
             balances:take("equilibrium")
@@ -498,5 +566,12 @@ class = {
         send("empower left with sacrifice")
         send("empower right with sacrifice")
         send("dsk " .. selectedTarget)
+    end,
+
+    autoattack = false,
+    attack = function()
+        if class.autoattack then
+            Templar:attack()
+        end
     end
 }
