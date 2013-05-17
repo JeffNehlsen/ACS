@@ -9,6 +9,28 @@ living = true
 artiPipes = false
 PRERESTORE_THRESHOLD = 15
 
+-- Numbers for specific types of weapons for the wielding system.
+weapons = {
+  dirk = {
+    item = "dirk120499",
+    name = "a needle%-pointed dirk"
+  },
+  whip = {
+    item = "whip172589",
+    name = "an iron%-tipped whip"
+  },
+  tower = {
+    item = "buckler53491",
+    name = "a buckler",
+    shield = true
+  },
+  bow = {
+    item = "darkbow233849",
+    name = "a pale, twisting darkbow of ash and bone.",
+    bow = true
+  },
+}
+
 -- Your preferred pagelength
 defaultPagelength = 40
 
@@ -62,7 +84,7 @@ showVenoms = true
 skills = {
   -- General
   vision = skillranks.transcendent,
-  avoidance = skillranks.fabled,
+  avoidance = skillranks.transcendent,
   survival = skillranks.transcendent,
   weaponry = skillranks.fabled,
   tattoos = skillranks.expert,

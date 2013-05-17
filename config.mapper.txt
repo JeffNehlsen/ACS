@@ -2,7 +2,7 @@
 # Manual changes that are not loaded will be lost on the next rewrite.
 
 Title-Color brown
-Disable-Swimming no
+Disable-Swimming yes
 Disable-WhoList no
 Disable-Alertness no
 Disable-Locating no
