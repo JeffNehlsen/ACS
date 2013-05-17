@@ -214,7 +214,6 @@ function Templar:maceAttack()
     for i, limb in ipairs(_limb_priority) do
         if etrack:hasAff(limb .. "_bruised_critical") then
             self:penance()
-            -- self:iceblast()
             self:rupture(limb_priority[i])
             return
         end
@@ -232,6 +231,7 @@ function Templar:maceAttack()
 
     for i, limb in ipairs(limb_priority) do
         if etrack:getParry() ~= limb then
+            doWield("mace1", "mace2")
             self:empower("trauma", "trauma")
             self:target(limb, limb)
             self:dsk()
@@ -244,22 +244,23 @@ function Templar:maceAttack()
 end
 
 function Templar:afterRuptureAttack()
-    if false and hasSkill("ice_breath") then
-        -- Wield a sword
-        -- Empower sword with hemorrhage
-        -- double iceblast release if not done already
-        -- icebreath
-        -- rend
+    local charges = self:getCharges()
+    if hasSkill("ice_breath") and charges.left > 100 and charges.right > 100 then
+        doWield("scimitar", "mace2")
+        self:empower("hemorrhage", "hemorrhage")
+        send("freeze " .. target)
+        send("rend " .. target)
     else
         self:empower("hemorrhage", "hemorrhage")
         self:target("nothing", "nothing")
         self:dsk()
-        etrack:removeAff("ruptured")
     end
+    etrack:removeAff("ruptured")
 end
 
 function Templar:attackLimbOrArmsWithMaces(limb)
     debug:print("Templar", "Attempting to attack " .. limb)
+    doWield("mace1", "mace2")
     if etrack:getParry() == limb then
         self:target("left arm", "right arm")
     else

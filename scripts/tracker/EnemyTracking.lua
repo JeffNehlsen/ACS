@@ -84,7 +84,7 @@ triggers.etrackTriggers = {
   {pattern = "^You suddenly perceive the vague outline of an aura of rebounding around (%w+).$", handler = function(p) etrack:enemyReboundingUp(p) end},
   {pattern = "^(%w+)'s aura of weapons rebounding disappears.$", handler = function(p) etrack:enemyReboundingDown(p) end},
   {pattern = "^With a flick of your whip, you flay the aura of rebounding from (%w+).$", handler = function(p) etrack:enemyReboundingFlayed() end},
-  {pattern = "^You raze %w+'s magical shield with .*%.", handler = function(p) etrack:enemyReboundingFlayed() end},
+  {pattern = "^You raze %w+'s magical shield with .*%.", handler = function(p) etrack:shieldFlayed() end},
   
   {pattern = "^You flay the hard waxy coating from (%w+).$", handler = function(p) etrack:biteProtectionFlayed() end},
   {pattern = "^The bone marrow coating (%w+)'s body sloughs off, unable to stick to .* unnaturally slick skin.$", handler = function(p) etrack:biteProtectionSlickedOff(p) end},
@@ -105,6 +105,8 @@ triggers.etrackTriggers = {
     {pattern = "(%w+) parries the attack on his (%w+) with a deft maneuver.", handler = function(p) etrack:parriedHandler(p) end},
 
     {pattern = "(Web): %w+ says, \"Afflicted (%w+): (%w+).\"", handler = function(p) etrack:webAfflictionAnnounceHandler(p) end},
+
+    {pattern = "You whip .* through the air in front of (%w+), to no effect.", handler = function(p) etrack:allFlayed() end},
 }
 
 function etrack:webAfflictionAnnounceHandler(p)
@@ -551,10 +553,10 @@ end
 
 function etrack:shieldFlayed(p)
   person = mb.line:match(p)
-  if isTarget(person) then
-    enemyShielded = false
+  -- if isTarget(person) 
+    thenenemyShielded = false
     setACSLabel(C.G .. person .. C.g .." shield flayed!")
-  end
+  -- end
 end
 
 function etrack:enemyUnshielded(p)

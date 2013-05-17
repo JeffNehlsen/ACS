@@ -49,6 +49,23 @@ weapons = {
     name = "an elegant, bladed darkbow.",
     bow = true
   },
+  mace1 = {
+    item = "mace90597",
+    name = "a mace of scorched ivory",
+  },
+  mace2 = {
+    item = "mace88881",
+    name = "an ebon serpent mace",
+  },
+  bastard = {
+    item = "bastardsword255261",
+    name = "a Delosian bastard sword",
+    twoHanded = true,
+  },
+  scimitar = {
+    item = "scimitar93129",
+    name = "a gleaming scimitar",
+  }
 }
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
@@ -72,4 +89,4 @@ skills = {
 }
 
 -- Skills for endgame and racial skills.
-extraSkills = {"miasma", "reconstitute", "quickassess"}
+extraSkills = {"miasma", "reconstitute", "quickassess", "ice_breath"}
