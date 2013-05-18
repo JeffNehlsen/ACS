@@ -85,6 +85,9 @@ triggers.etrackTriggers = {
   {pattern = "^(%w+)'s aura of weapons rebounding disappears.$", handler = function(p) etrack:enemyReboundingDown(p) end},
   {pattern = "^With a flick of your whip, you flay the aura of rebounding from (%w+).$", handler = function(p) etrack:enemyReboundingFlayed() end},
   {pattern = "^You raze %w+'s magical shield with .*%.", handler = function(p) etrack:shieldFlayed() end},
+  {pattern = "^You raze %w+'s aura of rebounding with .*.$", handler = function(p) etrack:enemyReboundingFlayed() end},
+  {pattern = "^You raze %w+'s speed defence with .*.$", handler = function(p) etrack:enemyReboundingFlayed() etrack:shieldFlayed() end},
+  {pattern = "^White flames suddenly encase .* as your attack strikes %w+'s rebounding aura, burning the aura away.$", handler = function(p) etrack:enemyReboundingFlayed() end},
   
   {pattern = "^You flay the hard waxy coating from (%w+).$", handler = function(p) etrack:biteProtectionFlayed() end},
   {pattern = "^The bone marrow coating (%w+)'s body sloughs off, unable to stick to .* unnaturally slick skin.$", handler = function(p) etrack:biteProtectionSlickedOff(p) end},
@@ -403,7 +406,7 @@ function etrack:getCure(cure)
   elseif cure:match("orbis to right arm") or cure:match("mending to right leg") then return mending_rightleg_afflictions
   elseif cure:match("oculi") or cure:match("epidermal") then return epidermal_afflictions
   elseif cure:match("orbis") or cure:match("mending") then return mending_afflictions
-  elseif cure:match("orbis to body") or cure:match("mending to body") then return mending_afflictions
+  elseif cure:match("orbis to body") or cure:match("mending to body") or cure:match("orbis to skin") or cure:match("mending to skin") then return mending_afflictions
   elseif cure:match("fumeae") or cure:match("caloric") then return caloric_afflictions
   else return {}
   end
@@ -551,12 +554,9 @@ function etrack:biteProtectionFlayed()
   setACSLabel(C.G .. target .. C.g .. " flayed!")
 end
 
-function etrack:shieldFlayed(p)
-  person = mb.line:match(p)
-  -- if isTarget(person) 
-    thenenemyShielded = false
-    setACSLabel(C.G .. person .. C.g .." shield flayed!")
-  -- end
+function etrack:shieldFlayed()
+  enemyShielded = false
+  setACSLabel(C.G .. person .. C.g .." shield flayed!")
 end
 
 function etrack:enemyUnshielded(p)

@@ -62,9 +62,13 @@ weapons = {
     name = "a Delosian bastard sword",
     twoHanded = true,
   },
-  scimitar = {
-    item = "scimitar93129",
-    name = "a gleaming scimitar",
+  scimitar1 = {
+    item = "scimitar161182",
+    name = "an icy blue scimitar",
+  },
+  scimitar2 = {
+    item = "scimitar47370",
+    name = "a flame%-etched scimitar",
   }
 }
 

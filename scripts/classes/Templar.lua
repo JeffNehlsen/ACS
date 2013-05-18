@@ -19,6 +19,7 @@ Templar.aliases = {
   -- {pattern = "^cha$", handler = function(i,p) setCharge() end},
 
   -- {pattern = "^dsl$", handler = function(i,p) dsl() end},
+    {pattern = "^attack$", handler = function(i,p) Templar:toggleAutoattack() end},
 
     {pattern = "^blessings (%w+)$", handler = function(i,p) Templar:blessingHandler(i,p) end}
 }
@@ -97,7 +98,19 @@ Templar.triggers = {
 -- TODO: Figure out how empowerments/releases are going to work
 -- Double Raze: empower blaze/razeslash
 
+function Templar:toggleAutoattack()
+    if class.autoattack == nil then class.autoattack = false end
 
+    class.autoattack = not class.autoattack
+
+    if class.autoattack then
+        echo(C.b .. "[" .. C.g .. "AUTO ATTACK ON" .. C.b .. "]" .. C.x)
+    else
+        echo(C.b .. "[" .. C.r .. "AUTO ATTACK OFF" .. C.b .. "]" .. C.x)
+    end
+
+    show_prompt()
+end
 
 function Templar:targetHandler()
     if class.autoattack then
@@ -178,14 +191,14 @@ function Templar:attack()
         return
     end
 
-    if enemyShielded and enemyRebounded then
+    if enemyShielded and enemyRebounding then
         -- Double raze
         Templar:doubleRaze()
         balances:take("balance")
         return
     end
 
-    if enemyShielded or enemyRebounded then
+    if enemyShielded or enemyRebounding then
         -- Single raze
         send("raze " .. target)
         balances:take("balance")
