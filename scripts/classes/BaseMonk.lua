@@ -3,9 +3,9 @@ echo("Base monk system loaded.")
 class = {
   bashAttack = function()
     if Tekura.stance == "" then
-      send("combo " .. selectedTarget .. " egs ucp ucp")
+      send("combo " .. selectedTarget .. " brs ucp ucp")
       return
-    elseif Tekura.stance == "eagle" then
+    elseif Tekura.stance == "bear" then
       send("scs")
     end
 
