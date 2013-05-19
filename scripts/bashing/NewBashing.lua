@@ -116,6 +116,15 @@ Bashing.aliases = {
         disableTriggers("Bashing")
     end},
 
+    {pattern = "^highbashing$", handler = function() 
+        Bashing.loop = { "xaanhal", "ayhesa", "lich", "mamashi", "khauskin"}
+        ACSEcho("Going to bash the harder areas!")
+    end},
+    {pattern = "^lowbashing$", handler = function() 
+        Bashing.loop = { "ayhesa", "lich", "mamashi", "khauskin", "mor"} 
+        ACSEcho("Going to bash the less hard areas!")
+    end},
+
     {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
 }
 
@@ -177,7 +186,7 @@ end
 function Bashing:checkForNextArea()
     local index = getTableIndex(Bashing.loop, Bashing.currentArea) + 1
     local nextArea
-    if not index or not Bashing.loop[index] then
+    if index == nil or not Bashing.loop[index] then
         index = 1
     end
     nextArea = Bashing.areas[Bashing.loop[index]]
