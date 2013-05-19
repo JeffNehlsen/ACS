@@ -1,5 +1,10 @@
 echo("Base monk system loaded.")
 
+class = {
+  bashAttack = function()
+    send("combo " .. selectedTarget .. " sdk ucp ucp")
+  end
+}
 Tekura = {}
 Tekura.autobbt = nil
 Tekura.moves = {

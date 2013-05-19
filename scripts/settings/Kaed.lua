@@ -50,15 +50,15 @@ weapons = {
     bow = true
   },
   mace1 = {
-    item = "mace90597",
-    name = "a mace of scorched ivory",
+    item = "mace284360",
+    name = "a hefty lakecrystal mace",
   },
   mace2 = {
-    item = "mace88881",
-    name = "an ebon serpent mace",
+    item = "mace284393",
+    name = "a Basilican mace",
   },
   bastard = {
-    item = "bastardsword255261",
+    item = "bastard68951",
     name = "a Delosian bastard sword",
     twoHanded = true,
   },

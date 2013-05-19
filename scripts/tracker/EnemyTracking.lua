@@ -38,7 +38,7 @@ elm_afflictions = { "aeon", "hellsight", "deadening" }
 valerian_afflictions = {"slickness", "disfigurement"}
 smoke_afflictions = { "aeon", "hellsight", "slickness", "disfigurement" }
 
-focus_afflictions = {"stupidity", "anorexia", "epilepsy", "paranoia", "hallucinations", "shyness", "stuttering", "dizziness", "indifference", "berserking", "pacifism", "lover's_effect", "hatred", "generosity", "claustrophobia", "vertigo", "loneliness", "agoraphobia", "masochism", "recklessness", "weariness", "magic_impaired", "confusion", "dementia" }
+focus_afflictions = {"stupidity", "anorexia", "epilepsy", "paranoia", "hallucinations", "shyness", "stuttering", "dizziness", "indifference", "berserking", "pacifism", "lover's_effect", "hatred", "generosity", "claustrophobia", "vertigo", "loneliness", "agoraphobia", "masochism", "recklessness", "weariness", "confusion", "dementia" }
 
 enemyRebounding = false
 enemyShielded = false

@@ -19,6 +19,8 @@ aliases.coreAliases = {
   {pattern = "^flick$", handler = function(i,p) flickAll() end},
   {pattern = "^dosleep$", handler = function(i,p) send("relax insomnia") send("sleep") end},
   {pattern = "^assess (%w+)$", handler = function(i,p) assessHandler(i,p) end},
+
+  {pattern = "^ring (%w+)$", handler = function(i,p) handleSendRing(i,p) end},
   
   
   -- Blocked emotes... This will prevent ghost stupidity from cropping up
@@ -39,6 +41,16 @@ aliases.coreAliases = {
   {pattern = "^srl$", handler = function(i,p) doShatter("right leg") end},
   {pattern = "^sra$", handler = function(i,p) doShatter("right arm") end},
 }
+
+function handleSendRing(i,p)
+  local person = i:match(p)
+  send("get letter from satchel")
+  send("open letter")
+  send("remove " .. artiring)
+  send("put " .. artiring .. " in letter")
+  send("close letter")
+  send("mail letter to " .. person)
+end
 
 function assessHandler(i,p)
   local person = i:match(p)
