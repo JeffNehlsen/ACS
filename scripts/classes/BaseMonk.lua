@@ -2,11 +2,19 @@ echo("Base monk system loaded.")
 
 class = {
   bashAttack = function()
+    if Tekura.stance == "" then
+      send("combo " .. selectedTarget .. " egs ucp ucp")
+      return
+    elseif Tekura.stance == "eagle" then
+      send("scs")
+    end
+
     send("combo " .. selectedTarget .. " sdk ucp ucp")
   end
 }
 Tekura = {}
 Tekura.autobbt = nil
+Tekura.stance = ""
 Tekura.moves = {
   -- Punches
   hfpl = {command = "hfp", side = "left"},
@@ -89,6 +97,14 @@ function Tekura.checkForOneSide(attacks)
   return true
 end
 
+function Tekura:setStance(stance)
+  self.stance = stance
+  setACSLabel("Stance changed to " .. C.R .. stance)
+end
+
+function Tekura:unstanced()
+  self.stance = ""
+end
 
 
 --Hunting Combo
@@ -154,7 +170,19 @@ aliases.attackAliases = {
 }
 
 triggers.classTriggers = {
-   
+  {pattern = "^You drop your legs into a sturdy Horse stance.$", handler = function(p) Tekura:setStance("horse") end},
+  {pattern = "^You draw back and balance into the Eagle stance.$", handler = function(p) Tekura:setStance("eagle") end},
+  {pattern = "^You tense your muscles and look about sharply as you take the stance of the Cat.$", handler = function(p) Tekura:setStance("cat") end},
+  {pattern = "^You draw yourself up to full height and roar aloud, adopting the Bear stance.$", handler = function(p) Tekura:setStance("bear") end},
+  {pattern = "^You take the Rat stance.$", handler = function(p) Tekura:setStance("rat") end},
+  {pattern = "^You sink back into the menacing stance of the Scorpion.$", handler = function(p) Tekura:setStance("scorpion") end},
+  {pattern = "^You sink into a sturdy crouch, reaching out before you as you assume the Cobra stance.$", handler = function(p) Tekura:setStance("cobra") end},
+  {pattern = "^Lifting one leg up off the ground, you reach into the air, balancing in the Phoenix stance.$", handler = function(p) Tekura:setStance("phoenix") end},
+  {pattern = "^Bringing your torso closer to the ground, you adopt the pose of a Tiger.$", handler = function(p) Tekura:setStance("tiger") end},
+  {pattern = "^Baring your teeth, you let out a mental snarl as you adopt the Wolf stance.$", handler = function(p) Tekura:setStance("wolf") end},
+  {pattern = "^You allow the form of the Dragon to fill your mind and govern your actions.$", handler = function(p) Tekura:setStance("dragon") end},
+
+  {pattern = "^You ease yourself out of the %w+ stance.$", handler = function(p) Tekura:unstanced() end},
 }
 
 
