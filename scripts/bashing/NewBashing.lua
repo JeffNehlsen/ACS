@@ -107,10 +107,16 @@ Bashing.triggers = {
 Bashing.aliases = {
     {pattern = "^beginbashing (%a+)$", handler = function(i,p) 
         local area = i:match(p) 
-        reloadBashing:begin(area) 
+        Bashing:gotoNextArea(area) 
     end},
-    -- {pattern = "^stopbashing$", handler = function() moveQueue = {} ACSEcho("Move Queue is empty.  Feel free to move around!") end},
-    -- {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
+
+    {pattern = "^stopbashing$", handler = function()
+        send("path stop")
+        Walker.kill()
+        disableTriggers("Bashing")
+    end},
+
+    {pattern = "^rlbashing$", handler = function() dofile("scripts/bashing/NewBashing.lua") show_prompt() end},
 }
 
 Bashing.loop = { "xaanhal", "ayhesa", "lich", "mamashi"} --, "khauskin", "mor" }
