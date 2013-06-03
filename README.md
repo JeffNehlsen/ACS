@@ -32,7 +32,7 @@ git pull
 Getting Started with ACS:
 -------------------------
 - Go into "scripts/settings/" and make a copy of Defaults.lua.
-- Paste it and rename it to be your characters name (CASE MATTERS)
+- Paste it and rename it to be your characters name (CASE SENSITIVE)
 - Modify your settings file.  Anything int his settings file will 'overwrite' the Defaults.  So, replace what you need to, or add onto it.
 - Open a Git Bash window (right click in the ACS folder and select "Git Bash")
 - Add, commit and push your file:
