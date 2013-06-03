@@ -64,7 +64,7 @@ This will prepare a file to be commited.  You can either add indivdual changed f
 
 ### git commit
 GIT COMMIT is used to actually save added files to your LOCAL repository.  After using git commit, your files are saved into your local git reposity, but NOT on the server.
-- *git commit -m "Your commit message goes here.  It should be descritive enough to tell what you did."*
+- *git commit -m "Your commit message goes here.  It should be descriptive enough to tell what you did."*
 
 ### git push
 GIT PUSH is used to move all of the changes you have committed to the server.  Make sure you do a GIT PULL before actually pushing
