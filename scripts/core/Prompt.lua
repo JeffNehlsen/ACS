@@ -201,7 +201,7 @@ function prompt:build()
     return ""
   end
   local soulDisplay = function()
-    if prompt.soul and prompt.soul ~= "" and isClass("carnifex") or isClass("indorani") then
+    if prompt.soul and prompt.soul ~= "" and isClass("carnifex") or isClass("indorani") or isClass("atabahi") or isClass("teradrim") then
       return C.c .. "S:" .. prompt.soul .. "%" .. promptLabelColor
     end
     return ""

@@ -51,6 +51,8 @@ triggers.defenseTriggers = {
   {pattern = "A powerful mastiff settles down in a corner to sleep.", handler = function(p) hSleepFollow() end},
   {pattern = "A powerful mastiff slowly wakens, looking fit and refreshed.", handler = function(p) hSleepFollow() end},
   {pattern = "A powerful mastiff bounds into the room, its delivery complete.", handler = function(p) send("order asimov follow me") end},
+
+  {pattern = "As the last of your life force fades, you reach out to the soul trapped within your chest. A", handler = function(p) stopHeal() end},
 }
 
 -- TODO: Weapon swing triggers for afflictions

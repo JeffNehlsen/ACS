@@ -1,6 +1,6 @@
 echo("Luminary file loaded. Fire it up!")
 
-shieldType = shieldType or "tower"
+shieldType = shieldType or "buckler"
 
 Luminary = {}
 --------------------
@@ -139,12 +139,19 @@ class = {
 -- Corporality - 50 power/20 seconds
 
 aliases.classAliases = {
-  {pattern = "^inspire$", handler = function(i,p) send("perform inspiration") end},
+  {pattern = "^inspirs$", handler = function(i,p) send("perform inspiration strength") end},
+  {pattern = "^inspird$", handler = function(i,p) send("perform inspiration dexterity") end},
+  {pattern = "^inspirc$", handler = function(i,p) send("perform inspiration constitution") end},
+  {pattern = "^inspiri$", handler = function(i,p) send("perform inspiration intelligence") end},
+
   {pattern = "^bliss (%w+)$", handler = function(i,p) doBliss(i,p) end},
   {pattern = "^pfocus$", handler = function(i,p) send("perform focus") end},
   {pattern = "^lform$", handler = function(i,p) send("evoke lightform") end},
   {pattern = "^inf$", handler = function(i,p) send("evoke infusion") end},
+
   {pattern = "^touch$", handler = function(i,p) send("angel touch") end},
+  {pattern = "^summ$", handler = function(i,p) send("angel summon") end},
+  {pattern = "^fade$", handler = function(i,p) send("angel fade") end},
 
   {pattern = "^seek (%w+)$", handler = function(i,p) seekHandler(i,p) end},
 }
@@ -152,8 +159,10 @@ aliases.classAliases = {
 aliases.attackAliases = {
   --{pattern = "^$", handler = function(i,p)  end},
   {pattern = "^lig$", handler = function(i,p) iLightning() end},
-  {pattern = "^beck(.*)", handler = function(i,p) beckonHandler(i,p) end},
+  {pattern = "^beck (.*)", handler = function(i,p) beckonHandler(i,p) end},
   {pattern = "^aura (%w+)", handler = function(i,p) auraHandler(i,p) end},
+
+  {pattern = "^ar$", handler = function(i,p) Luminary:smite() end},
 }
 
 

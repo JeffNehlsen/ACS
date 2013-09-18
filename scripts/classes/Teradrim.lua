@@ -35,20 +35,21 @@ aliases.attackAliases = {
   {pattern = "^pulp$", handler = function(i,p) ePulp() end},
   {pattern = "^over$", handler = function(i,p) eOverhand() end},
   {pattern = "^ep (%w+)$", handler = function(i,p) ePass(i,p) end},
+  {pattern = "^shock$", handler = function(i,p) eShockwave() end},
 
-  {pattern = "^aa$", handler = function(i,p) shred("left arm") end},
-  {pattern = "^dd$", handler = function(i,p) shred("right arm") end},
-  {pattern = "^zz$", handler = function(i,p) shred("left leg") end},
-  {pattern = "^cc$", handler = function(i,p) shred("right leg") end},
-  {pattern = "^ss$", handler = function(i,p) shred("torso") end},
-  {pattern = "^ww$", handler = function(i,p) shred("head") end},
+  {pattern = "^aa$", handler = function(i,p) eSlam("left arm") end},
+  {pattern = "^dd$", handler = function(i,p) eSlam("right arm") end},
+  {pattern = "^zz$", handler = function(i,p) eSlam("left leg") end},
+  {pattern = "^cc$", handler = function(i,p) eSlam("right leg") end},
+  {pattern = "^ss$", handler = function(i,p) eGutsmash() end},
+  {pattern = "^ww$", handler = function(i,p) eFacesmash() end},
   
-  {pattern = "^aa?2$", handler = function(i,p) shred2("left arm") end},
-  {pattern = "^dd?2$", handler = function(i,p) shred2("right arm") end},
-  {pattern = "^zz?2$", handler = function(i,p) shred2("left leg") end},
-  {pattern = "^cc?2$", handler = function(i,p) shred2("right leg") end},
-  {pattern = "^ss?2$", handler = function(i,p) shred2("torso") end},
-  {pattern = "^ww?2$", handler = function(i,p) shred2("head") end},
+  {pattern = "^aa?2$", handler = function(i,p) shred("left arm") end},
+  {pattern = "^dd?2$", handler = function(i,p) shred("right arm") end},
+  {pattern = "^zz?2$", handler = function(i,p) shred("left leg") end},
+  {pattern = "^cc?2$", handler = function(i,p) shred("right leg") end},
+  {pattern = "^ss?2$", handler = function(i,p) shred("torso") end},
+  {pattern = "^ww?2$", handler = function(i,p) shred("head") end},
   
 --  {pattern = "^ad$", handler = function(i,p) elemental("left arm", "right arm") end},
 --  {pattern = "^zc$", handler = function(i,p) elemental("left leg", "right leg") end},
@@ -74,7 +75,7 @@ aliases.attackAliases = {
   {pattern = "^coc?2$", handler = function(i,p) cocoon2() end},
   {pattern = "^qu$", handler = function(i,p) quake() end},
 --  {pattern = "^inf$", handler = function(i,p) send("infuse") end},
-  {pattern = "^xx$", handler = function(i,p) doTrip() end},
+  {pattern = "^xx$", handler = function(i,p) eOverhand() end},
 
   {pattern = "^storm$", handler = function(i,p) sand("storm") end},
   {pattern = "^spike$", handler = function(i,p) sand("spikes") end},
@@ -103,7 +104,7 @@ aliases.attackAliases = {
   {pattern = "^gpm (%w+)$", handler = function(i,p) gpush(i,p) end},
   {pattern = "^gsm (%w+)$", handler = function(i,p) gsmash(i,p) end},
   {pattern = "^gsm$", handler = function(i,p) send("golem smash") end},
-  {pattern = "^gmo$", handler = function(i,p) golemMoan() end},
+  {pattern = "^gmo (%w+)$", handler = function(i,p) golemMove(i,p) end},
   {pattern = "^gre$", handler = function(i,p) gRecover() end},
 
   {pattern = "^gc$", handler = function(i,p) send("golem call") end},
@@ -142,7 +143,20 @@ triggers.attackTriggers = {
   {pattern = "You place a hand upon the ground, directing your senses into the earth as you search for a path", handler = function(p) stopHeal() end},
   {pattern = "As your concentration wavers, your senses quickly flee the earth.$", handler = function(p) startHeal() end},
   {pattern = "Letting your form meld and become one with the earth, you transport yourself through rock and soil", handler = function(p) startHeal() end},
+
+  -- Earthenform
+  {pattern = "You kneel, and place your hands upon the earth beneath you. As if on command, the earth shifts and", handler = function(p) stopHeal() end},
+  {pattern = "You cease your focus upon attaining the earthen form, your mass returning to normal as the earth", handler = function(p) startHeal() end},
+  {pattern = "It takes several painstaking moments for the mass to settle upon every part of your body. Compacted", handler = function(p) startHeal() end},
+
+  -- Golem Related
+--  {pattern = "A clay golem settles down in a corner to sleep.", handler = function(p) send(que)}
 }
+
+function golemFollow()
+  send( "queue bal order entities passive" )
+  send( "queue eq order entities passive" )
+end
 
 function doRockCrush(i,p)
   local amt = i:match(p)
@@ -191,6 +205,11 @@ end
 function ePass(i,p)
   dir = i:match(p)
   send("earth pass " .. dir)
+end
+
+function golemMove(i,p)
+  dir = i:match(p)
+  send("golem move " .. dir)
 end
 
 
@@ -346,8 +365,25 @@ end
 -- Terramancy --
 ----------------
 
+function eFacesmash()
+  send("earth facesmash " .. target)
+end
+
 function eGrasp()
   send("earth grasp " .. target)
+end
+
+function eSlam(dir)
+--  dir = i:match(p)
+  send("earth slam " .. target .. " " .. dir)
+end
+
+function eFracture(dir)
+  send("earth fracture " .. target .. " " .. dir)
+end
+
+function eShockwave()
+  send("earth shockwave " .. target)
 end
 
 function eHammer()

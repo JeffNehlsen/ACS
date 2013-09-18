@@ -138,6 +138,7 @@ defenses = {
       },
       down = {
         "^The aura about you fades, leaving you somewhat more vulnerable again.$",
+        "^Your miasma defence has been stripped.$",
       },
     },
   },
@@ -175,7 +176,9 @@ defenses = {
         "^A chill runs over your icy skin.$",
         "^You are tempered against fire damage.$",
       },
-      down = {},
+      down = {
+        "^Your temperance defence has been stripped.$",
+      },
     },
   },
 
@@ -276,6 +279,7 @@ defenses = {
       },
       down = {
         "^You feel %w+'s eyes upon you, and feel your sense of time slow to normal.$",
+        "^Your speed defence has been stripped.$",
       },
     },
   },
@@ -503,6 +507,24 @@ defenses = {
     },
   },  
 
+  chameleon = {
+    requires = baleq,
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function() send() end,
+    able = hasSkill("chameleon"),
+    triggers = {
+      up = {
+        "^You take on the likeness of",
+        "^You have assumed the identity of",
+      },
+      down = {
+        "^The effect of your chameleon fades, and you return to your own identity.$",
+      },
+    },
+  },
+
   clarity = {
     requires = baleq,
     takes = {"equilibrium"},
@@ -517,6 +539,7 @@ defenses = {
         "^Your mind is filled with clarity.$",
       },
       down = {
+        "^Your clarity of mind has been corrupted.$",
       },
     },
   },  
@@ -643,6 +666,28 @@ defenses = {
         "^You begin to focus your efforts on (%w+) damage from melee attacks.$",
       },
       down = {},
+    },
+  },
+
+  nimbleness = {
+    requires = {},
+    takes = {},
+    initDef = false,
+    redef = false,
+    give = function()
+      if skills.avoidance >= skillranks.mythical then
+        send("nimbleness")
+      end
+    end,
+    able = true,
+    triggers = {
+      up = {
+        "^Shifting your weight to the balls of your feet, you begin to feel capable of quicker movements.$",
+      },
+      down ={
+        "^The constant exertion has worn you down, and you cease your nimble maneuvers, panting.$",
+        "^Your muscles are too tired to become nimble again so soon.$",
+      },
     },
   },
 
@@ -977,17 +1022,35 @@ defenses = {
     },
   },
 
-  inspiration = {
+  inspiration_strength = {
     requires = "balance",
     takes = {"equilibrium"},
     initDef = false,
     redef = false,
-    give = function() send("perform inspiration") end,
+    give = function() send("perform inspiration strength") end,
     able = isClass("luminary"),
     triggers = {
       up = {
-        "^You bow your head and, praying to the gods for inspiration, you are soon rewarded as your body is",
+        "^You bow your head and pray for the Gods to increase your strength.$",
         "^Your limbs are suffused with divinely",
+      },
+      down = {
+        "^You slump slightly as the divinely",
+      },
+    },
+  },
+
+  inspiration_constitution = {
+    requires = "balance",
+    takes = {"equilibrium"},
+    initDef = false,
+    redef = false,
+    give = function() send("perform inspiration constitution") end,
+    able = isClass("luminary"),
+    triggers = {
+      up = {
+        "^You bow your head and pray for the Gods to increase your constitution.$",
+        "^Your body is suffused with divinely",
       },
       down = {
         "^You slump slightly as the divinely",
@@ -1094,7 +1157,7 @@ defenses = {
     takes = {"equilibrium"},
     initDef = false,
     redef = false,
-    give = function() send("evoke rebirth") end,
+    give = function() send("paint shield dhar") end,
     able = isClass("luminary"),
     triggers = {
       up = {
@@ -2178,7 +2241,7 @@ defenses = {
     takes = {"equilibrium"},
     initDef = true,
     redef = false,
-    give = function() send("stalk") end,
+    give = function() send("bloodsense") end,
     able = isClass("bloodborn"),
     triggers = {
       up = {

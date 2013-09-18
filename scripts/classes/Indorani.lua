@@ -7,10 +7,13 @@ triggers.defenseTriggers = {
   {pattern = "You have successfully inscribed the image of (%w+) on your Tarot card.", handler = function(p) startHeal() end},
   {pattern = "You have successfully inscribed the image of the Wheel of Misfortune on your Tarot card.", handler = function(p) startHeal() end},
   {pattern = "Your concentration ruined, you throw away the half-finished and now worthless tarot.", handler = function(p) startHeal() end},
+  {pattern = "You cackle hellishly as you send the Wheel of Misfortune towards", handler = function(p) startHeal() end},
 
   {pattern = "You compose yourself, knowing that an inner calm is essential for the task ahead.", handler = function(p) stopHeal() end},
   {pattern = "You break your concentration and your transcendence fails.", handler = function(p) startHeal() end},
   {pattern = "Your surroundings burst asunder, a gaping black void opening in front of you. An eerie blue light", handler = function(p) startHeal() end},
+
+  {pattern = "makes a wild catch for the glowing tarot floating before her, and manages to get a", handler = function(p) startHeal() end},
 
   {pattern = "You call upon your dark power, and instantly a black wind descends upon you. In seconds your body", handler = function(p) stopHeal() end},
   {pattern = "You concentrate and are once again Azudim.$", handler = function(p) startHeal() end},
@@ -58,6 +61,7 @@ aliases.attackAliases = {
   {pattern = "^ar$", handler = function(i,p) nBoneDagger2() end},
   {pattern = "^ar (%w+)$", handler = function(i,p) nBoneDagger(i,p) end},
   {pattern = "^dec$", handler = function(i,p) nDecay() end},
+  {pattern = "^taint$", handler = function(i,p) nTaint() end},
 
   {pattern = "^star$", handler = function(i,p) tStar() end},
   {pattern = "^lov$", handler = function(i,p) tLovers() end},
@@ -114,6 +118,7 @@ aliases.attackAliases = {
   {pattern = "^dlo$", handler = function(i,p) send("ORDER DOPPLEGANGER LOOK") end},
 
   {pattern = "^pfh$", handler = function(i,p) send("order pathfinder home") end},
+  {pattern = "^derv$", handler = function(i,p) send("order dervish act") end},
 
   {pattern = "wwww", handler = function(i,p) orbParry("head") end},
   {pattern = "aaaa", handler = function(i,p) orbParry("left arm") end},

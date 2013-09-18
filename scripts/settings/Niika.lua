@@ -5,8 +5,8 @@ canFocus = false
 canTree = true
 canClot = true
 canParry = true
-living = false
-artiPipes = true
+living = true
+artiPipes = false
 
 -- Your preferred pagelength
 defaultPagelength = 0
@@ -34,7 +34,7 @@ experienceDisplay = "percent"
 --  vampire
 --  bloodborn
 --  infernal
-classType = LoadArg or "indorani"
+classType = LoadArg or "luminary"
 
 -- Default stick and kidney values.
 -- To change values in game, refer to help file
@@ -54,18 +54,8 @@ showVenoms = true
 -- Example:
 -- weaponVar = "weapon12345"
 tower     = "buckler188219"
---Teradrim
-crozier   = "crozier236948"
-flail     = "flail215790"
---Bloodborn
-athame    = "athame237414"
-scythe    = "scythe73214"
---Carnifex
-warhammer = "warhammer202470"
-bardiche  = "bardiche193743"
-halberd   = "halberd"
---Indorani
-dagger    = "bonedagger"
+--Luminary
+mace      = "mace"
 
 -- Enter what skill levels you have in all your classes.  If an impoortant one is missing, 
 -- let Kaed know and he'll add it to the master file.
@@ -73,21 +63,21 @@ dagger    = "bonedagger"
 -- Work in progress...
 skills = {
   -- General
-  vision = skillranks.transcendent,
-  avoidance = skillranks.transcendent,
-  survival = skillranks.mythical,
+  vision = skillranks.gifted,
+  avoidance = skillranks.skilled,
+  survival = skillranks.fabled,
   weaponry = skillranks.gifted,
-  tattoos = skillranks.skilled,
+  tattoos = skillranks.novice,
   
   -- Lycanthrope
-  ferality = skillranks.transcendent,
-  lycanthropy = skillranks.transcendent,
-  howling = skillranks.transcendent,
+  ferality = skillranks.unknown,
+  lycanthropy = skillranks.unknown,
+  howling = skillranks.unknown,
   
-  -- Teradrim
-  terramancy = skillranks.transcendent,
-  desiccation = skillranks.transcendent,
-  animation = skillranks.transcendent,
+  -- Luminary
+  spirituality = skillranks.transcendent,
+  devotion = skillranks.transcendent,
+  illumination = skillranks.transcendent,
   
   -- Syssin
   subterfuge = skillranks.unknown,
@@ -95,11 +85,11 @@ skills = {
   hypnosis = skillranks.unknown,
   
   -- Vampire (General)
-  mentis = skillranks.transcendent,
-  corpus = skillranks.transcendent,
+  mentis = skillranks.unknown,
+  corpus = skillranks.unknown,
   
   -- Bloodborn
-  hematurgy = skillranks.transcendent,
+  hematurgy = skillranks.unknown,
   
   -- Consanguine
   sanguis = skillranks.unknown,
@@ -109,18 +99,18 @@ skills = {
   forging = skillranks.unknown,
   necromancy = skillranks.unknown,
   -- Carnifex
-  savagery = skillranks.mythical,
-  deathlore = skillranks.virtuoso,
-  warhounds = skillranks.virtuoso,
+  savagery = skillranks.unknown,
+  deathlore = skillranks.unknown,
+  warhounds = skillranks.unknown,
 
   -- Indorani
-  necromancy = skillranks.transcendent,
-  tarot = skillranks.transcendent,
-  domination = skillranks.transcendent,
+  necromancy = skillranks.unknown,
+  tarot = skillranks.unknown,
+  domination = skillranks.unknown,
 }
 
 -- Skills for endgame and racial skills.
-extraSkills = {"heatsight", "miasma", "reconstitute", "gripping", "quickassess"}
+extraSkills = {"hover"}
 
 -- Label color for your prompt (H, M, %, etc)
 promptLabelColor = C.x

@@ -56,9 +56,10 @@ aliases.attackAliases = {
   {pattern = "^jug$", handler = function(i,p) combo("jugularclaw", "jugularclaw") end},
   {pattern = "^skw$", handler = function(i,p) combo("skullwhack", "skullwhack") end},
   {pattern = "^bpsw$", handler = function(i,p) combo("bodypunch", "skullwhack") end},
+  {pattern = "^bpsc$", handler = function(i,p) combo("bodypunch", "spinalcrack") end},
   {pattern = "^jb$", handler = function(i,p) combo("jugular", "bodypunch") end},
   {pattern = "^jug2$", handler = function(i,p) combo("jugular", "bodypunch") end},
-  
+
   -- Targeting w/ claw
   {pattern = "^aa$", handler = function(i,p) doAttack("clawla", "clawla") end},
   {pattern = "^dd$", handler = function(i,p) doAttack("clawra", "clawra") end},
@@ -145,9 +146,9 @@ triggers.attackTriggers = {
   
   -- Rips
   {pattern = "^Your teeth part the flesh of (%w+)'s tender groin easily, releasing your", handler = function(p) groinripped() end},
-  {pattern = "thigh.$", handler = function(p) gagLine() end},
+ -- {pattern = "thigh.$", handler = function(p) gagLine() end},
   {pattern = "^You cease pinning (%w+), only to sink your teeth satisfyingly into the flesh", handler = function(p) throatripped() end},
-  {pattern = "neck.$", handler = function(p) gagLine() end},
+--  {pattern = "neck.$", handler = function(p) gagLine() end},
   {pattern = "^You release your pin and instead thrust your jaws under (%w+)'s ribcage", handler = function(p) spleenripped() end},
   {pattern = "the sweet meat of (%w+) spleen.", handler = function(p) gagLine() end},
   

@@ -290,11 +290,13 @@ triggers.afflictionTriggers = {
   
   -- Triggers for when you already have the affliction.
   -- {pattern = "You move sluggishly into action.", handler = function(p) afflictionAdd("aeon") end},
+  --{pattern = "A movement-retarding vibe slows your actions.", handler = function(p)}
   {pattern = "The curse of the Aeon wears off and you return to the normal timestream.", handler = function(p) send("stick nervine") end},
   {pattern = "^You are too confused to concentrate properly.", handler = function(p) afflictionAdd("confusion") end},
   {pattern = "^You cannot contain the convulsions in your stomach any longer", handler = function(p) afflictionAdd("vomiting") end},
   {pattern = "^A wave of utter panic washes over you.", handler = function(p) send("compose") send("compose") end},
   {pattern = "^afflicted by fear.$", handler = function(p) send("compose") send("compose") end},
+  {pattern = "^Heart thumping, you cannot bear the company of others and depart in terror.$", handler = function(p) afflictionAdd("shyness") end},
   {pattern = "^You don't feel like doing that right now.$", handler = function(p) afflictionAdd("indifference") end},
   {pattern = "^You cannot press the poultice due to the pangs within your limbs.", handler = function(p) afflictionAdd("sandrot") end},
   {pattern = "You have a particularly intense shiver.", handler = function(p) afflictionAdd("shivering") end},
@@ -347,6 +349,7 @@ triggers.afflictionTriggers = {
   {pattern = "^The venom burns through your veins, destroying the deadly *", handler = function(p) checkVoyriaCure() end},
   {pattern = "^The serum has no effect.", handler = function(p) checkVoyriaCure() end},
   {pattern = "^The burning in your veins ceases.$", handler = function(p) checkVoyriaCure() end},
+  {pattern = "^You are not suffering from voyria.$", handler = function(p) checkVoyriaCure() end},
   
   -- Asleep triggers
   {pattern = "You open your eyes and stretch languidly, feeling deliciously well%-rested.", handler = function(p) asleep = false send("insomnia") end},

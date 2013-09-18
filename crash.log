@@ -1,17 +1,15 @@
 [MB]
-Section - Processing client data.
+Section - Unknown.
 [MOD]
-Section - Processing client aliases.
-Module - IMapper.
+Section - Not in a module.
 [DESC]
 Section - Reading from...
-Descriptor - Client.
+Descriptor - €§|) an.
 [Buffer:]
-"m l[13][10]"
 [History:]
- (0) destroy_map
- (1) get_string
- (2) i_mapper_process_client_aliases
- (3) strip_unprint
- (4) module_process_client_aliases
- (5) process_client
+ (0) process_client
+ (1) module_show_version
+ (2) process_client
+ (3) process_client
+ (4) process_client
+ (5) module_show_version
